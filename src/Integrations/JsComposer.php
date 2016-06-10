@@ -21,7 +21,7 @@
             	return;
         	}
         	
-        	vc_set_shortcodes_templates_dir( VIEW_ABS_DIR . DIRECTORY_SEPARATOR . 'vc' );
+        	vc_set_shortcodes_templates_dir( COMPONENTS_DIR . DS . 'vc' );
         	
         	foreach( WPKit::get_shortcodes() as $shortcode ) {
     	        

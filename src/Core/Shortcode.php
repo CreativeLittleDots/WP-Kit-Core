@@ -94,15 +94,7 @@
         		
     		}
     		
-    		$filename = SHORTCODES_VIEW_DIR . DIRECTORY_SEPARATOR . $this->filename($atts) . '.twig';
-    		
-    		if( ! file_exists($filename) ) {
-        		
-        	    $filename = SHORTCODES_VIEW_DIR . DIRECTORY_SEPARATOR . $this->base . '.twig';	
-        		
-    		}
-    		
-    		return Timber::compile($filename, $atts);
+    		return get_component('shortcodes', $this->base, $atts, false);
     		
 		}
 		

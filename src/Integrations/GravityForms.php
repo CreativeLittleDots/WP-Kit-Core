@@ -207,11 +207,11 @@
 		
 		public function custom_markup($html, $form) {
 			
-			$find = apply_filters('WPKit_gforms_find', ! empty( $this->settings['find'] ) ? $this->settings['find'] : array());
+			$find = apply_filters('wpkit_gforms_find', ! empty( $this->settings['find'] ) ? $this->settings['find'] : array());
 			
-			$replace = apply_filters('WPKit_gforms_replace', ! empty( $this->settings['replace'] ) ? $this->settings['replace'] : array());
+			$replace = apply_filters('wpkit_gforms_replace', ! empty( $this->settings['replace'] ) ? $this->settings['replace'] : array());
 			
-			$timber = apply_filters('WPKit_gforms_timber', ! empty( $this->settings['timber'] ) ? $this->settings['timber'] : array());
+			$timber = apply_filters('wpkit_gforms_timber', ! empty( $this->settings['timber'] ) ? $this->settings['timber'] : array());
 			
 			$gform = qp(str_replace($find, $replace, $html));  
 			 
@@ -221,11 +221,11 @@
     			
     			if($field->hasClass('field_label_below')) {
 	    			
-        			$field->children('.gfield_label')->first()->insertAfter($field->children('.ginput_container')->last()->children('input')->last())->remove();
+        			$field->children('.gfield_label')->first()->insertAfter($field->children('.ginput_container')->last()->children('input, select, textarea')->last())->remove();
         			
     			} else {
 	    			
-        			$children = $field->children('.ginput_container')->first()->children('input, textarea')->first();
+        			$children = $field->children('.ginput_container')->first()->children('input, textarea, select')->first();
         			
         			if($children->length) {
 	        			

@@ -1,0 +1,41 @@
+{# menu.twig #}
+    	            
+<ul class="inline-list right">
+    
+   {% for item in menu.get_items %}
+   
+        <li class="{{item.classes | join(' ')}}">
+            
+            <a href="{{item.get_link}}">{{ item.title }}</a>
+             
+        </li>
+        
+    {% endfor %}
+    
+    <li class="basket">
+		
+		<a href="{{ cart_url }}">
+	
+			<div data-icon="e" class="icon">
+				
+				{% include 'elements/basket-icon.twig' with { count : cart.get_cart_contents_count() } %}
+				
+			</div>
+		
+		</a>
+
+		{% include 'elements/basket-dropdown.twig' with { cart : cart } %}
+	
+	</li>
+	    	
+	<li class="logo">
+	
+		<a href="{{ site.url }}">
+			
+			<img src="{{ theme.link }}/img/logo.svg" />
+			
+		</a>
+		
+	</li>
+    
+</ul>

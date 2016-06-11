@@ -159,13 +159,15 @@
 				
 			}
 			
+			self::require_plugins();
+			
 			self::add_integration('timber-library', [
 				'file' => 'timber-library/timber.php'
 			]);
 			
 		}
 		
-		public static function require_plugins($plugins) {
+		public static function require_plugins($plugins = array()) {
     		
     		$plugins = array_merge(self::$plugins, $plugins);
     		
@@ -408,6 +410,12 @@
 		public static function uninvoke( $controller, $route = 'init', $priority = 20 ) {
 			
 			Invoker::uninvoke( $controller, $route, $priority );
+			
+		}
+		
+		public static function invoked( $controller, $action = 'init', $priority = 20 ) {
+			
+			return Invoker::invoked( $controller, $action, $priority );
 			
 		}
 		

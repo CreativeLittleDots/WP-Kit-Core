@@ -62,7 +62,7 @@
 			
 		}
 		
-		public static function is_invoked( $controller, $action = 'wp', $priority = 20 ) {
+		public static function invoked( $controller, $action = 'wp', $priority = 20 ) {
 			
 			return array_search(array_merge(array(
 				'controller' => '',

@@ -9,14 +9,20 @@
         public static $scripts = [];
         
         public static function init() {
+	        
+	        $class = get_called_class();
+	        
+	        if( wpkit()->invoked( $class, current_filter() ) ) {
+		        
+		        return false;
+		        
+	        }
 			
 			add_action( 'wp_enqueue_scripts', function() {
     			
     			self::enqueue_scripts( call_user_func( array( get_called_class(), 'get_scripts') ) ); 
     			
             });
-			
-			$class = get_called_class();
 
 			return new $class();
 			

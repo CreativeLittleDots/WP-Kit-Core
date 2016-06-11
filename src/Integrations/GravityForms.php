@@ -331,7 +331,7 @@
 		
 		public function nesting_custom_scripts() {
 			
-			wp_register_script( 'gform-nesting', SCRIPTS_DIR . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'jquery.gform.nesting.js', array('jquery'), '1.0.0', true );
+			wp_register_script( 'gform-nesting', get_asset('admin/jquery.gform.nesting.js'), array('jquery'), '1.0.0', true );
 			
 			wp_localize_script( 'gform-nesting', 'rg_delete_field', array(
 				'nonce' => wp_create_nonce( 'rg_delete_field' )

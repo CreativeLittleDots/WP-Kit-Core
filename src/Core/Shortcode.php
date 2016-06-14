@@ -94,7 +94,7 @@
         		
     		}
     		
-    		return get_component('shortcodes', $this->base, $atts, false);
+    		return get_component('Shortcode', $this->base, $atts, false);
     		
 		}
 		

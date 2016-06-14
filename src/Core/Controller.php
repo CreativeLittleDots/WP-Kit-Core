@@ -18,11 +18,7 @@
 		        
 	        }
 			
-			add_action( 'wp_enqueue_scripts', function() {
-    			
-    			self::enqueue_scripts( call_user_func( array( get_called_class(), 'get_scripts') ) ); 
-    			
-            });
+			add_action( 'wp_enqueue_scripts', array($class, 'enqueue_scripts') );
 
 			return new $class();
 			
@@ -36,7 +32,13 @@
 	        
         }
         
-        public static function enqueue_scripts($scripts) {
+        public static function enqueue_scripts() {
+    			
+			self::_enqueue_scripts( call_user_func( array( get_called_class(), 'get_scripts') ) ); 
+			
+        }
+        
+        private static function _enqueue_scripts($scripts) {
 			
 			foreach($scripts as $script) {
 				
@@ -147,6 +149,24 @@
             
             return false;
     		
+		}
+		
+		public function render( $view, $vars = array(), $echo = true ) {
+			
+			$path = str_replace( 'Controller', '', end( explode( '\\', get_called_class() ) ) );
+			
+			$html = get_component( $path, $view, $vars, $echo );
+			
+			if( $echo ) {
+				
+				echo $html;
+				
+			} else {
+				
+				return $html;
+				
+			}
+			
 		}
         
     }

@@ -61,6 +61,8 @@
 		
 		public function __construct() {
 			
+			require_once( 'defines.php' );
+			
 			if( ! defined( 'INFLECTOR_DEFAULT_LOCALE' ) ) {
     
 		    	define( 'INFLECTOR_DEFAULT_LOCALE', strtolower( DEFAULT_LOCALE ) );
@@ -72,8 +74,6 @@
 		}
 		
 		public static function init() {
-			
-			require_once( 'defines.php' );
 			
 			if( defined( 'FUNCTIONS_DIR' ) && FUNCTIONS_DIR ) {
 			

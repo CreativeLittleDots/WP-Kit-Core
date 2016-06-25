@@ -24,7 +24,6 @@
             "WPKit\\": "src/" 
         },
         "files": [
-	        "src/defines.php",
             "src/helpers.php"
         ]
     },

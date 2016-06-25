@@ -73,6 +73,8 @@
 		
 		public static function init() {
 			
+			require_once( 'defines.php' );
+			
 			if( defined( 'FUNCTIONS_DIR' ) && FUNCTIONS_DIR ) {
 			
 				foreach( glob( FUNCTIONS_DIR . DS . '*.php' ) as $functions ) {

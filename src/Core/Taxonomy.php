@@ -50,7 +50,7 @@
 	    				'show_ui'           => true,
 	    				'show_admin_column' => true,
 	    				'query_var'         => true,
-	    				'rewrite'           => $this->rewrite ? $this->rewrite : array( 'slug' => $this->slug ),
+	    				'rewrite'            => $this->rewrite && $this->rewrite !== true ? $this->rewrite : array( 'slug' => inflector()->dasherize( strtolower( $this->slug ) ) ),
 	    			)
     			);
     			

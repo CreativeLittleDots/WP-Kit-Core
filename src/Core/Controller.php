@@ -7,6 +7,7 @@
     class Controller {
         
         public static $scripts = [];
+        public static $scripts_action = 'wp_enqueue_scripts';
         
         public static function init() {
 	        
@@ -18,7 +19,7 @@
 		        
 	        }
 			
-			add_action( 'wp_enqueue_scripts', array($class, 'enqueue_scripts') );
+			add_action( $class::$scripts_action, array($class, 'enqueue_scripts') );
 
 			return new $class();
 			
@@ -153,7 +154,7 @@
 		
 		public function render( $view, $vars = array(), $echo = true ) {
 			
-			$path = str_replace( 'Controller', '', end( explode( '\\', get_called_class() ) ) );
+			$path = str_replace( 'Controller', '', implode( '/', explode( '\\', str_replace( 'App\Controllers\\', '', get_called_class() ) ) ) );
 			
 			$html = get_component( $path, $view, $vars, $echo );
 			

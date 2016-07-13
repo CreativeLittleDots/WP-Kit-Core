@@ -106,21 +106,21 @@
     
     function get_component($path = '', $template, $vars = array(), $echo = true) {
 	    
-	    $template = COMPONENTS_DIR . DS . $path . DS . $template;
+	    $file = COMPONENTS_DIR . DS . $path . DS . $template;
 		
 		$html = '';
 		
-		if( file_exists($template . '.twig') ) {
+		if( file_exists($file . '.twig') ) {
     		
-    		$html = Timber::compile($template . '.twig', $vars);
+    		$html = Timber::compile($path . DS . $template . '.twig', $vars);
     		
-        } else if( file_exists($template . '.php') ) {
+        } else if( file_exists($file . '.php') ) {
     		
     		ob_start();
     		
     		extract($vars);
     			
-			include( $template . '.php' );
+			include( $file . '.php' );
 		
 			$html = ob_get_contents();
 			

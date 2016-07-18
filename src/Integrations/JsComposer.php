@@ -89,17 +89,17 @@
         public function custom_css_classes( $class_string, $tag, $atts ) {
             
             if ( $tag == 'vc_row' || $tag == 'vc_row_inner' ) {
-	            $class = 'grid';
-	            $class .= ! empty( $atts['full_width'] ) ? ' grid--edge' : '';
+	            $class = ! empty( $this->settings['replace']['vc_row'] ) ? $this->settings['replace']['vc_row'] : 'grid';
+	            $class .= ! empty( $atts['full_width'] ) ? ( ! empty( $this->settings['replace']['vc_row-fluid'] ) ? $this->settings['replace']['vc_row-fluid'] : ' grid--edge' ) : '';
                 $class_string = str_replace( 'vc_row-fluid', $class, $class_string );
                 $class_string = str_replace( array('vc_row', 'wpb_row', 'vc_inner'), array('', '', ''), $class_string );
             }
             if ( $tag == 'vc_column' || $tag == 'vc_column_inner' ) {
-                $class_string = str_replace( 'wpb_column vc_column_container', 'grid__item', $class_string );
-                $class_string = preg_replace( '/vc_col-xs-(\d{1,2})/', 'size-$1', $class_string );
-                $class_string = preg_replace( '/vc_col-sm-(\d{1,2})/', 'size-$1-m', $class_string );
-                $class_string = preg_replace( '/vc_col-md-(\d{1,2})/', 'size-$1-l', $class_string );
-                $class_string = preg_replace( '/vc_col-lg-(\d{1,2})/', 'size-$1-xl', $class_string );
+                $class_string = str_replace( 'wpb_column vc_column_container', ! empty( $this->settings['replace']['wpb_column'] ) ? $this->settings['replace']['wpb_column'] : 'grid__item', $class_string );
+                $class_string = preg_replace( '/vc_col-xs-(\d{1,2})/', ! empty( $this->settings['replace']['vc_col-xs-$1'] ) ? $this->settings['replace']['vc_col-xs-$1'] : 'size-$1', $class_string );
+                $class_string = preg_replace( '/vc_col-sm-(\d{1,2})/', ! empty( $this->settings['replace']['vc_col-sm-$1'] ) ? $this->settings['replace']['vc_col-sm-$1'] : 'size-$1-m', $class_string );
+                $class_string = preg_replace( '/vc_col-md-(\d{1,2})/', ! empty( $this->settings['replace']['vc_col-md-$1'] ) ? $this->settings['replace']['vc_col-md-$1'] : 'size-$1-l', $class_string );
+                $class_string = preg_replace( '/vc_col-lg-(\d{1,2})/', ! empty( $this->settings['replace']['vc_col-lg-$1'] ) ? $this->settings['replace']['vc_col-lg-$1'] : 'size-$1-xl', $class_string );
             }
             return $class_string;
             

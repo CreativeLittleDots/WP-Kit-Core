@@ -94,7 +94,7 @@
     \*----------------------------------------------*/
      
     function nice($content) {
-        echo '<pre>';
+        echo '<pre class="var-dump">';
         print_r($content);
         echo '</pre>';
     }

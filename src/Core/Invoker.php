@@ -6,13 +6,13 @@
 	    
 	    public static $routes = [];
 	    
-		public static function invoke_by_url( $controller, $url, $priority = 20 ) {
+		public static function invoke_by_url( $controller, $url, $priority = 20, $action = 'wp' ) {
 			
 			add_action( 'wp', function() use($controller, $url, $priority) {
 				
 				if( $url ) {
 				
-					self::invoke_by_action( $controller, 'wp', $priority );
+					self::invoke_by_action( $controller, $action, $priority );
 				
 				}
 				
@@ -20,13 +20,13 @@
 			
 		}
 		
-		public static function invoke_by_page( $controller, $page, $priority = 20 ) {
+		public static function invoke_by_page( $controller, $page, $priority = 20, $action = 'wp' ) {
 			
 			add_action( 'wp', function() use($controller, $page, $priority) {
 			
 				if( is_page( $page ) ) {
 					
-					self::invoke_by_action( $controller, 'wp', $priority );
+					self::invoke_by_action( $controller, $action, $priority );
 				
 				}
 				
@@ -34,13 +34,13 @@
 			
 		}
 		
-		public static function invoke_by_condition( $controller, $condition, $priority = 20 ) {
+		public static function invoke_by_condition( $controller, $condition, $priority = 20, $action = 'wp' ) {
 			
 			add_action( 'wp', function() use($controller, $condition, $priority) {
 			
 				if( is_callable($condition) && call_user_func($condition) ) {
 					
-					self::invoke_by_action( $controller, 'wp', $priority );
+					self::invoke_by_action( $controller, $action, $priority );
 				
 				}
 				

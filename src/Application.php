@@ -365,25 +365,25 @@
 			
 		}
 		
-		public static function invoke( $controller, $route = 'init', $type = 'default', $priority = 20 ) {
+		public static function invoke( $controller, $route = 'init', $type = 'default', $priority = 20, $action = 'wp' ) {
 			
 			switch( $type ) {
 				
 				case 'url' :
 				
-					Invoker::invoke_by_url( $controller, $route, $priority );
+					Invoker::invoke_by_url( $controller, $route, $priority, $action );
 				
 				break;
 				
 				case 'page' :
 				
-					Invoker::invoke_by_page( $controller, $route, $priority );
+					Invoker::invoke_by_page( $controller, $route, $priority, $action );
 				
 				break;
 				
 				case 'condition' :
 				
-					Invoker::invoke_by_condition( $controller, $route, $priority );
+					Invoker::invoke_by_condition( $controller, $route, $priority, $action );
 				
 				break;
 				
@@ -395,7 +395,7 @@
 				
 					if( is_callable($route) || function_exists( $route ) ) {
 						
-						Invoker::invoke_by_condition( $controller, $route, $priority );
+						Invoker::invoke_by_condition( $controller, $route, $priority, $action );
 						
 					} else {
 						

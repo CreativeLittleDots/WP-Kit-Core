@@ -8,7 +8,7 @@
 	    
 		public static function invoke_by_url( $controller, $url, $priority = 20, $action = 'wp' ) {
 			
-			add_action( 'wp', function() use($controller, $url, $priority) {
+			add_action( $action, function() use($controller, $url, $priority, $action) {
 				
 				if( $url ) {
 				
@@ -22,7 +22,7 @@
 		
 		public static function invoke_by_page( $controller, $page, $priority = 20, $action = 'wp' ) {
 			
-			add_action( 'wp', function() use($controller, $page, $priority) {
+			add_action( $action, function() use($controller, $page, $priority, $action) {
 			
 				if( is_page( $page ) ) {
 					
@@ -36,7 +36,7 @@
 		
 		public static function invoke_by_condition( $controller, $condition, $priority = 20, $action = 'wp' ) {
 			
-			add_action( 'wp', function() use($controller, $condition, $priority) {
+			add_action( $action, function() use($controller, $condition, $priority, $action) {
 			
 				if( is_callable($condition) && call_user_func($condition) ) {
 					

@@ -18,4 +18,4 @@ The official repo for WP Kit can be found [here](https://github.com/creativelitt
 
 ## License
 
-WP Kit Core is open-sourced software licensed under the [GNU General Public License](http://www.gnu.org/licenses/gpl-3.0.en.html).
+WP Kit Core is open-sourced software licensed under the MIT License.

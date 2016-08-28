@@ -27,6 +27,7 @@
     use WPKit\Core\Auth;
     use WPKit\Core\Cache;
     use WPKit\Core\Invoker;
+    use WPKit\Core\Router;
 
 	class Application {
 		
@@ -365,59 +366,33 @@
 			
 		}
 		
-		public static function invoke( $controller, $route = 'init', $type = 'default', $priority = 20, $action = 'wp' ) {
+		public static function invoke( $callback, $action = 'wp', $condition = true, $priority = 20 ) {
 			
-			switch( $type ) {
-				
-				case 'url' :
-				
-					Invoker::invoke_by_url( $controller, $route, $priority, $action );
-				
-				break;
-				
-				case 'page' :
-				
-					Invoker::invoke_by_page( $controller, $route, $priority, $action );
-				
-				break;
-				
-				case 'condition' :
-				
-					Invoker::invoke_by_condition( $controller, $route, $priority, $action );
-				
-				break;
-				
-				case 'action' :
-				
-					Invoker::invoke_by_action( $controller, $route, $priority );
-				
-				default :
-				
-					if( is_callable($route) || function_exists( $route ) ) {
-						
-						Invoker::invoke_by_condition( $controller, $route, $priority, $action );
-						
-					} else {
-						
-						Invoker::invoke_by_action( $controller, $route, $priority );
-						
-					}
-					
-				break;
-				
-			}
+			Invoker::invoke_by_condition( $callback, $action, $condition, $priority );
 			
 		}
 		
-		public static function uninvoke( $controller, $route = 'init', $priority = 20 ) {
+		public static function uninvoke( $callback, $route = 'init', $priority = 20 ) {
 			
-			Invoker::uninvoke( $controller, $route, $priority );
+			Invoker::uninvoke( $callback, $route, $priority );
 			
 		}
 		
-		public static function invoked( $controller, $action = 'init', $priority = 20 ) {
+		public static function invoked( $callback, $action = 'init', $priority = 20 ) {
 			
-			return Invoker::invoked( $controller, $action, $priority );
+			return Invoker::invoked( $callback, $action, $priority );
+			
+		}
+		
+		public static function route( $route, $callback ) {
+			
+			Router::map( $route, $callback );
+			
+		}
+		
+		public static function routed( $route, $callback ) {
+			
+			return Router::mapped( $route, $callback );
 			
 		}
 		

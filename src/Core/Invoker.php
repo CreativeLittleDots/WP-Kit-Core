@@ -5,28 +5,14 @@
     class Invoker {
 	    
 	    public static $routes = [];
-	    
-		public static function invoke_by_url( $controller, $url, $priority = 20, $action = 'wp' ) {
-			
-			add_action( $action, function() use($controller, $url, $priority, $action) {
-				
-				if( $url ) {
-				
-					self::invoke_by_action( $controller, $action, $priority );
-				
-				}
-				
-			});
-			
-		}
 		
-		public static function invoke_by_page( $controller, $page, $priority = 20, $action = 'wp' ) {
+		public static function invoke_by_condition( $callback, $action = 'wp', $condition, $priority = 20 ) {
 			
-			add_action( $action, function() use($controller, $page, $priority, $action) {
+			add_action( 'init', function() use($callback, $action, $condition, $priority ) {
 			
-				if( is_page( $page ) ) {
+				if( ( is_callable($condition) && call_user_func($condition) ) || ( ! is_callable($condition) && $condition ) ) {
 					
-					self::invoke_by_action( $controller, $action, $priority );
+					self::invoke_by_action( $callback, $action, $priority );
 				
 				}
 				
@@ -34,57 +20,58 @@
 			
 		}
 		
-		public static function invoke_by_condition( $controller, $condition, $priority = 20, $action = 'wp' ) {
+		public static function invoke_by_action( $callback, $action = 'wp', $priority = 20 ) {
 			
-			add_action( $action, function() use($controller, $condition, $priority, $action) {
-			
-				if( is_callable($condition) && call_user_func($condition) ) {
-					
-					self::invoke_by_action( $controller, $action, $priority );
-				
-				}
-				
-			});
-			
-		}
-		
-		public static function invoke_by_action( $controller, $action = 'wp', $priority = 20 ) {
-			
-			$controller = stripos($controller, '\\') === 0 ? $controller : "App\Controllers\\$controller";
+			$callback = stripos($callback, '\\') === 0 ? $callback : "App\Controllers\\$callback";
+			$callback = stripos($callback, '::') === 0 ? $callback : array($callback, 'init');
 			
 			self::$routes[] = [
-				$controller,
+				$callback,
 				$action,
 				$priority
 			];
 			
-			add_action( $action, array($controller, 'init'), $priority );
+			add_action( $action, $callback, $priority );
 			
 		}
 		
-		public static function invoked( $controller, $action = 'wp', $priority = 20 ) {
+		public static function invoked( $callback, $action = 'wp', $priority = 20 ) {
+			
+			$callback = stripos($callback, '::') === 0 ? $callback : array($callback, 'init');
 			
 			return array_search(array_merge(array(
-				'controller' => '',
+				'callback' => '',
 				'action' => 'wp',
 				'priority' => 20
-			), get_defined_vars()), self::$routes) > -1 ? true : false;
+			), compact(
+				'callback',
+				'action',
+				'priority'
+			)), self::$routes) > -1 ? true : false;
 			
 		}
 		
-		public static function uninvoke( $controller, $action = 'wp', $priority = 20 ) {
+		public static function uninvoke( $callback, $action = 'wp', $priority = 20 ) {
+			
+			$callback = stripos($callback, '::') === 0 ? $callback : array($callback, 'init');
 			
 			$index = array_search(array_merge(array(
-				'controller' => '',
+				'callback' => '',
 				'action' => 'wp',
 				'priority' => 20
-			), get_defined_vars()), self::$routes);
+			), compact(
+				'callback',
+				'action',
+				'priority'
+			)), self::$routes);
 			
 			if( $index > -1 ) {
 				
 				unset( self::$routes[$index] );
 				
 			}
+			
+			remove_action( $action, $method, $priority );
 			
 		}
 	    

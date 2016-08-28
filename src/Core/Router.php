@@ -4,11 +4,13 @@
     
     use Routes;
     
-    class Router {
+    class Router extends Flow {
 	    
 	    public static $routes = [];
 		
 		public static function map( $route, $callback ) {
+			
+			$callback = self::getCallback($callback);
 			
 			Routes::map($route, $callback);
 			
@@ -19,7 +21,9 @@
 			
 		}
 		
-		public static function mapped( $route, $callback ) {
+		public static function isMapped( $route, $callback ) {
+			
+			$callback = self::getCallback($callback);
 			
 			return array_search(array_merge(array(
 				'route' => '',

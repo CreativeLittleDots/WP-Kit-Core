@@ -2,17 +2,17 @@
     
     namespace WPKit\Core;
     
-    class Invoker {
+    class Invoker extends Flow {
 	    
 	    public static $routes = [];
 		
-		public static function invoke_by_condition( $callback, $action = 'wp', $condition, $priority = 20 ) {
+		public static function invokeByCondition( $callback, $action = 'wp', $condition, $priority = 20 ) {
 			
 			add_action( 'init', function() use($callback, $action, $condition, $priority ) {
 			
 				if( ( is_callable($condition) && call_user_func($condition) ) || ( ! is_callable($condition) && $condition ) ) {
 					
-					self::invoke_by_action( $callback, $action, $priority );
+					self::invokeByAction( $callback, $action, $priority );
 				
 				}
 				
@@ -20,10 +20,9 @@
 			
 		}
 		
-		public static function invoke_by_action( $callback, $action = 'wp', $priority = 20 ) {
+		public static function invokeByAction( $callback, $action = 'wp', $priority = 20 ) {
 			
-			$callback = stripos($callback, '\\') === 0 ? $callback : "App\Controllers\\$callback";
-			$callback = stripos($callback, '::') === 0 ? $callback : array($callback, 'init');
+			$callback = self::getCallback($callback);
 			
 			self::$routes[] = [
 				$callback,
@@ -37,7 +36,7 @@
 		
 		public static function invoked( $callback, $action = 'wp', $priority = 20 ) {
 			
-			$callback = stripos($callback, '::') === 0 ? $callback : array($callback, 'init');
+			$callback = self::getCallback($callback);
 			
 			return array_search(array_merge(array(
 				'callback' => '',
@@ -53,7 +52,7 @@
 		
 		public static function uninvoke( $callback, $action = 'wp', $priority = 20 ) {
 			
-			$callback = stripos($callback, '::') === 0 ? $callback : array($callback, 'init');
+			$callback = self::getCallback($callback);
 			
 			$index = array_search(array_merge(array(
 				'callback' => '',

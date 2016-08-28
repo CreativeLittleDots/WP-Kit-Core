@@ -368,7 +368,7 @@
 		
 		public static function invoke( $callback, $action = 'wp', $condition = true, $priority = 20 ) {
 			
-			Invoker::invoke_by_condition( $callback, $action, $condition, $priority );
+			Invoker::invokeByCondition( $callback, $action, $condition, $priority );
 			
 		}
 		
@@ -392,7 +392,7 @@
 		
 		public static function routed( $route, $callback ) {
 			
-			return Router::mapped( $route, $callback );
+			return Router::isMapped( $route, $callback );
 			
 		}
 		

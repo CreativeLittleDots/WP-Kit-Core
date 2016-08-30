@@ -2,8 +2,8 @@
     
     namespace WPKit\Core;
 
-	class PostType {
-		
+	class PostType extends Singleton {
+
     	var $rewrite = true;
     	var $has_archive = true;
     	var $menu_name = '';
@@ -18,14 +18,6 @@
     	var $row_actions = array();
     	var $public = true;
     	var $publicly_queryable = true;
-    	
-    	public static function init() {
-	    	
-	    	$class = get_called_class();
-	    	
-	    	return new $class();
-	    	
-    	}
 		
 		public function __construct() {
 			

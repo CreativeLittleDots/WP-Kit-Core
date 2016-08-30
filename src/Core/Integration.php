@@ -4,9 +4,11 @@
 
 	class Integration {
     	
-    	var $settings = array();
+    	protected static $instance = null;
     	
-    	public static function init( $settings = array() ) {
+    	public $settings = array();
+    	
+    	public static function instance( $settings = array() ) {
 			
 			$class = get_called_class();
 			

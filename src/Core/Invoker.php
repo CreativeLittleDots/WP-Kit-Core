@@ -4,15 +4,31 @@
     
     class Invoker extends Flow {
 	    
-	    public static $routes = [];
-		
-		public static function invokeByCondition( $callback, $action = 'wp', $condition, $priority = 20 ) {
+	    protected static $instance = null;
+	    
+	   	public static $routes = [];
+	   	
+	   	public static function instance() {
+		   	
+		   	$class = get_called_class();
+	        
+	        if( ! $class::$instance ) {
+				
+				$class::$instance = new $class();
+		        
+	        }
+	        
+	        return $class::$instance;
+	        
+        }
+	    
+	    public static function invokeByCondition( $callback, $action = 'wp', $condition = true, $priority = 20 ) {
 			
-			add_action( 'init', function() use($callback, $action, $condition, $priority ) {
+			add_action( $action, function() use($callback, $action, $condition, $priority ) {
 			
 				if( ( is_callable($condition) && call_user_func($condition) ) || ( ! is_callable($condition) && $condition ) ) {
 					
-					self::invokeByAction( $callback, $action, $priority );
+					self::invoke( $callback, $action, $priority );
 				
 				}
 				
@@ -20,7 +36,7 @@
 			
 		}
 		
-		public static function invokeByAction( $callback, $action = 'wp', $priority = 20 ) {
+		public static function invoke( $callback, $action = 'wp', $priority = 20 ) {
 			
 			$callback = self::getCallback($callback);
 			
@@ -34,11 +50,11 @@
 			
 		}
 		
-		public static function invoked( $callback, $action = 'wp', $priority = 20 ) {
+		public static function isInvoked( $callback, $action = 'wp', $priority = 20 ) {
 			
 			$callback = self::getCallback($callback);
 			
-			return array_search(array_merge(array(
+			$index = array_search(array_merge(array(
 				'callback' => '',
 				'action' => 'wp',
 				'priority' => 20
@@ -46,7 +62,9 @@
 				'callback',
 				'action',
 				'priority'
-			)), self::$routes) > -1 ? true : false;
+			)), self::$routes);
+			
+			return $index > -1 ? (object) self::$routes[$index] : false;
 			
 		}
 		

@@ -24,16 +24,12 @@
         exit;
     }
     
+    use WPKit\Core\Singleton;
     use WPKit\Core\Auth;
     use WPKit\Core\Cache;
     use WPKit\Core\Invoker;
-    use WPKit\Core\Router;
 
-	class Application {
-		
-		protected static $instance;
-		
-		protected static $auth;
+	class Application extends Singleton {
 		
 		protected static $integrations = array();
 		
@@ -48,15 +44,39 @@
 			)
 		);
 		
-		public static function instance() {
+		public static function make($facade = null, $args = array()) {
 			
-			if( is_null( self::$instance ) ) {
+			$class = null;
+			
+			$facade = inflector()->camelize($facade);
+			
+			switch($facade) {
 				
-				self::$instance = new self();
+				default:
+				
+					if( stripos($facade, 'Controller') > 0 ) {
+						
+						if( class_exists( $className = 'App\Controllers\\' . $facade ) ) {
+							
+							$class = $className::instance($args);
+							
+						}
+						
+					} else if( class_exists( $className = "WPKit\Core\\$facade") ) {
+						
+						$class = $className::instance($args);
+						
+					} else if ( class_exists( $facade ) ) {
+						
+						$class = $facade::instance($args);
+						
+					}
+					
+				break;
 				
 			}
 			
-			return self::$instance;
+			return $class;
 			
 		}
 		
@@ -75,6 +95,10 @@
 		}
 		
 		public static function init() {
+			
+			$class = get_called_class();
+			
+			$instance = $class::instance();
 			
 			if( defined( 'FUNCTIONS_DIR' ) && FUNCTIONS_DIR ) {
 			
@@ -97,8 +121,8 @@
 				foreach( glob( POST_TYPES_DIR . DS . '*.php' ) as $post_type ) {
 					
 					$post_type = 'App\PostTypes\\' . basename($post_type, '.php');
-						
-					$post_type::init();
+					
+					$instance::make($post_type);
 					
 				}
 				
@@ -113,8 +137,8 @@
 				foreach( glob( TAXONOMIES_DIR . DS . '*.php' ) as $taxonomy ) {
 					
 					$taxonomy = 'App\Taxonomies\\' . basename($taxonomy, '.php');
-						
-					$taxonomy::init();
+					
+					$instance::make($taxonomy);
 					
 				}
 				
@@ -130,9 +154,9 @@
 	    			
 	    			$class = 'App\Shortcodes\\' . basename($shortcode, '.php');
 	    			
-	    			$shortcode = $class::init();
-					
-					self::$shortcodes[$shortcode->base] = $shortcode;
+	    			$shortcode = $instance::make($class);
+
+					$instance::$shortcodes[$shortcode->base] = $shortcode;
 					
 				}
 				
@@ -162,9 +186,9 @@
 				
 			}
 			
-			self::require_plugins();
+			$instance::require_plugins();
 			
-			self::add_integration('timber-library', [
+			$instance::add_integration('timber-library', [
 				'file' => 'timber-library/timber.php'
 			]);
 			
@@ -286,11 +310,11 @@
 	    		
 	    		if( class_exists( $core_integration_class ) ) {
 	        		
-	        		self::$integrations[$integration] = $core_integration_class::init($settings);
+	        		self::$integrations[$integration] = self::make($core_integration_class, $settings);
 	        		
 	    		} else if( class_exists( $integration_class ) ) {
 	        		
-	        		self::$integrations[$integration] = $integration_class::init($settings);
+	        		self::$integrations[$integration] = self::make($integration_class, $settings);
 	        		
 	    		}
 	    	
@@ -304,37 +328,7 @@
     		
 		}
 		
-		public static function auth($settings = array()) {
-			
-			if( is_null(self::$auth) ) {
-				
-				self::$auth = Auth::init($settings);
-				
-			}
-    		
-    		return self::$auth;
-			
-		}
-		
-		public static function set_var( $key, $val ) {
-    		
-    		return Cache::set( $key, $val );
-    		
-		}
-		
-		public static function get_var( $key ) {
-    		
-    		return Cache::get( $key );
-    		
-		}
-		
-		public static function unset_var( $key ) {
-			
-			Cache::remove( $key );
-			
-		}
-		
-		public static function add_ajax( $ajax, $fn, $public = true, $priority = 10 ) {
+		public static function ajax( $ajax, $fn, $public = true, $priority = 10 ) {
 			
 			if( is_string($ajax) && is_callable($fn) ) {
     					
@@ -350,7 +344,7 @@
 			
 		}
 		
-		public static function remove_ajax( $ajax, $fn, $public = true, $priority = 10 ) {
+		public static function unajax( $ajax, $fn, $public = true, $priority = 10 ) {
 			
 			if( is_string($ajax) && is_callable($fn) ) {
     					
@@ -363,36 +357,6 @@
 				remove_action( 'wp_ajax_' . $ajax, $fn, $priority );
 				
 			}
-			
-		}
-		
-		public static function invoke( $callback, $action = 'wp', $condition = true, $priority = 20 ) {
-			
-			Invoker::invokeByCondition( $callback, $action, $condition, $priority );
-			
-		}
-		
-		public static function uninvoke( $callback, $route = 'init', $priority = 20 ) {
-			
-			Invoker::uninvoke( $callback, $route, $priority );
-			
-		}
-		
-		public static function invoked( $callback, $action = 'init', $priority = 20 ) {
-			
-			return Invoker::invoked( $callback, $action, $priority );
-			
-		}
-		
-		public static function route( $route, $callback ) {
-			
-			Router::map( $route, $callback );
-			
-		}
-		
-		public static function routed( $route, $callback ) {
-			
-			return Router::isMapped( $route, $callback );
 			
 		}
 		

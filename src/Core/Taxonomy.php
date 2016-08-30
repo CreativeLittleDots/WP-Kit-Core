@@ -2,7 +2,7 @@
     
     namespace WPKit\Core;
 
-	class Taxonomy {
+	class Taxonomy extends Singleton {
 		
     	var $rewrite = true;
     	var $slug = '';
@@ -11,14 +11,6 @@
     	var $name = '';
     	var $belongs_to = array();
     	var $post_types = array();
-    	
-    	public static function init() {
-	    	
-	    	$class = get_called_class();
-	    	
-	    	return new $class();
-	    	
-    	}
 		
 		public function __construct() {
     		

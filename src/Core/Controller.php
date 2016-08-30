@@ -2,50 +2,30 @@
     
     namespace WPKit\Core;
     
-    use WPKit;
-    
-    class Controller {
+    class Controller extends Singleton {
         
-        public static $scripts = [];
-        public static $scripts_action = 'wp_enqueue_scripts';
+        protected $scripts = [];
+        protected $scripts_action = 'wp_enqueue_scripts';
         
-        public static function init() {
-	        
-	        $class = get_called_class();
-	        
-	        if( wpkit()->invoked( $class, current_filter() ) ) {
-		        
-		        return false;
-		        
-	        }
+        public function beforeFilter() {
 			
-			add_action( $class::$scripts_action, array($class, 'enqueue_scripts') );
-
-			return new $class();
+			add_action( $this->scripts_action, array($this, 'enqueueScripts') );
 			
 		}
         
-        public static function get_scripts() {
-            
-            $class = get_called_class();
+        protected function getScripts() {
 	        
-	        return $class::$scripts;
+	        return $this->scripts;
 	        
         }
         
-        public static function enqueue_scripts() {
-    			
-			self::_enqueue_scripts( call_user_func( array( get_called_class(), 'get_scripts') ) ); 
+        public function enqueueScripts() {
 			
-        }
-        
-        private static function _enqueue_scripts($scripts) {
-			
-			foreach($scripts as $script) {
+			foreach($this->getScripts() as $script) {
 				
 				$script = is_array($script) ? $script : ['file' => $script];
 				
-				if ( $script['file'] = self::get_script_path( $script['file'] ) ) {
+				if ( $script['file'] = $this->getScriptPath( $script['file'] ) ) {
 						
     				$info = pathinfo( $script['file'] );
     				
@@ -134,7 +114,7 @@
 			
 		}
 		
-		private static function get_script_path( $file ) {
+		private function getScriptPath( $file ) {
     		
     		if( ! filter_var( $file , FILTER_VALIDATE_URL) === false ) {
         		
@@ -152,7 +132,7 @@
     		
 		}
 		
-		public function render( $view, $vars = array(), $echo = true ) {
+		protected function render( $view, $vars = array(), $echo = true ) {
 			
 			$path = str_replace( 'Controller', '', implode( '/', explode( '\\', str_replace( 'App\Controllers\\', '', get_called_class() ) ) ) );
 			

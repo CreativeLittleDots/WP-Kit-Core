@@ -2,7 +2,7 @@
     
     namespace WPKit\Core;
 
-	class Cache {
+	class Cache extends Singleton {
 		
 		public static $vars;
 		

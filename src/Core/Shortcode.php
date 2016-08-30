@@ -4,7 +4,7 @@
     
     use Timber;
 
-	class Shortcode {
+	class Shortcode extends Singleton {
     	
     	var $compose = true;    	
 
@@ -30,14 +30,6 @@
         var $deprecated = false;
         var $content_element = true;
         var $params = array();
-    	
-    	public static function init() {
-        	
-        	$class = get_called_class();
-        	
-        	return new $class();
-        	
-        }
         
         public function __construct() {
             

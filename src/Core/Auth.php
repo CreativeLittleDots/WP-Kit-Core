@@ -2,15 +2,9 @@
     
     namespace WPKit\Core;
 
-	class Auth {
+	class Auth extends Singleton {
     	
-    	var $settings = array();
-    	
-    	public static function init( $settings = array() ) {
-			
-			return new self( $settings );
-			
-		}
+    	public $settings = array();
     	
     	public function __construct( $settings ) {
 	    	

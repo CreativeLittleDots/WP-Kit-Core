@@ -6,7 +6,23 @@
     
     class Router extends Flow {
 	    
-	    public static $routes = [];
+	    protected static $instance = null;
+	    
+	   	public static $routes = [];
+	   	
+	   	public static function instance() {
+		   	
+		   	$class = get_called_class();
+	        
+	        if( ! $class::$instance ) {
+
+				$class::$instance = new $class();
+		        
+	        }
+	        
+	        return $class::$instance;
+	        
+        }
 		
 		public static function map( $route, $callback ) {
 			
@@ -21,7 +37,16 @@
 			
 		}
 		
-		public static function isMapped( $route, $callback ) {
+		public function defaultToRest() {
+			
+			$restController = new RestController();
+			
+			Routes::map('/:controller/:action/:id', array($restController, 'action'));
+			Routes::map('/:controller/:action', array($restController, 'action'));
+			
+		}
+		
+		public function isMapped( $route, $callback ) {
 			
 			$callback = self::getCallback($callback);
 			

@@ -13,7 +13,7 @@
 		}
 	],
 	"require": {
-        "php": ">=5.5.34",
+        "php": ">=5.4.45",
         "tgmpa/tgm-plugin-activation": "2.5.0",
         "querypath/QueryPath": "*",
         "icanboogie/inflector": "*"

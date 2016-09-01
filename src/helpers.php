@@ -284,7 +284,9 @@
             $title = single_term_title( '', false );
         } elseif( get_queried_object() instanceof WP_Post ) {
             $title = __( get_queried_object()->post_title );
-        } elseif( $post ) {
+        } elseif ( is_search() ) {
+            $title = sprintf( __( 'Search Results: &ldquo;%s&rdquo;', 'woocommerce' ), get_search_query() );
+        }  elseif( $post ) {
             $title = get_post_type_object($post->post_type)->labels->name;
         } else {
             $title = __( 'Archives' );

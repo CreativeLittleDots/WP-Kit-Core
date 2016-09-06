@@ -6,10 +6,11 @@
         
         protected $scripts = [];
         protected $scripts_action = 'wp_enqueue_scripts';
+        protected $scripts_priority = 10;
         
         public function beforeFilter() {
 			
-			add_action( $this->scripts_action, array($this, 'enqueueScripts') );
+			add_action( $this->scripts_action, array($this, 'enqueueScripts'), $this->scripts_priority );
 			
 		}
         

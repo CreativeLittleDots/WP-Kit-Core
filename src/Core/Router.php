@@ -6,11 +6,11 @@
     
     class Router extends Flow {
 	    
-	    protected static $instance = null;
-	    
-	   	public static $routes = [];
+		protected static $instance = null;
+		
+		public static $routes = [];
 	   	
-	   	public static function instance() {
+		public static function instance() {
 		   	
 		   	$class = get_called_class();
 	        
@@ -24,21 +24,28 @@
 	        
         }
 		
-		public static function map( $route, $callback ) {
+		public static function map( $route, $callback, $method = 'get' ) {
 			
-			$controller = self::getController($callback);
-
-			Routes::map($route, function() use($controller, $callback) {
-				
-				call_user_func(array($controller, 'beforeFilter'));
-				call_user_func(self::getCallback($callback));
-				
-			});
+			$methods = is_array( $method ) ? $method : array_map( 'strtolower', array( $method ) );
 			
-			self::$routes[] = [
-				$route,
-				$callback
-			];
+			if( in_array( strtolower( $_SERVER['REQUEST_METHOD'] ), $methods ) ) {
+			
+				$controller = self::getController($callback);
+	
+				Routes::map($route, function() use($controller, $callback) {
+					
+					call_user_func(array($controller, 'beforeFilter'));
+					call_user_func(self::getCallback($callback));
+					
+				});
+				
+				self::$routes[] = [
+					$route,
+					$callback,
+					$method
+				];
+				
+			}
 			
 		}
 		

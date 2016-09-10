@@ -6,7 +6,7 @@
 	
 	class ContactController extends Controller {
 		
-		public static  $scripts = [
+		public $scripts = [
 			[
 				'type' => 'js',
 				'handle' => 'google-map',
@@ -14,7 +14,7 @@
 			]
 		];
 		
-		public static function get_scripts() {
+		public function getScripts() {
 			
 			$exploded_string = explode('@', get_field('google_map', 'option'));
 			
@@ -24,7 +24,7 @@
 			
 			$longitude = $further_exploded_string[1];
 			
-			self::$scripts[] = [
+			$this->scripts[] = [
 				'file' => 'map.js',
 				'localize' => [
 					'name' => 'map',
@@ -36,7 +36,7 @@
 				]
 			];
 			
-			return parent::get_scripts();
+			return parent::getScripts();
 			
 		}
 		

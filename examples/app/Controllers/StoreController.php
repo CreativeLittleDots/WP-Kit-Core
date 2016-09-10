@@ -7,7 +7,7 @@
 	
 	class StoreController extends Controller {
         
-        public function __construct() {
+        public function beforeFilter() {
            
           	remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper' );
 			remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
@@ -21,6 +21,8 @@
 			remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end' );
 			remove_action( 'woocommerce_before_shop_loop', 'wc_print_notices' );
 			remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end' );
+			
+			parent::beforeFilter();
 			            
         }
  		

@@ -6,13 +6,15 @@
 	
 	class ProductController extends Controller {
         
-        public function __construct() {
+        public function beforeFilter() {
            
            	remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper' );
 			remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
 			add_action( 'woocommerce_before_main_content', array($this, 'display_product_block') );
 			remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end' );
 			add_filter( 'woocommerce_product_description_heading', '__return_false' );
+			
+			parent::beforeFilter();
 
 			            
         }

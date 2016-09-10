@@ -6,13 +6,15 @@
 	
 	class PostController extends Controller {
 		
-		public function __construct() {
+		public function beforeFilter() {
 			
 			add_action( 'after_post_archive_title', array($this, 'after_post_archive_title') );
 			add_action( 'archive_detail_post_display_meta', array($this, 'archive_detail_post_display_meta') );
 			add_action( 'archive_loop_post_display_meta', array($this, 'archive_loop_post_display_meta') );
 			add_filter( 'the_content', array($this, 'ext_link_to_new_tab') );
 			add_filter( 'the_excerpt', array($this, 'ext_link_to_new_tab') );
+			
+			parent::beforeFilter();
 			
 		}
 		

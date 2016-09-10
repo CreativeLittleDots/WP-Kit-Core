@@ -3,26 +3,51 @@
     namespace WPKit\Core;
     
     class Flow extends Singleton {
-		
-		protected static function getCallback($callback) {
+	    
+	    protected static function getController($callback) {
+		    
+		    $controller = false;
 			
 			if( is_string($callback) ) {
 			
 				$callback = stripos($callback, '\\') === 0 ? $callback : "App\Controllers\\$callback";
-				$callback = stripos($callback, '::') === false ? $callback . '::beforeFilter' : $callback;
-				$callback = explode('::', $callback);
-				
-				$class = $callback[0];
-				
-				if( class_exists( $class ) ) {
-					
-					$callback[0] = $class::instance();
-					
-				}
+				$controller = stripos($callback, '::') === false ? $callback : explode('::', $callback);
+				$controller = is_array($controller) ? reset($controller) : $controller;
+				$controller = $controller::instance();
 			
 			}
 			
-			return $callback;
+			return $controller;
+			
+		}
+		
+		protected static function getMethod($callback) {
+			
+			$method = false;
+			
+			if( is_string($callback) ) {
+			
+				$method = stripos($callback, '::') === false ? false : explode('::', $callback);
+				$method = is_array($method) ? end($method) : $method;
+			
+			}
+			
+			return $method;
+			
+		}
+		
+		protected static function getCallback($callback) {
+			
+			$controller = self::getController($callback);
+			$method = self::getMethod($callback);
+			
+			if( $controller && $method ) {
+				
+				return array($controller, $method);
+				
+			}
+			
+			return false;
 			
 		}
 	    

@@ -30,16 +30,16 @@
 	     *
 	     * @var Array
 	     */
-    	public static $scripts = [];
+    	public $scripts = [];
     	
     	/**
 	     * get_scripts static method.
 	     *
 	     * @return Array
 	     */
-    	public static function get_scripts() {
+    	public function getScripts() {
 	        
-	        return parent::get_scripts();
+	        return parent::getScripts();
 			
 		}
 		
@@ -48,8 +48,10 @@
 	     *
 	     * @return void
 	     */
-		public function __construct() {
+		public function beforeFilter() {
 			
+			parent::beforeFilter();
+
 		}
 		
 	}

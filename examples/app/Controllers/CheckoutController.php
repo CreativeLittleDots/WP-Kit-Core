@@ -6,7 +6,7 @@
 	
 	class CheckoutController extends Controller {
         
-        public function __construct() {
+        public function beforeFilter() {
 			
 			add_action( 'woocommerce_before_checkout_form' , array($this, 'show_notification_if_cart_exceeded') );
 			
@@ -15,6 +15,8 @@
 			add_filter( 'woocommerce_available_payment_gateways', array( $this, 'remove_bank_transfer_if_customer') );
 		
 			add_action( 'woocommerce_thankyou_bacs', array($this, 'complete_order_if_admin') );
+			
+			parent::beforeFilter();
             
         }
 		

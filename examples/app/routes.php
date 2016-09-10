@@ -2,21 +2,44 @@
     
     // set your invoked calls here
     
-    wpkit()->invoke( 'AppController' );
-    wpkit()->invoke( 'AjaxController' );
-    wpkit()->invoke( 'FormController' );
-    wpkit()->invoke( 'StoreController', 'is_shop', 'condition' );
-    wpkit()->invoke( 'ProductController', 'is_product', 'condition' );
-    wpkit()->invoke( 'AccountController', 'my-account', 'page' );
-    wpkit()->invoke( 'CartController', 'woocommerce_cart_loaded_from_session' );
-    wpkit()->invoke( 'ContactController', 'contact-us', 'page' );
-    wpkit()->invoke( 'CheckoutController', 'is_checkout', 'condition' );
+    invoke( 'AppController' );
     
-    wpkit()->invoke( 'EventController' );
-    wpkit()->invoke( 'LoginController' );
-    wpkit()->invoke( 'PostController' );
-    wpkit()->invoke( 'UserController' );
-    wpkit()->invoke( 'AdminController', 'admin_init' );
-    wpkit()->invoke( 'FeedbackController', function() {
+    invoke( 'AjaxController' );
+    
+    invoke( 'FormController' );
+    
+    invoke( 'StoreController', 'wp', 'is_shop' );
+    
+    invoke( 'ProductController', 'wp', 'is_product' );
+    
+    invoke( 'AccountController', 'wp', function() {
+	    
+	    return is_page( 'my-account' );
+	     
+	});
+	
+    invoke( 'CartController', 'woocommerce_cart_loaded_from_session' );
+    
+    invoke( 'ContactController', 'wp', function() {
+	 
+		return is_page( 'contact-us' );   
+	    
+	} );
+	
+    invoke( 'CheckoutController', 'wp', 'is_checkout' );
+    
+    invoke( 'EventController' );
+    
+    invoke( 'LoginController' );
+    
+    invoke( 'PostController' );
+    
+    invoke( 'UserController' );
+    
+    invoke( 'AdminController', 'admin_init' );
+    
+    invoke( 'FeedbackController', 'wp', function() {
+	    
     	return is_page('Feedback');
+    	
     } );

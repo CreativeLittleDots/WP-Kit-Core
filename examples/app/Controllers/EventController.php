@@ -6,7 +6,7 @@
 	
 	class EventController extends Controller {
 		
-		public function __construct() {
+		public function beforeFilter() {
 			
 			add_action( 'acf/save_post', array($this, 'invite_users'), 10, 2 );
 			add_action( 'after_event_archive_title', array($this, 'archive_detail_event_display_meta') );
@@ -19,6 +19,8 @@
 			add_action( 'gform_replace_merge_tags', array($this, 'replace_event_info'), 10, 7 );
 			add_action( 'gform_custom_merge_tags', array($this, 'custom_event_merge_tags'), 10, 4 );
 			add_action( 'index_args_event', array($this, 'index_args') );
+			
+			parent::beforeFilter();
 			
 		}
 		

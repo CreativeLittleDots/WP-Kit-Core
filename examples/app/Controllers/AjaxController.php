@@ -7,9 +7,9 @@
 	
 	class AjaxController extends Controller {
 	    
-	    public function __construct() {
+	    public function beforeFilter() {
 			
-			wpkit()->add_ajax( 'search_courses', array($this, 'search_courses') );
+			wpkit()->ajax( 'search_courses', array($this, 'search_courses') );
 	        
 	    }
 		

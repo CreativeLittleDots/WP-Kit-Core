@@ -6,7 +6,7 @@
 	
 	class FormController extends Controller {
         
-        public function __construct() {
+        public function beforeFilter() {
 	        
 	        add_filter( 'gform_form_settings', array($this, 'form_terms_settings'), 10, 2);
 			
@@ -33,6 +33,8 @@
 			add_filter( 'gform_init_scripts_footer', '__return_true' );
 			
 			add_filter( 'gform_validation_message', array($this, 'change_message'), 10, 2);
+			
+			parent::beforeFilter();
             
         }
 		

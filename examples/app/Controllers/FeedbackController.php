@@ -6,12 +6,14 @@
 	
 	class FeedbackController extends Controller {
 		
-		public function __construct() {
+		public function beforeFilter() {
 			
 			add_filter( 'gform_pre_render_5', array($this, 'form_render'), 12 );
             add_filter( 'gform_pre_validation_5', array($this, 'form_render') );
             add_filter( 'gform_pre_submission_filter_5', array($this, 'form_render') );
             add_filter( 'gform_admin_pre_render_5', array($this, 'form_render') );
+            
+            parent::beforeFilter();
 			
 		}
 		

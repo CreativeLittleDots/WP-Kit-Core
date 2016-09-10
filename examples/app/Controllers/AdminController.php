@@ -6,11 +6,11 @@
 	
 	class AdminController extends Controller {
 		
-		public static  $assets = [
+		public $scripts = [
 			'admin.css'
 		];
 		
-		public function __construct() {
+		public function beforeFilter() {
 			
 			add_filter( 'acf/update_value/name=welcome_message', array($this, 'set_welcome_id'), 10, 3);
 		    
@@ -33,6 +33,8 @@
 	    	$labels->search_items = 'Search News';
 	    	$labels->not_found = 'No News found';
 	    	$labels->not_found_in_trash = 'No News found in Trash';
+	    	
+	    	parent::beforeFilter();
 			
 		}
 		

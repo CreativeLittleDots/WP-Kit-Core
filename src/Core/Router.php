@@ -26,9 +26,14 @@
 		
 		public static function map( $route, $callback ) {
 			
-			$callback = self::getCallback($callback);
-			
-			Routes::map($route, $callback);
+			$controller = self::getController($callback);
+
+			Routes::map($route, function() use($controller, $callback) {
+				
+				call_user_func(array($controller, 'beforeFilter'));
+				call_user_func(self::getCallback($callback));
+				
+			});
 			
 			self::$routes[] = [
 				$route,

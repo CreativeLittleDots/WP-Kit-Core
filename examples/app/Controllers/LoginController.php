@@ -6,9 +6,11 @@
 	
 	class LoginController extends Controller {
 		
-		public function __construct() {
+		public function beforeFilter() {
 			
 			add_action( 'login_form_lostpassword', array($this, 'redirect_to_custom_lostpassword') );
+			
+			parent::beforeFilter();
 			
 		}
 		

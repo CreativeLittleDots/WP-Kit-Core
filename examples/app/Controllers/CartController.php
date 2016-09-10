@@ -6,13 +6,15 @@
 	
 	class CartController extends Controller {
         
-        public function __construct()() {
+        public function beforeFilter()() {
 	        			
 			add_action( 'woocommerce_before_cart' , array($this, 'show_notification_if_cart_exceeded') );
 			
 			add_action( 'gettext', array($this, 'coupon_to_voucher') );
 			
 			add_filter( 'woocommerce_add_to_cart_fragments', array($this, 'cart_fragments') );
+			
+			parent::beforeFilter();
             
         }
 		

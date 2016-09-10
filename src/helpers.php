@@ -324,6 +324,26 @@
     }
     
     /*----------------------------------------------*\
+    	#INVOKE FUNCTION
+    \*----------------------------------------------*/
+    
+    function invoke( $callback, $action = 'wp', $condition = null, $priority = null ) {
+	    
+	    $priority = is_null( $priority ) ? ( is_numeric( $condition ) ? $condition : 20 ) : 20;
+	    
+	    if( is_null( $condition ) ) {
+		    
+		    return wpkit()->make('invoker')->invoke( $callback, $action, $priority );
+		    
+	    } else {
+		    
+		    return wpkit()->make('invoker')->invokeByCondition( $callback, $action, $condition, $priority );
+		    
+	    }
+	    
+    }
+    
+    /*----------------------------------------------*\
     	#MULTISITE
     \*----------------------------------------------*/
     	    

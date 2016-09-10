@@ -6,7 +6,7 @@
 	
 	class AccountController extends Controller {
 		
-		public static  $scripts = [
+		public $scripts = [
 			[
 				'type' => 'js',
 				'handle' => 'google-map',
@@ -14,7 +14,7 @@
 			]
 		];
 		
-		public static function get_scripts() {
+		public function getScripts() {
 			
 			if($postcode = get_user_meta(get_current_user_id(), 'billing_postcode', true)) {
 				
@@ -42,7 +42,7 @@
 				
 			}
 			
-			self::$scripts[] = [
+			$this->scripts[] = [
 				'file' => 'map.js',
 				'localize' => [
 					'name' => 'map',
@@ -54,7 +54,7 @@
 				]
 			];
 			
-			return parent::get_scripts();
+			return parent::getScripts();
 			
 		}
 		

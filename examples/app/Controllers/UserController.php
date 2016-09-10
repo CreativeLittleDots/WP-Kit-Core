@@ -6,17 +6,19 @@
 	
 	class UserController extends Controller {
 	    
-	    public function __construct() {
+	    public function beforeFilter() {
 			
-			wpkit()->add_ajax( 'user_login', array($this, 'user_login') );
-			wpkit()->add_ajax( 'validate_user_email', array($this, 'validate_user_email') );
-			wpkit()->add_ajax( 'user_accept_notifications', array($this, 'user_accept_notifications'), false );
-			wpkit()->add_ajax( 'user_action_event', array($this, 'user_action_event'), false );
-			wpkit()->add_ajax( 'user_get_unactioned_events', array($this, 'user_get_unactioned_events'), false );
-			wpkit()->add_ajax( 'user_like_post', array($this, 'user_like_post'), false );
-			wpkit()->add_ajax( 'user_unlike_post', array($this, 'user_unlike_post'), false );
+			wpkit()->ajax( 'user_login', array($this, 'user_login') );
+			wpkit()->ajax( 'validate_user_email', array($this, 'validate_user_email') );
+			wpkit()->ajax( 'user_accept_notifications', array($this, 'user_accept_notifications'), false );
+			wpkit()->ajax( 'user_action_event', array($this, 'user_action_event'), false );
+			wpkit()->ajax( 'user_get_unactioned_events', array($this, 'user_get_unactioned_events'), false );
+			wpkit()->ajax( 'user_like_post', array($this, 'user_like_post'), false );
+			wpkit()->ajax( 'user_unlike_post', array($this, 'user_unlike_post'), false );
 			
 			add_filter('show_admin_bar', array($this, 'show_admin_bar') );
+			
+			parent::beforeFilter();
 	        
 	    }
 	    

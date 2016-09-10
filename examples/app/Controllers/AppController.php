@@ -6,7 +6,7 @@
 	
 	class AppController extends Controller {
     	
-    	public static $scripts = [
+    	public $scripts = [
         	'parties/svg4everybody.min.js',
         	'parties/jquery-2.2.4.min.js',
         	'parties/jquery.serializeObject.js',
@@ -21,11 +21,11 @@
         	'style.css',
     	];
     	
-    	public static function get_scripts() {
+    	public function getScripts() {
 	        
 	        if( is_user_logged_in() ) {
     	        
-    	        self::$scripts = array_merge(self::$scripts, [
+    	        $this->scripts = array_merge($this->scripts, [
         	        'parties/mustache.min.js',
         	        'parties/gsap.min.js',
         	        'parties/jquery.selectric.min.js',
@@ -45,7 +45,7 @@
 	            
 	        } else {
     	        
-    	        self::$scripts = array_merge(self::$scripts, [
+    	        $this->scripts = array_merge($this->scripts, [
         	        [
         	            'file' => 'login.min.js',
         	            'localize' => [
@@ -61,11 +61,11 @@
 	            
 	        }
 	        
-	        return parent::get_scripts();
+	        return parent::getScripts();
 			
 		}
 		
-		public function __construct() {
+		public function beforeFilter() {
     		
     		// maybe you'd like to set authentication
     		
@@ -109,6 +109,8 @@
 			add_filter( 'wp_calculate_image_srcset', '__return_false' );
 			
 			add_filter( 'script_loader_tag', array($this, 'clean_script_tag') );
+			
+			parent::beforeFilter();
 			
 		}
 		

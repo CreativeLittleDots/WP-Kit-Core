@@ -22,14 +22,15 @@
         /* General meta data*/
         protected static $meta = [];
         
+        /* Check if is new model*/
+        protected $is_new = false;
+        
     	
     	public function __construct( $entity = null ) {
 	    	
         	if( $entity ) {
 	        	
-	        	$class = get_called_class();
-	        	
-	        	$model = $class::$model;
+	        	$model = self::getModel();
         	
 	            $entity = $entity instanceOf $model ? $entity : $model::get_instance( $entity );
 
@@ -40,7 +41,6 @@
 		            $this->id = $entity->ID;
 		            $this->title = $entity->post_title;
 					$this->status = $entity->post_status;
-					$this->post_type = $class::getPostType();
 		            
 	            }
 	            
@@ -68,9 +68,11 @@
     	
     	public function getMeta() {
 	    	
+	    	$class = get_called_class();
+	    	
 	    	$meta_data = array();
 	    	
-	    	foreach($this->meta as $meta_key) {
+	    	foreach($class::$meta as $meta_key) {
 		    	
 		    	$meta_data[$meta_key] = $this->$meta_key;
 		    	
@@ -86,11 +88,17 @@
 	    	
     	}
     	
+    	public function isNew() {
+	    	
+	    	return $this->is_new;
+	    	
+    	}
+    	
     	public function getPostArgs($args = array()) {
 	    	
 	    	return array_merge(array(
 		    	'post_title' => $this->title ? $this->title : null,
-		    	'post_type' => $this->post_type ? $this->post_type : 'post',
+		    	'post_type' => self::getPostType(),
 		    	'meta_query' => array_map(function($key, $value) {
 			    	return compact('key', 'value');
 		    	}, array_keys($this->getMeta()), $this->getMeta())
@@ -102,7 +110,7 @@
     	
     	public function findOrCreate($args = array()) {
 	    	
-	    	if( $this->model == 'WP_Post' ) {
+	    	if( self::getModel() == 'WP_Post' ) {
 	        
 		        if( $posts = get_posts( $this->getPostArgs($args) ) ) {
 			        
@@ -130,14 +138,14 @@
         
         public function save() {
 	        
-	        if( $this->model == 'WP_Post' ) {
+	        if( self::getModel() == 'WP_Post' ) {
 	        
 		        if( $this->id ) {
 			        
 			        wp_update_post(array(
 				        'ID' => $this->id,
 				        'post_title' => $this->title,
-				        'post_type' => $this->post_type,
+				        'post_type' => self::getPostType(),
 				        'post_status' => $this->status,
 			        ));
 			        
@@ -145,9 +153,11 @@
 			        
 			    	$this->id = wp_insert_post(array(
 				        'post_title' => $this->title,
-				        'post_type' => $this->post_type,
+				        'post_type' => self::getPostType(),
 				        'post_status' => $this->status,
 			        )); 
+			        
+			        $this->is_new = true;
 			        
 		        }
 		        

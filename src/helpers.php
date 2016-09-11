@@ -93,10 +93,30 @@
     	#NICE VAR DUMP
     \*----------------------------------------------*/
      
-    function nice($content) {
+    function nice($content, $echo = true) {
+	    
+	    ob_start();
+	    
         echo '<pre class="var-dump">';
+        
         print_r($content);
+        
         echo '</pre>';
+        
+        $html = ob_get_contents();
+        
+        ob_end_clean();
+        
+        if( $echo ) {
+	        
+	        echo $html;
+	        
+        } else {
+	        
+	        return $html;
+	        
+        }
+        
     }
     
     

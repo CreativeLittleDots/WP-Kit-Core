@@ -27,7 +27,7 @@
 			
 			if( is_string($callback) ) {
 			
-				$method = stripos($callback, '::') === false ? false : explode('::', $callback);
+				$method = stripos($callback, '::') === false ? 'beforeFilter' : explode('::', $callback);
 				$method = is_array($method) ? end($method) : $method;
 			
 			}

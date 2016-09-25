@@ -381,6 +381,8 @@
 		
 		global $wpdb;
 		
+		$current_blog = get_current_blog_id();
+		
 		$blogArgs = array(
 		    'network_id' => $wpdb->siteid,
 		    'public'     => is_user_logged_in() ? null : 1,
@@ -392,13 +394,13 @@
 		    'offset'     => 1,
 		);
 		
-		$blogs = wp_get_sites( $blogArgs );
+		$blogs = get_sites( $blogArgs );
 		
 		foreach($blogs as $i => $blog) {
 			
-			$status = get_blog_status($blog['blog_id'], 'public');
+			$status = get_blog_status($blog->blog_id, 'public');
 			
-			if( ! $status && ( ! is_user_logged_in() || ( ! is_user_member_of_blog(get_current_user_id(), $blog['blog_id']) && !is_super_admin() ) ) )
+			if( ! $status && ( ! is_user_logged_in() || ( ! is_user_member_of_blog(get_current_user_id(), $blog->blog_id) && !is_super_admin() ) ) )
 				unset($blogs[$i]);
 			
 		}
@@ -433,13 +435,13 @@
 		
 		foreach($blogs as $blog) {
 			
-			switch_to_blog($blog['blog_id']);
+			switch_to_blog( $blog->blog_id );
 			
 			$blog_posts = get_posts($args);
 			
 			foreach($blog_posts as $blog_post) {
 				
-				$blog_post->blog_id = $blog['blog_id'];
+				$blog_post->blog_id = $blog->blog_id;
 				
 				if($orderby === 'date') 
 					$ordering = strtotime($blog_post->$orderbyVal);

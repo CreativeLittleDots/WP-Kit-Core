@@ -4,6 +4,8 @@
 
 	class Taxonomy extends Singleton {
 		
+		var $blog_ids = [];
+		var $exclude_blog_ids = [];
     	var $rewrite = true;
     	var $slug = '';
     	var $hierarchical = false;
@@ -13,6 +15,18 @@
     	var $post_types = array();
 		
 		public function __construct() {
+    		
+    		if( $this->blog_ids && ! in_array( get_current_blog_id(), $this->blog_ids ) ) {
+				
+				return;
+				
+			}
+			
+			if( $this->exclude_blog_ids && in_array( get_current_blog_id(), $this->exclude_blog_ids ) ) {
+				
+				return;
+				
+			}
     		
     		if( $this->slug ) {
         		

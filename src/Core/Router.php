@@ -32,10 +32,10 @@
 			
 				$controller = self::getController($callback);
 	
-				Routes::map($route, function() use($controller, $callback) {
+				Routes::map($route, function( $params ) use($controller, $callback) {
 					
-					call_user_func(array($controller, 'beforeFilter'));
-					call_user_func(self::getCallback($callback));
+					call_user_func( array($controller, 'beforeFilter'), $params );
+					call_user_func( self::getCallback($callback), $params );
 					
 				});
 				

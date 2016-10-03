@@ -331,7 +331,7 @@
 		    
 		    $this->afterSave();
 		    
-		    return $this;
+		    return $this->id;
 	        
         }
         

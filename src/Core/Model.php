@@ -67,15 +67,7 @@
 			            
 		            }
 		            
-		            $this->id = $entity->ID;
-		            $this->title = $entity->post_title;
-		            $this->content = $entity->post_content;
-		            $this->url = get_permalink( $entity->ID );
-		            $this->blog_id = $entity->blog_id;
-					$this->author_id = $entity->author;
-					$this->thumbnail_id = get_post_thumbnail_id( $entity->ID );
-					$this->date_modified = get_post_modified_time( 'Y-m-d', false, $entity->ID );
-					$this->status = $entity->post_status;
+		            $this->beforePopulate( $entity );
 					
 					if( is_multisite() && $entity->blog_id ) {
 			            
@@ -266,7 +258,25 @@
 	    	
     	}
     	
-    	public function populate( $post ) {}
+    	public function beforePopulate( $entity ) {
+	    	
+	    	if( self::getModel() == 'WP_Post' ) {
+		    	
+		    	$this->id = $entity->ID;
+	            $this->title = $entity->post_title;
+	            $this->content = $entity->post_content;
+	            $this->url = get_permalink( $entity->ID );
+	            $this->blog_id = $entity->blog_id;
+				$this->author_id = $entity->author;
+				$this->thumbnail_id = get_post_thumbnail_id( $entity->ID );
+				$this->date_modified = get_post_modified_time( 'Y-m-d', false, $entity->ID );
+				$this->status = $entity->post_status;
+		    	
+		    }
+	    	
+    	}
+    	
+    	public function populate( $entity ) {}
     	
     	public function findOrCreate($args = array()) {
 	    	
@@ -305,8 +315,8 @@
 			        wp_update_post(array(
 				        'ID' => $this->id,
 				        'post_title' => $this->title,
-				        'post_type' => self::getPostType(),
 				        'post_status' => $this->status,
+				        'post_content' => $this->content
 			        ));
 			        
 		        } else {
@@ -315,6 +325,7 @@
 				        'post_title' => $this->title,
 				        'post_type' => self::getPostType(),
 				        'post_status' => $this->status,
+				        'post_content' => $this->content
 			        )); 
 			        
 			        $this->is_new = true;
@@ -326,6 +337,8 @@
 			        update_post_meta( $this->id, $meta_key, $meta_value );
 			        
 		        }
+		        
+		        $this->beforePopulate( get_post( $this->id ) ); 
 		        
 		    }
 		    

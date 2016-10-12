@@ -26,6 +26,12 @@
 		
 		public static function map( $route, $callback, $method = 'get' ) {
 			
+			if( ! class_exists( 'Routes' ) ) {
+				
+				return;
+				
+			}
+			
 			$methods = is_array( $method ) ? $method : array_map( 'strtolower', array( $method ) );
 			
 			if( in_array( strtolower( $_SERVER['REQUEST_METHOD'] ), $methods ) ) {
@@ -34,8 +40,8 @@
 	
 				Routes::map($route, function( $params ) use($controller, $callback) {
 					
-					call_user_func( array($controller, 'beforeFilter'), $params );
-					call_user_func( self::getCallback($callback), $params );
+					call_user_func(array($controller, 'beforeFilter'));
+					call_user_func_array(self::getCallback($callback), $params);
 					
 				});
 				

@@ -10,6 +10,9 @@
 		/* General entity title */
 		public $title;
 		
+		/* General entity slug */
+		public $slug;
+		
 		/* General entity content */
 		public $content;
 		
@@ -19,14 +22,8 @@
 		/* General entity blog id */
 		public $blog_id;
 		
-		/* General entity author id */
-		public $author_id;
-		
 		/* General entity thumbnail id */
 		public $thumbnail_id;
-		
-		/* General entity date modified */
-		public $date_modified;
 		
 		/* Original WP entity */
         protected $entity;
@@ -38,7 +35,7 @@
 		protected static $model = 'WP_Post';
     	
     	/* In case this is a WP_Post Layered Model, lets set the post type to null */
-    	protected static $post_type;
+    	protected static $post_type = 'post';
     	
         /* General meta data*/
         protected static $meta = [];
@@ -51,16 +48,26 @@
 	    	
         	if( $entity ) {
 	        	
-	        	$model = self::getModel();
-        	
-	            $entity = $entity instanceOf $model ? $entity : ( method_exists( $model, 'get_instance' ) ? $model::get_instance( $entity ) : new $model( $entity ) );
-
-	            $this->entity = $entity;
-	            
-	            if( $model == 'WP_Post' ) {
+	        	try {
+	        	
+		        	$model = self::getModel();
+	        	
+		            $entity = $entity instanceOf $model ? $entity : ( method_exists( $model, 'get_instance' ) ? $model::get_instance( $entity ) : new $model( $entity ) );
+		            
+		            if( $model == 'WP_Post' ) {
+			            
+			            if( $entity->post_type !== self::getPostType() ) {
+				            
+				            throw new \Exception( "This is an incorrect Post Type" );
+				            
+			            }
+			            
+		            }
+		            
+		            $this->entity = $entity;
 		            
 		            if( is_multisite() && $entity->blog_id ) {
-			            
+				            
 			            $current_blog_id = get_current_blog_id();
 			            
 			            switch_to_blog( $entity->blog_id );
@@ -75,9 +82,13 @@
 			            
 		            }
 		            
-	            }
-	            
-	            $this->populate( $entity );
+		            $this->populate( $entity );
+		            
+				} catch(\Exception $e) {
+					
+					wp_die( $e->getMessage() );
+					
+				}
 	            
 			}
         	
@@ -264,6 +275,7 @@
 		    	
 		    	$this->id = $entity->ID;
 	            $this->title = $entity->post_title;
+	            $this->slug = $entity->post_name;
 	            $this->content = $entity->post_content;
 	            $this->url = get_permalink( $entity->ID );
 	            $this->blog_id = $entity->blog_id;
@@ -271,6 +283,16 @@
 				$this->thumbnail_id = get_post_thumbnail_id( $entity->ID );
 				$this->date_modified = get_post_modified_time( 'Y-m-d', false, $entity->ID );
 				$this->status = $entity->post_status;
+		    	
+		    } else if( self::getModel() == 'WP_Term' ) {
+		    	
+		    	$this->id = $entity->term_id;
+	            $this->title = $entity->name;
+	            $this->slug = $entity->slug;
+	            $this->content = $entity->description;
+	            $this->url = get_term_link( $entity->term_id );
+	            $this->blog_id = $entity->blog_id;
+				$this->thumbnail_id = get_term_meta( $entity->term_id, 'thumbnail_id', true );
 		    	
 		    }
 	    	

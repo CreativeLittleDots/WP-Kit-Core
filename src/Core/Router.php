@@ -40,7 +40,12 @@
 	
 				Routes::map($route, function( $params ) use($controller, $callback) {
 					
-					call_user_func(array($controller, 'beforeFilter'));
+					if( $controller ) {
+						
+						call_user_func_array(array($controller, 'beforeFilter'), $params);
+						
+					}
+					
 					call_user_func_array(self::getCallback($callback), $params);
 					
 				});

@@ -103,3 +103,15 @@
     	define( 'WIDGETS_DIR', APP . DS . 'Widgets' );
     	
     }
+    
+    if( ! defined( 'WPKIT_DEBUG' ) ) {
+	    
+	    define( 'WPKIT_DEBUG', false );
+	    
+    }
+    
+    if( ! defined( 'BASE_PATH' ) ) {
+	    
+	    defined( 'BASE_PATH', '' );
+	    
+    }

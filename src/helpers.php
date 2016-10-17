@@ -119,6 +119,46 @@
         
     }
     
+    /*----------------------------------------------*\
+    	#NICE JSON VAR DUMP
+    \*----------------------------------------------*/
+     
+    function wp_nice_json($json, $echo = true) {
+	    
+	    if ( ! WPKIT_DEBUG ) {
+		    
+		    http_response_code( 200 );
+		    
+		    wp_send_json( $json );
+		    
+	    }
+	    
+	    ob_start();
+	    
+        echo '<pre class="var-dump">';
+        
+        echo json_encode($json, JSON_PRETTY_PRINT);
+        
+        echo '</pre>';
+        
+        $json = ob_get_contents();
+        
+        ob_end_clean();
+        
+        if( $echo ) {
+	        
+	        http_response_code( 200 );
+	        
+	        wp_die($json);
+	        
+        } else {
+	        
+	        return $json;
+	        
+        }
+        
+    }
+    
     
     /*----------------------------------------------*\
     	#GET COMPONENT FUNCTION
@@ -132,7 +172,7 @@
 		
 		if( file_exists($file . '.twig') ) {
     		
-    		$html = Timber::compile($path . DS . $template . '.twig', $vars);
+    		$html = Timber\Timber::compile($file . '.twig', $vars);
     		
         } else if( file_exists($file . '.php') ) {
     		
@@ -206,7 +246,7 @@
     
     function twig_this($template, $data) {
 	    
-	    $loader = new TimberLoader( Timber::get_calling_script_dir() );
+	    $loader = new Timber\TimberLoader( Timber\Timber::get_calling_script_dir() );
 	    
 	    return $loader->get_twig()->createTemplate($template)->render($data);
 	    
@@ -381,8 +421,6 @@
 		
 		global $wpdb;
 		
-		$current_blog = get_current_blog_id();
-		
 		$blogArgs = array(
 		    'network_id' => $wpdb->siteid,
 		    'public'     => is_user_logged_in() ? null : 1,
@@ -394,13 +432,13 @@
 		    'offset'     => 1,
 		);
 		
-		$blogs = get_sites( $blogArgs );
+		$blogs = wp_get_sites( $blogArgs );
 		
 		foreach($blogs as $i => $blog) {
 			
-			$status = get_blog_status($blog->blog_id, 'public');
+			$status = get_blog_status($blog['blog_id'], 'public');
 			
-			if( ! $status && ( ! is_user_logged_in() || ( ! is_user_member_of_blog(get_current_user_id(), $blog->blog_id) && !is_super_admin() ) ) )
+			if( ! $status && ( ! is_user_logged_in() || ( ! is_user_member_of_blog(get_current_user_id(), $blog['blog_id']) && !is_super_admin() ) ) )
 				unset($blogs[$i]);
 			
 		}
@@ -435,13 +473,13 @@
 		
 		foreach($blogs as $blog) {
 			
-			switch_to_blog( $blog->blog_id );
+			switch_to_blog($blog['blog_id']);
 			
 			$blog_posts = get_posts($args);
 			
 			foreach($blog_posts as $blog_post) {
 				
-				$blog_post->blog_id = $blog->blog_id;
+				$blog_post->blog_id = $blog['blog_id'];
 				
 				if($orderby === 'date') 
 					$ordering = strtotime($blog_post->$orderbyVal);

@@ -10,23 +10,34 @@
 		    
 		    if( empty( $controller ) ) {
 			    
-			    if( )
-			    
 			    wp_die("Controller is not set");
 			    
 		    }
 		    
 		    if( empty( $action ) ) {
 			    
-			    wp_die("Action is not set");
+			    $action = 'index';
 			    
 		    }
 		    
-		    $controller = inflector()->camelize($controller . '_controller');
+		    $singleController = inflector()->camelize( inflector()->singularize( $controller ) . '_controller');
+		    $pluralController = inflector()->camelize( inflector()->pluralize( $controller ) . '_controller');
 		    
-		    if( ! $class = wpkit()->make($controller) ) {
+		    if( ! $class = wpkit()->make($singleController) ) {
 			    
-			    wp_die("Controller $controller does not exist");
+			    if( ! $class = wpkit()->make($pluralController) ) {
+			    
+			    	wp_die("Controllers $singleController and $pluralController do not exist");
+			    	
+			    } else {
+				    
+				   $controller = $pluralController; 
+				    
+			    }
+			    
+		    } else {
+			    
+			    $controller = $singleController;
 			    
 		    }
 		    

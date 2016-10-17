@@ -50,13 +50,19 @@
 					
 				});
 				
-				self::$routes[] = [
+				self::$routes[] = new Route([
 					$route,
 					$callback,
 					$method
-				];
+				]);
 				
 			}
+			
+		}
+		
+		public static function getRoutes() {
+			
+			return self::$routes;
 			
 		}
 		
@@ -64,22 +70,25 @@
 			
 			$restController = new RestController();
 			
-			Routes::map('/:controller/:action/:id', array($restController, 'action'));
-			Routes::map('/:controller/:action', array($restController, 'action'));
+			Routes::map( BASE_PATH . '/:controller/:action/:id', array( $restController, 'action' ) );
+			Routes::map( BASE_PATH . '/:controller/:action', array( $restController, 'action' ) );
+			Routes::map( BASE_PATH . '/:controller', array( $restController, 'action' ) );
 			
 		}
 		
-		public function isMapped( $route, $callback ) {
+		public function isMapped( $route, $callback, $method = 'get' ) {
 			
 			$callback = self::getCallback($callback);
 			
-			return array_search(array_merge(array(
+			return array_search(new Route(array_merge(array(
 				'route' => '',
 				'callback' => '',
+				'method' => 'get'
 			), compact(
 				'route',
-				'callback'
-			)), self::$routes) > -1 ? true : false;
+				'callback',
+				'method'
+			))), self::$routes) > -1 ? true : false;
 			
 		}
 	    

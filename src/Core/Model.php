@@ -47,13 +47,13 @@
         protected $is_new = false;
         
     	
-    	public function __construct( $entity = null ) {
-	    	
-        	if( $entity ) {
+    	public function __construct( $entity = null, $settings = array() ) {
 	        	
-	        	$model = self::getModel();
-        	
-	            $entity = $entity instanceOf $model ? $entity : ( method_exists( $model, 'get_instance' ) ? $model::get_instance( $entity ) : new $model( $entity ) );
+        	$model = self::getModel();
+    	
+            $entity = $entity instanceOf $model ? $entity : ( method_exists( $model, 'get_instance' ) ? $model::get_instance( $entity ) : new $model( $entity ) );
+            
+			if( $entity ) {
 
 	            $this->entity = $entity;
 	            
@@ -243,7 +243,31 @@
 	    		return get_comments( $args );
 	    		
 	    	}
+	    	
+	    	return false;
     		
+    	}
+    	
+    	public function addComment( $args ) {
+	    	
+	    	if( self::getModel() == 'WP_Post' ) {
+		    	
+		    	global $current_user;
+		    	
+		    	$args = array_merge(array(
+			    	'comment_content' => '',
+			    	'comment_post_ID' => $this->id,
+			    	'comment_author' => $current_user->display_name,
+					'comment_author_email' => $current_user->user_email, 
+			    	'user_id' => $current_user->ID ? $current_user->ID : 73
+		    	), $args);
+		    	
+		    	return wp_insert_comment( $args );
+		    	
+		    }
+		    
+		    return false;
+	    	
     	}
     	
     	public function getPostArgs($args = array()) {

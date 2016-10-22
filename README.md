@@ -1,6 +1,6 @@
 # [WP Kit](http://creativelittle.uk/wpkit) (Core)
 
-The Creative Little WP Kit is a MCEDC (Model Component Event Driven Controller) solution for Wordpress.
+The Creative Little WP Kit is a RAD (Rapid Application Development) solution for Wordpress.
 
 > **Note:** This repository contains the core code of the Creative Little WP Kit. If you want to build your theme using Creative Little WP Kit, visit the main [Creative Little WP Kit](https://github.com/creativelittledots/wp-kit).
 

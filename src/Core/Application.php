@@ -167,6 +167,8 @@
 	        static::$instance = $this;
 	        
 	        $this->version = new SemVersion(self::VERSION);
+	        $this->inWp = ( defined( 'WP_USE_THEMES' ) && WP_USE_THEMES ) || ( defined( 'WP_ADMIN' ) && WP_ADMIN );
+	        
 	        $this->instance('app', $this);
 	        $this->instance('Illuminate\Container\Container', $this);
 			$this->registerBaseProviders();
@@ -562,8 +564,6 @@
 				// admin error
 				
 			}
-			
-			$this->inWp = ( defined( 'WP_USE_THEMES' ) && WP_USE_THEMES ) || ( defined( 'WP_ADMIN' ) && WP_ADMIN );
 			
 			if( $this->inWp ) {
 			

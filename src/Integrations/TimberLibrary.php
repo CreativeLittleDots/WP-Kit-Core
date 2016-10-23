@@ -8,6 +8,12 @@
 	class TimberLibrary extends Integration {
 		
 		public function __construct( $settings ) {
+			
+			if( ! class_exists('Timber') ) {
+				
+				return;
+				
+			}
 	
 			Timber::$locations = array( TIMBER_VIEW_DIR );
 			

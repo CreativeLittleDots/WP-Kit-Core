@@ -24,9 +24,11 @@
         exit;
     }
     
+    use Illuminate\Contracts\Foundation\Application as ApplicationInterface;
 	use vierbergenlars\SemVer\version as SemVersion;
+	use Illuminate\Container\Container;
 
-	class Application extends \Illuminate\Container\Container implements \Illuminate\Contracts\Foundation\Application {
+	class Application extends Container implements ApplicationInterface {
 		
 		/**
 	     * The application's version.
@@ -149,7 +151,13 @@
 	     *
 	     * @var boolean
 	     */
-		protected $inWp = array();
+		protected $inWp = false;
+		/**
+	     * Namespace of App.
+	     *
+	     * @var string
+	     */
+		protected $namespace = 'App';
 		
 		/**
 	     * Constructs the application and ensures it's correctly setup.
@@ -439,7 +447,7 @@
 		    
 	        $this->bootedCallbacks[] = $callback;
 	        
-	        if ($this->isBooted()) $this->fireAppCallbacks(array($callback));
+	        if ( $this->isBooted() ) $this->fireAppCallbacks(array($callback));
 	        
 	    }
 	    
@@ -465,7 +473,9 @@
 		
 		public function boot() {
 			
-			if ($this->booted) return;
+			$namespace = $this->namespace;
+			
+			if ( $this->booted ) return;
 			
 			if( defined( 'FUNCTIONS_DIR' ) && FUNCTIONS_DIR ) {
 			
@@ -487,7 +497,7 @@
 			
 				foreach( glob( POST_TYPES_DIR . DS . '*.php' ) as $post_type ) {
 					
-					$post_type = 'App\PostTypes\\' . basename($post_type, '.php');
+					$post_type = $namespace . '\PostTypes\\' . basename($post_type, '.php');
 					
 					$this->make($post_type);
 					
@@ -503,7 +513,7 @@
 			
 				foreach( glob( TAXONOMIES_DIR . DS . '*.php' ) as $taxonomy ) {
 					
-					$taxonomy = 'App\Taxonomies\\' . basename($taxonomy, '.php');
+					$taxonomy = $namespace .'\Taxonomies\\' . basename($taxonomy, '.php');
 					
 					$this->make($taxonomy);
 					
@@ -519,7 +529,7 @@
 			
 				foreach( glob( SHORTCODES_DIR . DS . '*.php' ) as $shortcode ) {
 	    			
-	    			$class = 'App\Shortcodes\\' . basename($shortcode, '.php');
+	    			$class = $namespace . '\Shortcodes\\' . basename($shortcode, '.php');
 	    			
 	    			$shortcode = $this->make($class);
 
@@ -537,7 +547,7 @@
 			
 				foreach( glob( WIDGETS_DIR . DS . '*.php' ) as $widget) {
 					
-					$class = 'App\Widgets\\' . basename($widget, '.php');
+					$class = $namespace .'\Widgets\\' . basename($widget, '.php');
 					
 					add_action( 'widgets_init', function() use ($widget, $class) {
 	    				
@@ -564,6 +574,14 @@
 				]);
 				
 			}
+			
+		}
+		
+		public function setNamespace($namespace) {
+			
+			$this->namespace = $namespace;
+			
+			return $this;
 			
 		}
 		
@@ -699,20 +717,22 @@
 		public function addIntegration($integration, $settings) {
 			
 			if( $this->inWp ) {
+				
+				$namespace = $this->namespace;
 			
 				if( ! $this->hasIntegration( $integration ) ) {
 				
 					$core_integration_class = 'WPKit\Integrations\\' . inflector()->camelize($integration);
 			    		
-		    		$integration_class = 'App\Integrations\\' . inflector()->camelize($integration);
+		    		$integration_class = $namespace . '\Integrations\\' . inflector()->camelize($integration);
 		    		
 		    		if( class_exists( $core_integration_class ) ) {
 		        		
-		        		//$this->integrations[$integration] = $this->make($core_integration_class, $settings);
+		        		$this->integrations[$integration] = $this->make($core_integration_class, compact('settings'));
 		        		
 		    		} else if( class_exists( $integration_class ) ) {
 		        		
-		        		//$this->integrations[$integration] = $this->make($integration_class, $settings);
+		        		$this->integrations[$integration] = $this->make($integration_class, compact('settings'));
 		        		
 		    		}
 		    	

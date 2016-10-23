@@ -2,7 +2,7 @@
     
     namespace WPKit\Core;
 
-	class Model {
+	class Model { ##deprecated
 		
 		/* General entity id */
 		public $id;
@@ -48,6 +48,8 @@
         
     	
     	public function __construct( $entity = null, $settings = array() ) {
+	    	
+	    	_deprecated_file( __FILE__, '1.3', null, "Please us relative ORM model");
 	        	
         	$model = self::getModel();
     	

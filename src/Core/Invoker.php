@@ -2,11 +2,26 @@
     
     namespace WPKit\Core;
     
-    class Invoker extends Flow {
+    class Invoker extends Singleton {
 	    
-	    protected static $instance = null;
+	    /**
+	     * @var \WPKit\Application
+	     */
+	    protected $app;
 	    
-	   	public static $routes = [];
+		protected static $instance = null;
+		
+		public static $routes = [];
+		
+		/**
+	     * Adds the action hooks for WordPress.
+	     *
+	     * @param \WPKit\Core\Application $app
+	     */
+	    public function __construct(Application $app)
+	    {
+	        $this->app = $app;
+	    }
 	   	
 	   	public static function instance() {
 		   	
@@ -26,7 +41,7 @@
 			
 			add_action( $action, function() use($callback, $action, $condition, $priority ) {
 			
-				if( ( is_callable($condition) && call_user_func($condition) ) || ( ! is_callable($condition) && $condition ) ) {
+				if( ( is_callable($condition) && $this->app->call($condition) ) || ( ! is_callable($condition) && $condition ) ) {
 					
 					self::invoke( $callback, $action, $priority );
 				
@@ -89,6 +104,53 @@
 			}
 			
 			remove_action( $action, $method, $priority );
+			
+		}
+		
+		protected static function getController($callback) {
+		    
+		    $controller = false;
+			
+			if( is_string($callback) ) {
+			
+				$callback = stripos($callback, '\\') === 0 ? $callback : "App\Controllers\\$callback";
+				$controller = stripos($callback, '::') === false ? $callback : explode('::', $callback);
+				$controller = is_array($controller) ? reset($controller) : $controller;
+				$controller = $controller::instance();
+			
+			}
+			
+			return $controller;
+			
+		}
+		
+		protected static function getMethod($callback) {
+			
+			$method = false;
+			
+			if( is_string($callback) ) {
+			
+				$method = stripos($callback, '::') === false ? 'beforeFilter' : explode('::', $callback);
+				$method = is_array($method) ? end($method) : $method;
+			
+			}
+			
+			return $method;
+			
+		}
+		
+		protected static function getCallback($callback) {
+			
+			$controller = self::getController($callback);
+			$method = self::getMethod($callback);
+			
+			if( $controller && $method ) {
+				
+				return array($controller, $method);
+				
+			}
+			
+			return $callback;
 			
 		}
 	    

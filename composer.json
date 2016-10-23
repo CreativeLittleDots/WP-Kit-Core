@@ -1,6 +1,6 @@
 {
 	"name": "creativelittledots/wp-kit-core",
-	"description": "Creative Little WP Kit is a OOEDA (Object Orientated Event Driven Architecture) solution for Wordpress.",
+	"description": "Creative Little WP Kit is a RAD (Rapid Application Development) solution for Wordpress.",
 	"keywords": ["wordpress", "framework", "oop", "creative little wp kit", "Creatie Little WP Kit"],
 	"homepage" : "https://github.com/creativelittledots/wp-kit-core",
 	"license": "MIT",
@@ -14,9 +14,14 @@
 	],
 	"require": {
         "php": ">=5.4.45",
-        "tgmpa/tgm-plugin-activation": "2.5.0",
         "querypath/QueryPath": "*",
-        "icanboogie/inflector": "*"
+        "twig/twig": "~1.16",
+        "upstatement/routes": "0.4",
+        "icanboogie/inflector": "*",
+	    "illuminate/database": "~5.0",
+	    "vierbergenlars/php-semver": "~3.0",
+	    "symfony/var-dumper": "~3.0",
+	    "illuminate/http": "~5.0"
     },
 	"type": "library",
 	"autoload": {
@@ -24,9 +29,14 @@
             "WPKit\\": "src/" 
         },
         "files": [
-            "src/helpers.php"
+            "src/bootstrap/helpers.php",
+            "src/bootstrap/defines.php"
         ]
     },
+    "config": {
+		"preferred-install": "dist"
+	},
+	"minimum-stability": "dev",
 	"repositories": [
 	],
 	"scripts": {

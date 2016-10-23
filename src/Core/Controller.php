@@ -2,6 +2,8 @@
     
     namespace WPKit\Core;
     
+    use ReflectionClass;
+    
     class Controller extends Singleton {
         
         protected $scripts = [];
@@ -133,11 +135,45 @@
     		
 		}
 		
-		protected function render( $view, $vars = array(), $echo = true ) {
+		protected function render( $view, $vars = array(), $echo = true, $dir = VIEWS_DIR ) {
 			
-			$path = str_replace( 'Controller', '', implode( '/', explode( '\\', str_replace( 'App\Controllers\\', '', get_called_class() ) ) ) );
+			$reflect = new ReflectionClass($this);
 			
-			$html = get_component( $path, $view, $vars, $echo );
+			$path = str_replace( 'Controller', '', $reflect->getShortName() );
+			
+			$html = get_element( $path, $view, $vars, $echo, $dir );
+			
+			if( $echo ) {
+				
+				echo $html;
+				
+			} else {
+				
+				return $html;
+				
+			}
+			
+		}
+		
+		protected function renderView( $view, $vars = array(), $echo = true ) {
+			
+			$html = $this->render( $view, $vars, $echo );
+			
+			if( $echo ) {
+				
+				echo $html;
+				
+			} else {
+				
+				return $html;
+				
+			}
+			
+		}
+		
+		protected function renderComponent( $view, $vars = array(), $echo = true ) {
+			
+			$html = $this->render( $view, $vars, $echo, COMPONENTS_DIR );
 			
 			if( $echo ) {
 				

@@ -1,8 +1,6 @@
 <?php
     
     namespace WPKit\Core;
-    
-    use Timber;
 
 	class Shortcode extends Singleton {
     	

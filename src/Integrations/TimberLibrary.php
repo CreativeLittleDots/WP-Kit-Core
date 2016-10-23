@@ -9,7 +9,7 @@
 		
 		public function __construct( $settings ) {
 	
-			Timber::$locations = array( COMPONENTS_DIR );
+			Timber::$locations = array( TIMBER_VIEW_DIR );
 			
 			if( ! empty($settings['context']) && is_array($settings['context']) && count($settings['context']) > 0 ) {
 				

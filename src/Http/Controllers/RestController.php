@@ -1,8 +1,25 @@
 <?php
 	
-	namespace WPKit\Core;
+	namespace WPKit\Core\Controllers;
+	
+	use WPKit\Core\Application;
 	
 	class RestController extends Controller {
+		
+		/**
+	     * @var \WPKit\Application
+	     */
+	    protected $app;
+	    
+	    /**
+	     * Adds the action hooks for WordPress.
+	     *
+	     * @param \WPKit\Core\Application $app
+	     */
+	    public function __construct(Application $app)
+	    {
+	        $this->app = $app;
+	    }
 	    
 	    public function action($params) {
 		    
@@ -47,7 +64,7 @@
 			    
 		    }
 		    
-		    return call_user_func_array(array($class, $action), array_slice($params, 2, null, true));
+		    return $this->app->call(array($class, $action), array_slice($params, 2, null, true));
 		    
 	    }
 		

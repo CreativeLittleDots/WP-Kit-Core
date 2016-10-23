@@ -69,14 +69,16 @@
     		
     		// maybe you'd like to set authentication
     		
-    		wpkit()->auth(array(
-                'page' => 'login', 
-                'allow' => array(
-                    'login', 
-                    'reset'
-                ),
-                'force' => true
-            ));
+    		auth(array(
+    			'form' => array(
+	                'page' => 'login', 
+	                'allow' => array(
+	                    'login', 
+	                    'reset'
+	                ),
+	                'force' => true
+	            )
+			));
 
             // some generic filters and actions across the whole site
 			

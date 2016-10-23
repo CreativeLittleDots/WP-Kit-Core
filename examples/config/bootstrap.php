@@ -71,8 +71,7 @@
 				'vc_tta_accordion',
 				'vc_tta_section'
 			)
-		),
-		'timber-library' => true, // make sure this is true before you run WPKit::require_plugins
+		)
 	));
 	
 	// now require some plugins, make sure the zip files are in your plugins directory, or set 'external_url'

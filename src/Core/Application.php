@@ -23,26 +23,12 @@
     if ( ! defined( 'ABSPATH' ) ) {
         exit;
     }
-    
-    use WPKit\Core\Singleton;
-    use WPKit\Core\Auth;
-    use WPKit\Core\Cache;
-    use WPKit\Core\Invoker;
 
-	class Application extends Singleton {
+	class Application extends \Illuminate\Container\Container implements \Illuminate\Contracts\Foundation\Application {
 		
 		protected static $integrations = array();
 		
 		protected static $shortcodes = array();
-		
-		protected static $plugins = array( 
-			array(
-	            'name'			    => 'Timber', // The plugin name
-	            'slug'			    => 'timber-library', // The plugin slug (typically the folder name)
-	            'version'			=> '1.0.4', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented,
-	            'external_url'      => 'https://wordpress.org/plugins/timber-library/',
-			)
-		);
 		
 		public static function make($facade = null, $args = array()) {
 			
@@ -78,20 +64,6 @@
 			
 			return $class;
 			
-		}
-		
-		public function __construct() {
-			
-			require_once( 'defines.php' );
-			
-			if( ! defined( 'INFLECTOR_DEFAULT_LOCALE' ) ) {
-    
-		    	define( 'INFLECTOR_DEFAULT_LOCALE', strtolower( DEFAULT_LOCALE ) );
-		    	
-		    }
-		    
-		    // other errors if things are missing, like inflector
-
 		}
 		
 		public static function init() {
@@ -186,17 +158,28 @@
 				
 			}
 			
-			$instance::require_plugins();
+			if( WP_USE_THEMES ) {
 			
-			$instance::add_integration('timber-library', [
-				'file' => 'timber-library/timber.php'
-			]);
+				$instance::require_plugins();
+				
+				$instance::add_integration('timber-library', [
+					'file' => 'timber-library/timber.php'
+				]);
+				
+			}
 			
 		}
 		
 		public static function require_plugins($plugins = array()) {
     		
-    		$plugins = array_merge(self::$plugins, $plugins);
+    		$plugins = array_merge(array( 
+				array(
+		            'name'			    => 'Timber', // The plugin name
+		            'slug'			    => 'timber-library', // The plugin slug (typically the folder name)
+		            'version'			=> '1.0.4', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented,
+		            'external_url'      => 'https://wordpress.org/plugins/timber-library/',
+				)
+			), $plugins);
     		
     		if( ! empty( $plugins ) && count( $plugins ) > 0 ) {
 			
@@ -292,9 +275,17 @@
 		
 		public static function add_integrations($integrations) {
 			
-			foreach($integrations as $integration => $settings) {
-    			
-    			self::add_integration($integration, $settings);
+			if( WP_USE_THEMES ) {
+			
+				foreach($integrations as $integration => $settings) {
+	    			
+	    			self::add_integration($integration, $settings);
+					
+				}
+				
+			} else {
+				
+				// admin error
 				
 			}
 			
@@ -302,29 +293,45 @@
 		
 		public static function add_integration($integration, $settings) {
 			
-			if( ! self::has_integration( $integration ) ) {
+			if( WP_USE_THEMES ) {
 			
-				$core_integration_class = 'WPKit\Integrations\\' . inflector()->camelize($integration);
+				if( ! self::has_integration( $integration ) ) {
+				
+					$core_integration_class = 'WPKit\Integrations\\' . inflector()->camelize($integration);
+			    		
+		    		$integration_class = 'App\Integrations\\' . inflector()->camelize($integration);
 		    		
-	    		$integration_class = 'App\Integrations\\' . inflector()->camelize($integration);
-	    		
-	    		if( class_exists( $core_integration_class ) ) {
-	        		
-	        		self::$integrations[$integration] = self::make($core_integration_class, $settings);
-	        		
-	    		} else if( class_exists( $integration_class ) ) {
-	        		
-	        		self::$integrations[$integration] = self::make($integration_class, $settings);
-	        		
-	    		}
-	    	
+		    		if( class_exists( $core_integration_class ) ) {
+		        		
+		        		self::$integrations[$integration] = self::make($core_integration_class, $settings);
+		        		
+		    		} else if( class_exists( $integration_class ) ) {
+		        		
+		        		self::$integrations[$integration] = self::make($integration_class, $settings);
+		        		
+		    		}
+		    	
+				}
+				
+			} else {
+				
+				// admin error
+				
 			}
 			
 		}
 		
 		public static function has_integration($integration) {
+			
+			if( WP_USE_THEMES ) {
     		
-    		return array_key_exists($integration, self::$integrations) && self::$integrations[$integration];
+    			return array_key_exists($integration, self::$integrations) && self::$integrations[$integration];
+    			
+    		} else {
+	    		
+	    		// admin error
+	    		
+    		}
     		
 		}
 		

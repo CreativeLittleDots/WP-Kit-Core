@@ -74,6 +74,18 @@
     	
     }
     
+    if( ! defined( 'VIEWS_DIR' ) ) {
+	    
+	    define( 'VIEWS_DIR', APP . DS . 'Views' );
+	    
+    }
+    
+    if( ! defined( 'TIMBER_VIEW_DIR' ) ) {
+	    
+	    define( 'TIMBER_VIEW_DIR', COMPONENTS_DIR );
+	    
+    }
+    
     if( ! defined( 'FUNCTIONS_DIR' ) ) {
     
     	define( 'FUNCTIONS_DIR', APP . DS . 'Functions' );
@@ -115,3 +127,10 @@
 	    defined( 'BASE_PATH', '' );
 	    
     }
+    
+    if( ! defined( 'INFLECTOR_DEFAULT_LOCALE' ) ) {
+    
+    	define( 'INFLECTOR_DEFAULT_LOCALE', strtolower( DEFAULT_LOCALE ) );
+    	
+    }
+    

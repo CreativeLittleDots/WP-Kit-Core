@@ -124,7 +124,7 @@
     
     if( ! defined( 'BASE_PATH' ) ) {
 	    
-	    defined( 'BASE_PATH', '' );
+	    define( 'BASE_PATH', '' );
 	    
     }
     

@@ -11,14 +11,13 @@
 	    	parent::__construct( $settings );
 	    	
 	    	$this->settings = array_merge(array(
-    			'logout_redirect' => '/login',
+    			'logout_redirect' => '/wp-login.php',
     			'login_redirect' => home_url(),
     			'mask_wp_login' => false
-			), $settings);
+			), $this->settings);
 			
 			add_filter( 'login_url', array($this, 'get_login_url'), 10, 3);
-			add_action( 'init', array($this, 'mask_wp_login') );
-			add_action( 'wp', array($this, 'route') );
+			add_action( 'login_init', array($this, 'mask_login') );
 	    	
     	}
     	
@@ -27,80 +26,74 @@
     		extract($this->settings);
 			
 			if( $logout_redirect ) {
-    			
-    			if( is_numeric( $logout_redirect ) ) {
-        			
-        			$logout_redirect = get_post($logout_redirect);
-        			
-    			} else {
-        			
-        			$logout_redirect = get_page_by_path($logout_redirect);
-        			
-    			}
-    			
-    			$login_url = get_permalink($logout_redirect->ID);
 
             	if ( ! empty($redirect) )
-            		$login_url = add_query_arg('redirect_to', urlencode($redirect), $login_url);
+            		$logout_redirect = add_query_arg('redirect_to', urlencode($redirect), $logout_redirect);
             
             	if ( $force_reauth )
-            		$login_url = add_query_arg('reauth', '1', $login_url);
+            		$logout_redirect = add_query_arg('reauth', '1', $logout_redirect);
     			
 			}
     		
-    		return $login_url;
+    		return $logout_redirect;
     		
 		}
 		
-		public function route() {
+		public function authenticate() {
     			
 			extract($this->settings);
 			
-			$is_page = false;
+			$is_allowed = is_page( $logout_redirect ) || is_route( $logout_redirect );
 			
-			foreach($allow as $page) {
-    			
-    			$is_page = is_page( $page ) ? true : $is_page;
-    			
+			if( ! $is_allowed ) {
+			
+				foreach($allow as $page) {
+	    			
+	    			$is_allowed = is_page( $page ) || is_route( $page ) ? true : $is_allowed;
+	    			
+				}
+				
 			}
 
-            if ( ! is_user_logged_in() && ! $is_page ) {
+            if ( ! is_user_logged_in() && ! $is_allowed ) {
                 
                 $current_url = "//" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 
-                wp_redirect( wp_login_url ( $current_url ) );
+                wp_redirect( add_query_arg('redirect_to', urlencode($current_url), $logout_redirect) );
                 
                 exit;
                 
-            } else if( is_user_logged_in() && ( is_wp_login() || ( $logout_redirect && is_page($logout_redirect) ) ) ) {
+            } else if( is_user_logged_in() && $is_allowed ) {
                 
                 wp_redirect( $login_redirect );
                 
                 exit;
             
             }
-        
+	        
         }
         
-        public function mask_wp_login() {
+        public function mask_login() {
 	        
 	        extract($this->settings);
-                        
-            if( $mask_wp_login && is_wp_login() && empty ( $_REQUEST['interim-login'] ) && $logout_redirect ) {
+	        
+	        if( $mask_wp_login && is_wp_login() && empty ( $_REQUEST['interim-login'] ) ) {
+	            
+	            if( $logout_redirect == '/wp-login.php' ) {
+		            
+		            return;
+		            
+	            }
+	            
+	            $args = array();
+	            
+	            if( ! empty( $_REQUEST['redirect_to'] ) ) {
+		            
+		            $args['redirect_to'] = $_REQUEST['redirect_to'];
+		            
+	            }
                 
-                if( is_numeric( $logout_redirect ) ) {
-            			
-        			$logout_redirect = get_post($logout_redirect);
-        			
-    			} else {
-        			
-        			$logout_redirect = get_page_by_path($logout_redirect);
-        			
-    			}
-                
-                $current_url = isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : "//" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-                
-                wp_redirect( add_query_arg( array( 'redirect_to' => $current_url ), get_permalink($logout_redirect->ID) ) );
+                wp_redirect( add_query_arg( $args, $logout_redirect ) );
                 
             }
 	        

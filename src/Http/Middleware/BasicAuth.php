@@ -12,13 +12,11 @@
 	    	
 	    	$this->settings = array_merge(array(
     			'username' => 'user_login'
-			), $settings);
-			
-			add_filter( 'parse_request', array($this, 'basic_auth') );
+			), $this->settings);
 			
     	}
     	
-    	public function basic_auth() {
+    	public function authenticate() {
 	    	
 			nocache_headers();
 			
@@ -28,9 +26,9 @@
 				
 			}
 			
-			foreach($allow as $page) {
+			foreach($this->settings['allow'] as $page) {
     			
-    			if( is_page( $page ) ) {
+    			if( is_page( $page ) || is_route( $page ) ) {
 	    			
 	    			return true;
 	    			
@@ -51,9 +49,13 @@
 				
 				$user = get_user_by( $this->settings['username'], $usr );
 				
-			}
+				$is_authenticated = wp_authenticate($user->user_login, $pwd);
+				
+			} else {
 	
-			$is_authenticated = wp_authenticate($user->user_login, $pwd);
+				$is_authenticated = wp_authenticate($usr, $pwd);
+				
+			}
 			
 			if ( ! is_wp_error( $is_authenticated ) ) {
 				

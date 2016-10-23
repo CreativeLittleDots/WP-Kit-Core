@@ -49,7 +49,7 @@
     	
     	public function __construct( $entity = null, $settings = array() ) {
 	    	
-	    	_deprecated_file( __FILE__, '1.3', null, "Please us relative ORM model");
+	    	_deprecated_file( __FILE__, '1.3', null, "Please use relative ORM model");
 	        	
         	$model = self::getModel();
     	

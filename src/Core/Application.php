@@ -17,60 +17,455 @@
      * @version     1.0.0
      */
      
-    namespace WPKit;
+    namespace WPKit\Core;
      
 	 // Exit if accessed directly
     if ( ! defined( 'ABSPATH' ) ) {
         exit;
     }
+    
+	use vierbergenlars\SemVer\version as SemVersion;
 
 	class Application extends \Illuminate\Container\Container implements \Illuminate\Contracts\Foundation\Application {
 		
-		protected static $integrations = array();
+		/**
+	     * The application's version.
+	     */
+	    const VERSION = '1.2.1';
+	    /**
+	     * The application's version.
+	     *
+	     * @var \vierbergenlars\SemVer\version
+	     */
+	    protected $version;
+	    /**
+	     * @var \Herbert\Framework\Application
+	     */
+	    protected static $instance;
+	    /**
+	     * Indicates if the application has "booted".
+	     *
+	     * @var bool
+	     */
+	    protected $booted = false;
+	    /**
+	     * The array of booting callbacks.
+	     *
+	     * @var array
+	     */
+	    protected $bootingCallbacks = array();
+	    /**
+	     * The array of booted callbacks.
+	     *
+	     * @var array
+	     */
+	    protected $bootedCallbacks = array();
+	    /**
+	     * The array of terminating callbacks.
+	     *
+	     * @var array
+	     */
+	    protected $terminatingCallbacks = array();
+	    /**
+	     * All of the registered service providers.
+	     *
+	     * @var array
+	     */
+	    protected $serviceProviders = array();
+	    /**
+	     * The names of the loaded service providers.
+	     *
+	     * @var array
+	     */
+	    protected $loadedProviders = array();
+	    /**
+	     * The deferred services and their providers.
+	     *
+	     * @var array
+	     */
+	    protected $deferredServices = array();
+	    /**
+	     * The registered plugins.
+	     *
+	     * @var array
+	     */
+	    protected $plugins = [];
+	    /**
+	     * The mismatched plugins.
+	     *
+	     * @var array
+	     */
+	    protected $mismatched = [];
+	    /**
+	     * The matched plugins.
+	     *
+	     * @var array
+	     */
+	    protected $matched = [];
+	    /**
+	     * The plugin apis.
+	     *
+	     * @var array
+	     */
+	    protected $apis = [];
+	    /**
+	     * The plugin configurations.
+	     *
+	     * @var array
+	     */
+	    protected $configurations = [];
+	    /**
+	     * The view composers.
+	     *
+	     * @var array
+	     */
+	    protected $viewComposers = [];
+	    /**
+	     * The view globals.
+	     *
+	     * @var array
+	     */
+	    protected $viewGlobals = [];
+	    /**
+	     * The built view globals.
+	     *
+	     * @var array
+	     */
+	    protected $builtViewGlobals = null;
+		/**
+	     * The integrations.
+	     *
+	     * @var array
+	     */
+		protected $integrations = array();
+		/**
+	     * The shortcodes.
+	     *
+	     * @var array
+	     */
+		protected $shortcodes = array();
+		/**
+	     * Are we in WP.
+	     *
+	     * @var boolean
+	     */
+		protected $inWp = array();
 		
-		protected static $shortcodes = array();
+		/**
+	     * Constructs the application and ensures it's correctly setup.
+	     */
+	    public function __construct() {
+		    
+	        static::$instance = $this;
+	        
+	        $this->version = new SemVersion(self::VERSION);
+	        $this->instance('app', $this);
+	        $this->instance('Illuminate\Container\Container', $this);
+			$this->registerBaseProviders();
+	        
+	        $this->registerCoreContainerAliases();
+	        $this->registerConfiguredProviders();
+	        
+	    }
+	    
+	    /**
+	     * Register the core aliases.
+	     *
+	     * @return void
+	     */
+	    protected function registerCoreContainerAliases() {
+		    
+	        $aliases = [
+	            'app' => [
+	                'Illuminate\Foundation\Application',
+	                'Illuminate\Contracts\Container\Container',
+	                'Illuminate\Contracts\Foundation\Application'
+	            ]
+	        ];
+	        foreach ($aliases as $key => $aliases)
+	        {
+	            foreach ((array) $aliases as $alias)
+	            {
+	                $this->alias($key, $alias);
+	            }
+	        }
+	        
+	    }
+	    
+	    /**
+	     * Get the global container instance.
+	     *
+	     * @return static
+	     */
+	    public static function getInstance() {
+		    
+	        if (is_null(static::$instance))
+	        {
+	            static::$instance = new static;
+	        }
+	        return static::$instance;
+	        
+	    }
+	    
+	    /**
+	     * Register the base providers.
+	     *
+	     * @return void
+	     */
+	    protected function registerBaseProviders()
+	    {
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\WPKitServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\TwigServiceProvider'
+	        ));
+	    }
+
 		
-		public static function make($facade = null, $args = array()) {
+		/**
+	     *  Added to satisfy interface
+	     *
+	     *  @return string
+	     */
+	    public function basePath() {
+		    
+	        return APP_ROOT;
+	        
+	    }
+	    
+	    /**
+	     * Get or check the current application environment.
+	     *
+	     * @param  mixed
+	     * @return string
+	     */
+	    public function environment() {
+		    
+	        if (func_num_args() > 0)
+	        {
+	            $patterns = is_array(func_get_arg(0)) ? func_get_arg(0) : func_get_args();
+	            foreach ($patterns as $pattern)
+	            {
+	                if (str_is($pattern, $this['env']))
+	                {
+	                    return true;
+	                }
+	            }
+	            return false;
+	        }
+	        return $this['env'];
+	        
+	    }
+	    
+	    /**
+	     * Determine if the application is currently down for maintenance.
+	     *
+	     * @todo
+	     * @return bool
+	     */
+	    public function isDownForMaintenance() {
+		    
+	        return false;
+	        
+	    }
+	    
+	    /**
+	     * Get the version number of the application.
+	     *
+	     * @return string
+	     */
+	    public function version()
+	    {
+	        return static::VERSION;
+	    }
+	    
+	    /**
+		 * Register all of the configured providers.
+	     *
+	     * @todo
+	     * @return void
+	     */
+	    public function registerConfiguredProviders()
+	    {
+	        //
+	    }
+	    
+	    /**
+	     * Register a service provider with the application.
+	     *
+	     * @param  \Illuminate\Support\ServiceProvider|string $provider
+	     * @param  array                                      $options
+	     * @param  bool                                       $force
+	     * @return \Illuminate\Support\ServiceProvider
+	     */
+	    public function register($provider, $options = array(), $force = false) {
+		    
+	        if ($registered = $this->getProvider($provider) && ! $force)
+	        {
+	            return $registered;
+	        }
+	        // If the given "provider" is a string, we will resolve it, passing in the
+	        // application instance automatically for the developer. This is simply
+	        // a more convenient way of specifying your service provider classes.
+	        if (is_string($provider))
+	        {
+	            $provider = $this->resolveProviderClass($provider);
+	        }
+	        $provider->register();
+	        // Once we have registered the service we will iterate through the options
+	        // and set each of them on the application so they will be available on
+	        // the actual loading of the service objects and for developer usage.
+	        foreach ($options as $key => $value)
+	        {
+	            $this[$key] = $value;
+	        }
+	        $this->markAsRegistered($provider);
+	        // If the application has already booted, we will call this boot method on
+	        // the provider class so it has an opportunity to do its boot logic and
+	        // will be ready for any usage by the developer's application logics.
+	        if ($this->booted)
+	        {
+	            $this->bootProvider($provider);
+	        }
+	        return $provider;
+	        
+	    }
+	    
+	    /**
+	     * Register a deferred provider and service.
+	     *
+	     * @param  string $provider
+	     * @param  string $service
+	     * @return void
+	     */
+	    public function registerDeferredProvider($provider, $service = null) {
+		    
+	        // Once the provider that provides the deferred service has been registered we
+	        // will remove it from our local list of the deferred services with related
+	        // providers so that this container does not try to resolve it out again.
+	        if ($service) unset($this->deferredServices[$service]);
+	        $this->register($instance = new $provider($this));
+	        if ( ! $this->booted)
+	        {
+	            $this->booting(function() use ($instance)
+	            {
+	                $this->bootProvider($instance);
+	            });
+	        }
+	        
+	    }
+	    
+	    /**
+	     * Get the registered service provider instance if it exists.
+	     *
+	     * @param  \Illuminate\Support\ServiceProvider|string  $provider
+	     * @return \Illuminate\Support\ServiceProvider|null
+	     */
+	    public function getProvider($provider) {
+		    
+	        $name = is_string($provider) ? $provider : get_class($provider);
+	        return array_first($this->serviceProviders, function($key, $value) use ($name)
+	        {
+	            return $value instanceof $name;
+	        });
+	        
+	    }
+	    
+	    /**
+	     * Resolve a service provider instance from the class name.
+	     *
+	     * @param  string  $provider
+	     * @return \Illuminate\Support\ServiceProvider
+	     */
+	    public function resolveProviderClass($provider) {
+		    
+	        return $this->make($provider, ['app' => $this]);
+	        
+	    }
+	    
+	    /**
+	     * Mark the given provider as registered.
+	     *
+	     * @param  \Illuminate\Support\ServiceProvider
+	     * @return void
+	     */
+	    protected function markAsRegistered($provider)
+	    {
+	        $this->serviceProviders[] = $provider;
+	        $this->loadedProviders[get_class($provider)] = true;
+	    }
+	    
+	    /**
+	     * Determine if the application has booted.
+	     *
+	     * @return bool
+	     */
+	    public function isBooted() {
+		    
+	        return $this->booted;
+	        
+	    }
+	    
+	    /**
+	     * Get the path to the cached "compiled.php" file.
+	     *
+	     * @return string
+	     */
+	    public function getCachedCompilePath() {
+		    
+	        return $this->basePath() . '/vendor/compiled.php';
+	        
+	    }
+	    
+	    /**
+	     * Get the path to the cached services.json file.
+	     *
+	     * @return string
+	     */
+	    public function getCachedServicesPath() {
+		    
+	        return $this->basePath() . '/vendor/services.json';
+	        
+	    }
+	    
+	    /**
+	     * Register a new "booted" listener.
+	     *
+	     * @param  mixed  $callback
+	     * @return void
+	     */
+	    public function booted($callback) {
+		    
+	        $this->bootedCallbacks[] = $callback;
+	        
+	        if ($this->isBooted()) $this->fireAppCallbacks(array($callback));
+	        
+	    }
+	    
+	    /**
+	     * Register a new boot listener.
+	     *
+	     * @param  mixed  $callback
+	     * @return void
+	     */
+	    public function booting($callback) {
+		    
+	        $this->bootingCallbacks[] = $callback;
+	        
+	    }
+		
+		public function init() {
 			
-			$class = null;
+			_deprecated_function( __METHOD__, '1.3', __CLASS__ . '::boot' );
 			
-			$facade = inflector()->camelize($facade);
-			
-			switch($facade) {
-				
-				default:
-				
-					if( stripos($facade, 'Controller') > 0 ) {
-						
-						if( class_exists( $className = 'App\Controllers\\' . $facade ) ) {
-							
-							$class = $className::instance($args);
-							
-						}
-						
-					} else if( class_exists( $className = "WPKit\Core\\$facade") ) {
-						
-						$class = $className::instance($args);
-						
-					} else if ( class_exists( $facade ) ) {
-						
-						$class = $facade::instance($args);
-						
-					}
-					
-				break;
-				
-			}
-			
-			return $class;
+			$this->boot();
 			
 		}
 		
-		public static function init() {
+		public function boot() {
 			
-			$class = get_called_class();
-			
-			$instance = $class::instance();
+			if ($this->booted) return;
 			
 			if( defined( 'FUNCTIONS_DIR' ) && FUNCTIONS_DIR ) {
 			
@@ -94,7 +489,7 @@
 					
 					$post_type = 'App\PostTypes\\' . basename($post_type, '.php');
 					
-					$instance::make($post_type);
+					$this->make($post_type);
 					
 				}
 				
@@ -110,7 +505,7 @@
 					
 					$taxonomy = 'App\Taxonomies\\' . basename($taxonomy, '.php');
 					
-					$instance::make($taxonomy);
+					$this->make($taxonomy);
 					
 				}
 				
@@ -126,9 +521,9 @@
 	    			
 	    			$class = 'App\Shortcodes\\' . basename($shortcode, '.php');
 	    			
-	    			$shortcode = $instance::make($class);
+	    			$shortcode = $this->make($class);
 
-					$instance::$shortcodes[$shortcode->base] = $shortcode;
+					$this->shortcodes[$shortcode->base] = $shortcode;
 					
 				}
 				
@@ -158,11 +553,13 @@
 				
 			}
 			
-			if( WP_USE_THEMES ) {
+			$this->inWp = ( defined( 'WP_USE_THEMES' ) && WP_USE_THEMES ) || ( defined( 'WP_ADMIN' ) && WP_ADMIN );
 			
-				$instance::require_plugins();
+			if( $this->inWp ) {
+			
+				$this->requirePlugins();
 				
-				$instance::add_integration('timber-library', [
+				$this->addIntegration('timber-library', [
 					'file' => 'timber-library/timber.php'
 				]);
 				
@@ -170,7 +567,7 @@
 			
 		}
 		
-		public static function require_plugins($plugins = array()) {
+		public function requirePlugins($plugins = array()) {
     		
     		$plugins = array_merge(array( 
 				array(
@@ -249,37 +646,37 @@
     		
 		}
 		
-		public static function get_shortcodes() {
+		public function getShortcodes() {
     		
-    		return self::$shortcodes;
+    		return $this->shortcodes;
     		
 		}
 		
-		public static function remove_shortcodes( $tags ) {
+		public function removeShortcodes( $tags ) {
 			
 			foreach( $tags as $tag ) {
 				
-				self::remove_shortcode( $tag );
+				$this->remove_shortcode( $tag );
 				
 			}
 			
 		}
 		
-		public static function remove_shortcode( $tag ) {
+		public function removeShortcode( $tag ) {
 			
 			remove_shortcode ( $tag );
 			
-			unset( self::$shortcodes[ $tag ] );
+			unset( $this->shortcodes[ $tag ] );
 			
 		}
 		
-		public static function add_integrations($integrations) {
+		public function addIntegrations($integrations) {
 			
-			if( WP_USE_THEMES ) {
+			if( $this->inWp ) {
 			
 				foreach($integrations as $integration => $settings) {
 	    			
-	    			self::add_integration($integration, $settings);
+	    			$this->addIntegration($integration, $settings);
 					
 				}
 				
@@ -291,11 +688,19 @@
 			
 		}
 		
-		public static function add_integration($integration, $settings) {
+		public function add_integrations($integrations) {
 			
-			if( WP_USE_THEMES ) {
+			_deprecated_function( __METHOD__, '1.3', __CLASS__ . '::addIntegrations' );
 			
-				if( ! self::has_integration( $integration ) ) {
+			return $this->addIntegrations($integrations);
+			
+		}
+		
+		public function addIntegration($integration, $settings) {
+			
+			if( $this->inWp ) {
+			
+				if( ! $this->hasIntegration( $integration ) ) {
 				
 					$core_integration_class = 'WPKit\Integrations\\' . inflector()->camelize($integration);
 			    		
@@ -303,11 +708,11 @@
 		    		
 		    		if( class_exists( $core_integration_class ) ) {
 		        		
-		        		self::$integrations[$integration] = self::make($core_integration_class, $settings);
+		        		//$this->integrations[$integration] = $this->make($core_integration_class, $settings);
 		        		
 		    		} else if( class_exists( $integration_class ) ) {
 		        		
-		        		self::$integrations[$integration] = self::make($integration_class, $settings);
+		        		//$this->integrations[$integration] = $this->make($integration_class, $settings);
 		        		
 		    		}
 		    	
@@ -321,11 +726,19 @@
 			
 		}
 		
-		public static function has_integration($integration) {
+		public function add_integration($integration, $settings) {
 			
-			if( WP_USE_THEMES ) {
-    		
-    			return array_key_exists($integration, self::$integrations) && self::$integrations[$integration];
+			_deprecated_function( __METHOD__, '1.3', __CLASS__ . '::addIntegration' );
+			
+			return $this->addIntegration($integrations);
+			
+		}
+		
+		public function hasIntegration($integration) {
+			
+			if( $this->inWp ) {
+				
+    			return array_key_exists($integration, $this->integrations) && $this->integrations[$integration];
     			
     		} else {
 	    		
@@ -335,7 +748,7 @@
     		
 		}
 		
-		public static function ajax( $ajax, $fn, $public = true, $priority = 10 ) {
+		public function ajax( $ajax, $fn, $public = true, $priority = 10 ) {
 			
 			if( is_string($ajax) && is_callable($fn) ) {
     					
@@ -351,7 +764,7 @@
 			
 		}
 		
-		public static function unajax( $ajax, $fn, $public = true, $priority = 10 ) {
+		public function unAjax( $ajax, $fn, $public = true, $priority = 10 ) {
 			
 			if( is_string($ajax) && is_callable($fn) ) {
     					

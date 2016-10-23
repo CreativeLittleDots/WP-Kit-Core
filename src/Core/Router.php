@@ -367,8 +367,8 @@
 	     * @param array $parameters
 	     * @return mixed
 	     */
-	    public function __call($method, $uri, $callback)
-	    {
+	    public function __call($method, $params)
+	    {   
 	        if (method_exists($this, $method))
 	        {
 	            return call_user_func_array([$this, $method], $parameters);

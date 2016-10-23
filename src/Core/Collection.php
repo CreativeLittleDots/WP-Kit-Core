@@ -9,7 +9,7 @@
     	
     	public function __construct( $post = null ) {
 	    	
-	    	_deprecated_file( __FILE__, '1.3', null, "Please us relative ORM model");
+	    	_deprecated_file( __FILE__, '1.3', null, "Please use relative ORM model");
 	    	
         	$class = $this->model = stripos($this->model, '\\') === 0 ? $this->model : "App\Models\\{$this->model}";
         	

@@ -11,7 +11,11 @@
 	    	$this->settings = array_merge(array(
     			'allow' => array()
 			), $settings);
+			
+			add_action( 'parse_request', array($this, 'authenticate') );
 	    	
     	}
+    	
+    	public function authenticate() {}
     	
     }

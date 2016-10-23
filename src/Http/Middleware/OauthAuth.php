@@ -6,15 +6,7 @@
 
 	class OauthAuth extends Auth {
     	
-    	public function __construct( $settings ) {
-	    	
-	    	parent::__construct( $settings );
-			
-			add_filter( 'parse_request', array($this, 'oauth') );
-			
-    	}
-    	
-    	public function oauth() {
+    	public function authenticate() {
 	    	
 			nocache_headers();
 			

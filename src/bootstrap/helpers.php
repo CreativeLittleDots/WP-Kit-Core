@@ -4,8 +4,7 @@
 		#CONVERT INTEGER TO CURRENCY
 	\*----------------------------------------------*/
 	
-	if ( ! function_exists('get_currency_symbol'))
-	{
+	if ( ! function_exists('get_currency_symbol') ) {
 	
 		function get_currency_symbol( $currency = DEFAULT_CURRENCY ) {
 	    
@@ -68,8 +67,7 @@
 	    
 	}
     
-    if ( ! function_exists('to_currency'))
-	{
+    if ( ! function_exists('to_currency') ) {
     
 	    function to_currency( $price, $currency = DEFAULT_CURRENCY ) {
 	        
@@ -83,8 +81,7 @@
 		#OUTPUT SVG ICON CODE
 	\*----------------------------------------------*/
 	
-	if ( ! function_exists('icon'))
-	{
+	if ( ! function_exists('icon') ) {
 	
 		function icon($name, $css = '', $echo = true) {
 			
@@ -108,8 +105,7 @@
     	#NICE VAR DUMP
     \*----------------------------------------------*/
     
-    if ( ! function_exists('nice'))
-	{
+    if ( ! function_exists('nice') ) {
      
 	    function nice($content, $echo = true) {
 		    
@@ -143,8 +139,7 @@
     	#NICE JSON VAR DUMP
     \*----------------------------------------------*/
     
-    if ( ! function_exists('wp_nice_json'))
-	{
+    if ( ! function_exists('wp_nice_json') ) {
      
 	    function wp_nice_json($json, $echo = true) {
 		    
@@ -188,8 +183,7 @@
     	#GET ELEMENT FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('get_element'))
-	{
+    if ( ! function_exists('get_element') ) {
     
 	    function get_element($path = '', $template, $vars = array(), $echo = true, $dir = VIEWS_DIR) {
 		    
@@ -229,8 +223,7 @@
     	#GET COMPONENT FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('get_component'))
-	{
+    if ( ! function_exists('get_component') ) {
     
 	    function get_component($path = '', $template, $vars = array(), $echo = true) {
 		    
@@ -250,8 +243,7 @@
     	#THE COMPONENT FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('the_component'))
-	{
+    if ( ! function_exists('the_component') ) {
     
 	    function the_component($path = '', $template, $vars = array()) {
 		    
@@ -265,8 +257,7 @@
     	#COMPONENT FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('component'))
-	{
+    if ( ! function_exists('component') ) {
     
 	    function component($path = '', $template, $vars = array(), $echo = true) {
 		    
@@ -286,8 +277,7 @@
     	#GET VIEW FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('get_view'))
-	{
+    if ( ! function_exists('get_view') ) {
     
 	    function get_view($path = '', $template, $vars = array(), $echo = true) {
 		    
@@ -307,8 +297,7 @@
     	#THE VIEW FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('the_view'))
-	{
+    if ( ! function_exists('the_view') ) {
     
 	    function the_view($path = '', $template, $vars = array()) {
 		    
@@ -322,8 +311,7 @@
     	#VIEW FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('view'))
-	{
+    if ( ! function_exists('view') ) {
     
 	    function view($path = '', $template, $vars = array(), $echo = true) {
 		    
@@ -343,8 +331,7 @@
     	#GET ASSET FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('get_asset'))
-	{
+    if ( ! function_exists('get_asset') ) {
     
 	    function get_asset($file) {
 	        
@@ -368,8 +355,7 @@
     	#THE ASSET FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('the_asset'))
-	{
+    if ( ! function_exists('the_asset') ) {
     
 	    function the_asset($file) {
 	        
@@ -387,8 +373,7 @@
     	#IS WP_LOGIN
     \*----------------------------------------------*/
     
-    if ( ! function_exists('is_wp_login'))
-	{
+    if ( ! function_exists('is_wp_login') ) {
     
 	    function is_wp_login() {
 	        
@@ -402,8 +387,7 @@
     	#TWIG HELPER
     \*----------------------------------------------*/
     
-    if ( ! function_exists('twig_this'))
-	{
+    if ( ! function_exists('twig_this') ) {
     
 	    function twig_this($template, $data) {
 		    
@@ -417,8 +401,7 @@
     	#IN, ADD & REMOVE META SERIALIZED
     \*----------------------------------------------*/
     
-    if ( ! function_exists('in_metadata_serialized'))
-	{
+    if ( ! function_exists('in_metadata_serialized') ) {
     
 	    function in_metadata_serialized($value, $type = 'post', $object_id, $meta_key) {
 	        
@@ -430,8 +413,7 @@
 	    
 	}
     
-    if ( ! function_exists('update_metadata_serialized'))
-	{
+    if ( ! function_exists('update_metadata_serialized') ) {
     
 	    function update_metadata_serialized($type = 'post', $object_id, $meta_key, $value, $multiple = false) {
 	        
@@ -451,8 +433,7 @@
 	    
 	}
     
-    if ( ! function_exists('remove_metadata_serialized'))
-	{
+    if ( ! function_exists('remove_metadata_serialized') ) {
     
 	    function remove_metadata_serialized($type = 'post', $object_id, $meta_key, $value) {
 	        
@@ -478,8 +459,7 @@
     	#GET RAW ARCHIVE TITLE
     \*----------------------------------------------*/
     
-    if ( ! function_exists('get_the_raw_archive_title'))
-	{
+    if ( ! function_exists('get_the_raw_archive_title') ) {
     
 	    function get_the_raw_archive_title() {
 	        global $post;
@@ -547,8 +527,7 @@
     	#INFLECTOR FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('inflector'))
-	{
+    if ( ! function_exists('inflector') ) {
     
 	    function inflector() {
 		    
@@ -563,12 +542,11 @@
     	#WPKIT FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('wpkit'))
-	{
+    if ( ! function_exists('wpkit') ) {
     
 	    function wpkit($binding = null) {
 		    
-		    $instance = WPKit\Core\Application::instance();
+		    $instance = WPKit\Core\Application::getInstance();
 		    
 		    if ( ! $binding ) {
 			    
@@ -586,8 +564,7 @@
     	#INVOKE FUNCTION
     \*----------------------------------------------*/
     
-    if ( ! function_exists('invoke'))
-	{
+    if ( ! function_exists('invoke') ) {
     
 	    function invoke( $callback, $action = 'wp', $condition = null, $priority = null ) {
 		    
@@ -608,15 +585,26 @@
 	}
     
     /*----------------------------------------------*\
-    	#ROUTE FUNCTION
+    	#ROUTES
     \*----------------------------------------------*/
     
-    if ( ! function_exists('route'))
-	{
+    if ( ! function_exists('route') ) {
     
 	    function route( $uri, $callback, $method = 'get' ) {
 		    
 		    return wpkit('router')->add( $uri, $callback, $method );
+		    
+	    }
+	    
+	}
+	
+	if ( ! function_exists('is_route') ) {
+    
+	    function is_route( $path ) {
+		    
+		    global $wp;
+
+			return home_url( $path ) == home_url( add_query_arg( array(), $wp->request ) );
 		    
 	    }
 	    
@@ -626,8 +614,7 @@
     	#MULTISITE
     \*----------------------------------------------*/
     
-    if ( ! function_exists('get_wpmu_posts'))
-	{
+    if ( ! function_exists('get_wpmu_posts') ) {
     	    
 	    function get_wpmu_posts($args = array()) {
 			
@@ -728,8 +715,7 @@
     	#RESPONSE TYPES
     \*----------------------------------------------*/
 	
-	if ( ! function_exists('response'))
-	{
+	if ( ! function_exists('response') ) {
 	    /**
 	     * Generates a response.
 	     *
@@ -744,8 +730,7 @@
 	    }
 	}
 	
-	if ( ! function_exists('json_response'))
-	{
+	if ( ! function_exists('json_response') ) {
 	    /**
 	     * Generates a json response.
 	     *
@@ -760,8 +745,7 @@
 	    }
 	}
 	
-	if ( ! function_exists('redirect_response'))
-	{
+	if ( ! function_exists('redirect_response') ) {
 	    /**
 	     * Generates a redirect response.
 	     *
@@ -780,8 +764,7 @@
     	#FORCE REST
     \*----------------------------------------------*/
     
-    if ( ! function_exists('force_rest'))
-	{
+    if ( ! function_exists('force_rest') ) {
 	
 		function force_rest($controller = WPKit\Http\Controllers\RestController) {
 				
@@ -799,18 +782,17 @@
     	#AUTH
     \*----------------------------------------------*/
     
-    if ( ! function_exists('auth'))
-	{
+    if ( ! function_exists('auth') ) {
 		
 		function auth($authentications) {
 			
 			foreach($authentications as $auth => $params) {
 				
-				$class = class_exists($class) ? $class : "WPKit\Http\Middleware\\" . ucfirst($auth) . "Auth";
+				$class = class_exists($auth) ? $auth : "WPKit\Http\Middleware\\" . ucfirst($auth) . "Auth";
 				
 				if( class_exists( $class ) ) {
 					
-					new $class($settings);
+					new $class($params);
 					
 				}
 				
@@ -818,6 +800,47 @@
 			
 		}
 		
+	}
+	
+	/*----------------------------------------------*\
+    	#SESSION
+    \*----------------------------------------------*/
+	
+	if ( ! function_exists('session') ) {
+		
+	    /**
+	     * Gets the session or a key from the session.
+	     *
+	     * @param  string $key
+	     * @param  mixed  $default
+	     * @return \Illuminate\Session\Store|mixed
+	     */
+	    function session($key = null, $default = null)
+	    {
+	        if ($key === null)
+	        {
+	            return wpkit('session');
+	        }
+	        return wpkit('session')->get($key, $default);
+	    }
+	}
+	
+	if ( ! function_exists('session_flashed') ) {
+	    /**
+	     * Gets the session flashbag or a key from the session flashbag.
+	     *
+	     * @param  string $key
+	     * @param  mixed  $default
+	     * @return \Illuminate\Session\Store|mixed
+	     */
+	    function session_flashed($key = null, $default = [])
+	    {
+	        if ($key === null)
+	        {
+	            return wpkit('session')->getFlashBag();
+	        }
+	        return wpkit('session')->getFlashBag()->get($key, $default);
+	    }
 	}
 
 ?>

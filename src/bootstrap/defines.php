@@ -1,5 +1,11 @@
 <?php
 	
+	if ( ! defined('DS') ) {
+		
+	    define( 'DS', DIRECTORY_SEPARATOR );
+	    
+	}
+	
 	if( ! defined( 'THEME_DIR' ) ) {
 	
 		define( 'THEME_DIR', get_stylesheet_directory() );
@@ -12,30 +18,39 @@
     	
     }
     
-     /**
-	 * Use the DS to separate the directories in other defines
-	 */
-	if ( ! defined('DS') ) {
-		
-	    define( 'DS', DIRECTORY_SEPARATOR );
+    if( ! defined( 'BASE_PATH' ) ) {
 	    
-	}
+	    define( 'BASE_PATH', '' );
+	    
+    }
+    
+    if( ! defined( 'APP_ROOT' ) ) {
+	
+    	define( 'APP_ROOT', THEME_DIR );
+    	
+    }
+    
+    if( ! defined( 'APP_ROOT_URI' ) ) {
+	
+    	define( 'APP_ROOT_URI', THEME_URI );
+    	
+    }
     
     if( ! defined( 'APP' ) ) {
 	
-    	define( 'APP', THEME_DIR . DS . 'app' );
+    	define( 'APP', APP_ROOT . DS . 'app' );
     	
     }
     
     if( ! defined( 'APP_URI' ) ) {
     
-    	define( 'APP_URI', THEME_URI . 'app' );
+    	define( 'APP_URI', APP_ROOT_URI . 'app' );
     	
     }
     
     if( ! defined( 'CONFIG_DIR' ) ) {
     
-	    define( 'CONFIG_DIR', THEME_DIR . DS . 'config' );
+	    define( 'CONFIG_DIR', APP_ROOT . DS . 'config' );
 	    
 	}
 	
@@ -119,12 +134,6 @@
     if( ! defined( 'WPKIT_DEBUG' ) ) {
 	    
 	    define( 'WPKIT_DEBUG', false );
-	    
-    }
-    
-    if( ! defined( 'BASE_PATH' ) ) {
-	    
-	    define( 'BASE_PATH', '' );
 	    
     }
     

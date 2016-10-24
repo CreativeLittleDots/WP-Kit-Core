@@ -5,10 +5,35 @@
     use ReflectionClass;
     
     class Controller extends Singleton {
+	    
+	    /**
+	     * @var \WPKit\Application
+	     */
+	    protected $app;
+	    
+	    /**
+	     * @var \WPKit\Core\Http
+	     */
+	    protected $http;
         
         protected $scripts = [];
         protected $scripts_action = 'wp_enqueue_scripts';
         protected $scripts_priority = 10;
+	   
+		public function __construct(Application $app, Http $http) {
+			
+			$this->app = $app;
+			$this->http = $http;
+			
+			// when using REST api OPTIONS needs to return successful
+			
+			if ( 'OPTIONS' == $this->http->method() ) {
+					    
+		        wp_send_json_success( 'authorised' );
+		        
+		    }
+			
+		}
         
         public function beforeFilter() {
 			

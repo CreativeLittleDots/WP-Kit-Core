@@ -5,9 +5,14 @@
 	class Flow extends Singleton {
 		
 		/**
-	     * @var \WPKit\Application
+	     * @var \WPKit\Core\Application
 	     */
 	    protected $app;
+	    
+	    /**
+	     * @var \WPKit\Core\Http
+	     */
+	    protected $http;
 	   
 		/**
 	     * @var array
@@ -19,9 +24,10 @@
 	     *
 	     * @param \WPKit\Core\Application $app
 	     */
-	    public function __construct(Application $app)
+	    public function __construct(Application $app, Http $http)
 	    {
 	        $this->app = $app;
+	        $this->http = $http;
 	    }
 		
 		protected function getController($callback) {

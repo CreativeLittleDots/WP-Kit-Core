@@ -145,9 +145,11 @@
 		    
 		    if ( ! WPKIT_DEBUG ) {
 			    
-			    http_response_code( 200 );
+			    status_header(200);
 			    
-			    wp_send_json( $json );
+			    wp_send_json_success( $json );
+			    
+			    exit();
 			    
 		    }
 		    
@@ -165,9 +167,7 @@
 	        
 	        if( $echo ) {
 		        
-		        http_response_code( 200 );
-		        
-		        wp_die($json);
+		        wp_die( $json, 'WPKit Nice JSON', [ 'response' => 200 ] );
 		        
 	        } else {
 		        
@@ -724,63 +724,15 @@
 	}
 	
 	/*----------------------------------------------*\
-    	#RESPONSE TYPES
-    \*----------------------------------------------*/
-	
-	if ( ! function_exists('response') ) {
-	    /**
-	     * Generates a response.
-	     *
-	     * @param  string  $body
-	     * @param  integer $status
-	     * @param  array   $headers
-	     * @return \WPKit\Core\Response
-	     */
-	    function response($body, $status = 200, $headers = null)
-	    {
-	        return new WPKit\Http\Response($body, $status, $headers);
-	    }
-	}
-	
-	if ( ! function_exists('json_response') ) {
-	    /**
-	     * Generates a json response.
-	     *
-	     * @param  mixed   $jsonable
-	     * @param  integer $status
-	     * @param  array   $headers
-	     * @return \WPKit\Core\Response
-	     */
-	    function json_response($jsonable, $status = 200, $headers = null)
-	    {
-	        return new WPKit\Http\JsonResponse($jsonable, $status, $headers);
-	    }
-	}
-	
-	if ( ! function_exists('redirect_response') ) {
-	    /**
-	     * Generates a redirect response.
-	     *
-	     * @param  string  $url
-	     * @param  integer $status
-	     * @param  array   $headers
-	     * @return \WPKit\Core\Response
-	     */
-	    function redirect_response($url, $status = 302, $headers = null)
-	    {
-	        return new WPKit\Http\RedirectResponse($url, $status, $headers);
-	    }
-	}
-	
-	/*----------------------------------------------*\
     	#FORCE REST
     \*----------------------------------------------*/
     
     if ( ! function_exists('force_rest') ) {
 	
-		function force_rest($controller = '\WPKit\Http\Controllers\RestController') {
+		function force_rest(WPKit\Core\Auth $auth = null, $controller = '\WPKit\Http\Controllers\RestController') {
 				
-			$restController = new $controller( wpkit() );
+			$restController = wpkit()->make($controller);
+			$auth && $auth->beforeAuth();
 			
 			route( BASE_PATH . '/:controller/:action/:id', array( $restController, 'action' ), '*' );
 			route( BASE_PATH . '/:controller/:action', array( $restController, 'action' ), '*' );
@@ -796,19 +748,17 @@
     
     if ( ! function_exists('auth') ) {
 		
-		function auth($authentications) {
+		function auth($auth, $params = array()) {
 			
-			foreach($authentications as $auth => $params) {
+			$class = class_exists($auth) ? $auth : "WPKit\Http\Middleware\\" . ucfirst($auth) . "Auth";
 				
-				$class = class_exists($auth) ? $auth : "WPKit\Http\Middleware\\" . ucfirst($auth) . "Auth";
+			if( class_exists( $class ) ) {
 				
-				if( class_exists( $class ) ) {
-					
-					new $class($params);
-					
-				}
+				return wpkit()->make($class, $params);
 				
 			}
+			
+			return false;
 			
 		}
 		

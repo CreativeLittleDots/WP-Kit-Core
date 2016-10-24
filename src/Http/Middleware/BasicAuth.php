@@ -6,56 +6,42 @@
 
 	class BasicAuth extends Auth {
     	
-    	public function __construct( $settings ) {
-	    	
-	    	parent::__construct( $settings );
-	    	
-	    	$this->settings = array_merge(array(
-    			'username' => 'user_login'
-			), $this->settings);
+    	public function mergeSettings($settings = array()) {
 			
-    	}
+			parent::mergeSettings(array_merge(array(
+    			'username' => 'login'
+			), $settings));
+
+		}
     	
     	public function authenticate() {
 	    	
 			nocache_headers();
 			
-			if ( is_user_logged_in() ) {
+			if( $is_allowed = $this->isAllowed() ) {
 				
 				return true;
 				
 			}
-			
-			foreach($this->settings['allow'] as $page) {
-    			
-    			if( is_page( $page ) || is_route( $page ) ) {
-	    			
-	    			return true;
-	    			
-    			}    			
-			}
 	
-			$usr = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-			$pwd = isset($_SERVER['PHP_AUTH_PW'])   ? $_SERVER['PHP_AUTH_PW']   : '';
+			$username = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
+			$password = isset($_SERVER['PHP_AUTH_PW'])   ? $_SERVER['PHP_AUTH_PW']   : '';
 			
-			if (empty($usr) && empty($pwd) && isset($_SERVER['HTTP_AUTHORIZATION']) && $_SERVER['HTTP_AUTHORIZATION']) {
-				list($type, $auth) = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
+			if ( empty($username) && empty($password) && $this->http->header('Authorization') ) {
+				
+				list($type, $auth) = explode(' ', $this->http->header('Authorization'));
+				
 				if (strtolower($type) === 'basic') {
-					list($usr, $pwd) = explode(':', base64_decode($auth));
+					
+					list($username, $password) = explode(':', base64_decode($auth));
+					
 				}
+				
 			}
 			
-			if( $this->settings['username'] !== 'user_login' ) {
-				
-				$user = get_user_by( $this->settings['username'], $usr );
-				
-				$is_authenticated = wp_authenticate($user->user_login, $pwd);
-				
-			} else {
-	
-				$is_authenticated = wp_authenticate($usr, $pwd);
-				
-			}
+			$user = get_user_by( $this->settings['username'], $username );
+			
+			$is_authenticated = wp_authenticate($user->user_login, $password);
 			
 			if ( ! is_wp_error( $is_authenticated ) ) {
 				

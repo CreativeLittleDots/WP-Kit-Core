@@ -6,27 +6,12 @@
 	use WPKit\Core\Controller;
 	
 	class RestController extends Controller {
-		
-		/**
-	     * @var \WPKit\Application
-	     */
-	    protected $app;
-	    
-	    /**
-	     * Adds the action hooks for WordPress.
-	     *
-	     * @param \WPKit\Core\Application $app
-	     */
-	    public function __construct(Application $app)
-	    {
-	        $this->app = $app;
-	    }
 	    
 	    public function action($controller, $action = '', $id = '') {
 		    
 		    if( empty( $controller ) ) {
 			    
-			    wp_die("Controller is not set");
+			    wp_send_json_error("Controller is not set");
 			    
 		    }
 		    
@@ -43,7 +28,7 @@
 			    
 			    if( ! class_exists( $class = $this->app->getControllerName($pluralController) ) ) {
 			    
-			    	wp_die("Controllers $singleController and $pluralController do not exist");
+			    	wp_send_json_error("Controllers $singleController and $pluralController do not exist");
 			    	
 			    } else {
 				    
@@ -59,11 +44,13 @@
 		    
 		    if( ! method_exists($class, $action) ) {
 			    
-			    wp_die("Controller $controller does not have method $action");
+			    wp_send_json_error("Controller $controller does not have method $action", 400);
 			    
 		    }
 		    
-		    return $this->app->call(array($this->app->make($class), $action), compact('id'));
+		    $this->app->call(array($this->app->make($class), 'beforeFilter'));
+		    
+		    $this->app->call(array($this->app->make($class), $action), compact('id'));
 		    
 	    }
 		

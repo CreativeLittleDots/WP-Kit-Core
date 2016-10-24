@@ -1,24 +1,22 @@
 <?php 
 	
 	namespace WPKit\Core;
-
+;
 	use Illuminate\Http\Request;
 
 	class Http extends Request {
 	   
-		public function __construct() {
+		public function header($key = null, $default = null) {
 			
-			// when using REST api OPTIONS needs to return successful
+			$headers = apache_request_headers();
 			
-			if ( 'OPTIONS' == $_SERVER['REQUEST_METHOD'] ) {
-					    
-		        status_header(200);
-		        
-		        exit();
-		        
-		    }
-		    
-		    parent::__construct();
+			if( ! empty( $headers[$key] ) ) {
+				
+				return $headers[$key];
+				
+			}
+			
+			return parent::header($key, $default);
 			
 		}
 	   

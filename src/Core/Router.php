@@ -24,7 +24,7 @@
 			
 			$methods = is_array( $methods ) ? $methods : array_map( 'strtoupper', array( $methods ) );
 			
-			if( in_array( $_SERVER['REQUEST_METHOD'], $methods ) ) {
+			if( in_array( $this->http->method(), $methods ) ) {
 			
 				$controller = $this->getController($callback);
 	
@@ -32,11 +32,11 @@
 					
 					if( $controller ) {
 						
-						call_user_func_array(array($controller, 'beforeFilter'), $params);
+						$this->app->call(array($controller, 'beforeFilter'), compact('params'));
 						
 					}
 					
-					call_user_func_array($this->getCallback($callback), $params);
+					$this->app->call($this->getCallback($callback), $params);
 					
 				});
 				
@@ -83,12 +83,12 @@
 		       
 	        if (method_exists($this, $method))
 	        {
-	            return call_user_func_array([$this, $method], $parameters);
+	            return $this->app->call([$this, $method], compact('parameters'));
 	        }
 	
 	        if (in_array(strtoupper($method), static::$methods))
 	        {
-	            return call_user_func([$this, 'map'], $uri, $callback, $method);
+	            return $this->app->call([$this, 'map'], $uri, compact('callback', 'method'));
 	        }
 	
 	        throw new InvalidArgumentException("Method {$method} not defined");

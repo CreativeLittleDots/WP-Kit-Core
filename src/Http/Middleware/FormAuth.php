@@ -6,20 +6,21 @@
 
 	class FormAuth extends Auth {
     	
-    	public function __construct( $settings ) {
-	    	
-	    	parent::__construct( $settings );
-	    	
-	    	$this->settings = array_merge(array(
-    			'logout_redirect' => '/wp-login.php',
-    			'login_redirect' => home_url(),
-    			'mask_wp_login' => false
-			), $this->settings);
+    	public function beforeAuth() {
 			
 			add_filter( 'login_url', array($this, 'get_login_url'), 10, 3);
-			add_action( 'login_init', array($this, 'mask_login') );
-	    	
-    	}
+			add_action( 'login_init', array($this, 'mask_login') );;
+			
+		}
+    	
+    	public function mergeSettings($settings = array()) {
+			
+			parent::mergeSettings(array_merge(array(
+    			'login_redirect' => home_url(),
+    			'mask_wp_login' => false
+			), $settings));
+
+		}
     	
     	public function get_login_url($login_url, $redirect, $force_reauth) {
         		
@@ -40,32 +41,22 @@
 		}
 		
 		public function authenticate() {
-    			
-			extract($this->settings);
 			
-			$is_allowed = is_page( $logout_redirect ) || is_route( $logout_redirect );
+			nocache_headers();
 			
-			if( ! $is_allowed ) {
-			
-				foreach($allow as $page) {
-	    			
-	    			$is_allowed = is_page( $page ) || is_route( $page ) ? true : $is_allowed;
-	    			
-				}
-				
-			}
+			$is_allowed = $this->isAllowed();
 
             if ( ! is_user_logged_in() && ! $is_allowed ) {
                 
                 $current_url = "//" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 
-                wp_redirect( add_query_arg('redirect_to', urlencode($current_url), $logout_redirect) );
+                wp_redirect( add_query_arg('redirect_to', urlencode($current_url), $this->settings['logout_redirect']) );
                 
                 exit;
                 
             } else if( is_user_logged_in() && $is_allowed ) {
                 
-                wp_redirect( $login_redirect );
+                wp_redirect( $this->settings['logout_redirect'] );
                 
                 exit;
             

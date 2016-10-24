@@ -193,7 +193,7 @@
 			
 			if( file_exists($file . '.twig') ) {
 				
-				$html = twig_this($file . '.twig', $vars);
+				$html = twigify($file . '.twig', $vars);
 	    		
 	        } else if( file_exists($file . '.php') ) {
 	    		
@@ -390,6 +390,18 @@
     if ( ! function_exists('twig_this') ) {
     
 	    function twig_this($template, $data) {
+		    
+		    _deprecated_function( __FUNCTION__, '1.3', 'twigify' );
+		    
+		    return twigify($template, $data);
+		    
+	    }
+	    
+	}
+	
+	if ( ! function_exists('twigify') ) {
+    
+	    function twigify($template, $data) {;
 		    
 		    return wpkit('Twig_Environment')->render($template, $data);
 		    
@@ -592,7 +604,7 @@
     
 	    function route( $uri, $callback, $method = 'get' ) {
 		    
-		    return wpkit('router')->add( $uri, $callback, $method );
+		    return wpkit('router')->map( $uri, $callback, $method );
 		    
 	    }
 	    
@@ -766,9 +778,9 @@
     
     if ( ! function_exists('force_rest') ) {
 	
-		function force_rest($controller = WPKit\Http\Controllers\RestController) {
+		function force_rest($controller = '\WPKit\Http\Controllers\RestController') {
 				
-			$restController = new $controller();
+			$restController = new $controller( wpkit() );
 			
 			route( BASE_PATH . '/:controller/:action/:id', array( $restController, 'action' ), '*' );
 			route( BASE_PATH . '/:controller/:action', array( $restController, 'action' ), '*' );

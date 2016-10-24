@@ -82,22 +82,40 @@
 	    ] ) );
 		
 	}
+	
+	if( ! defined( 'COMPONENTS_FOLDER' ) ) {
+    
+    	define( 'COMPONENTS_FOLDER', 'Components' );
+    	
+    }
     
     if( ! defined( 'COMPONENTS_DIR' ) ) {
     
-    	define( 'COMPONENTS_DIR', APP . DS . 'Components' );
+    	define( 'COMPONENTS_DIR', APP . DS . COMPONENTS_FOLDER );
     	
+    }
+    
+    if( ! defined( 'VIEWS_FOLDER' ) ) {
+	    
+	    define( 'VIEWS_FOLDER', 'Views' );
+	    
     }
     
     if( ! defined( 'VIEWS_DIR' ) ) {
 	    
-	    define( 'VIEWS_DIR', APP . DS . 'Views' );
+	    define( 'VIEWS_DIR', APP . DS . VIEWS_FOLDER );
+	    
+    }
+    
+    if( ! defined( 'TIMBER_VIEWS_FOLDER' ) ) {
+	    
+	    define( 'TIMBER_VIEWS_FOLDER', COMPONENTS_FOLDER );
 	    
     }
     
     if( ! defined( 'TIMBER_VIEW_DIR' ) ) {
 	    
-	    define( 'TIMBER_VIEW_DIR', COMPONENTS_DIR );
+	    define( 'TIMBER_VIEWS_DIR', APP . DS . TIMBER_VIEWS_FOLDER );
 	    
     }
     

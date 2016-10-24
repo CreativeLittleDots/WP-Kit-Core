@@ -1,8 +1,9 @@
 <?php
 	
-	namespace WPKit\Core\Controllers;
+	namespace WPKit\Http\Controllers;
 	
 	use WPKit\Core\Application;
+	use WPKit\Core\Controller;
 	
 	class RestController extends Controller {
 		
@@ -21,9 +22,7 @@
 	        $this->app = $app;
 	    }
 	    
-	    public function action($params) {
-		    
-		    extract($params);
+	    public function action($controller, $action = '', $id = '') {
 		    
 		    if( empty( $controller ) ) {
 			    
@@ -40,9 +39,9 @@
 		    $singleController = inflector()->camelize( inflector()->singularize( $controller ) . '_controller');
 		    $pluralController = inflector()->camelize( inflector()->pluralize( $controller ) . '_controller');
 		    
-		    if( ! $class = wpkit()->make($singleController) ) {
+		    if( ! class_exists( $class = $this->app->getControllerName($singleController) ) ) {
 			    
-			    if( ! $class = wpkit()->make($pluralController) ) {
+			    if( ! class_exists( $class = $this->app->getControllerName($pluralController) ) ) {
 			    
 			    	wp_die("Controllers $singleController and $pluralController do not exist");
 			    	
@@ -64,7 +63,7 @@
 			    
 		    }
 		    
-		    return $this->app->call(array($class, $action), array_slice($params, 2, null, true));
+		    return $this->app->call(array($this->app->make($class), $action), compact('id'));
 		    
 	    }
 		

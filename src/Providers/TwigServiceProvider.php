@@ -20,7 +20,9 @@
 	    {
 	        $this->app->singleton('twig.loader', function ()
 	        {
-	            $loader = new Twig_Loader_Filesystem();
+	            $loader = new Twig_Loader_Filesystem(array(
+		            '__MAIN__' => '/'
+	            ));
 	
 	            foreach ($this->app->getPlugins() as $plugin)
 	            {
@@ -35,7 +37,6 @@
 	            return [
 	                'debug' => $this->app->environment() === 'local',
 	                'charset' => 'utf-8',
-	                'cache' => content_directory() . '/twig-cache',
 	                'auto_reload' => true,
 	                'strict_variables' => false,
 	                'autoescape' => true,
@@ -46,13 +47,8 @@
 	        $this->app->bind('twig.functions', function ()
 	        {
 	            return [
-	                'dd',
-	                'herbert',
+	                'wpkit',
 	                'view',
-	                'content_directory',
-	                'plugin_directory',
-	                'panel_url',
-	                'route_url',
 	                'session',
 	                'session_flashed',
 	                'errors'

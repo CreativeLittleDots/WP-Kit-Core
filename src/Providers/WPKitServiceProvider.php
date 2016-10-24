@@ -4,12 +4,7 @@
 
 	use Illuminate\Database\Capsule\Manager as Capsule;
 	use Illuminate\Support\ServiceProvider;
-	use Illuminate\Cookie\CookieJar;
-	use WPKit\Core\Session;
 	
-	/**
-	 * @see http://getherbert.com
-	 */
 	class WPKitServiceProvider extends ServiceProvider {
 	
 	    /**
@@ -38,14 +33,9 @@
 	            'WPKit\Core\Http'
 	        );
 	
-	        $this->app->instance(
-	            'router',
-	            $this->app->make('WPKit\Core\Router', ['app' => $this->app])
-	        );
-	
 	        $this->app->bind(
-	            'route',
-	            'WPKit\Core\Route'
+	            'router',
+	            'WPKit\Core\Router'
 	        );
 	
 	        $this->app->instance(

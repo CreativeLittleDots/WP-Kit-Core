@@ -24,6 +24,7 @@
         exit;
     }
     
+    use Illuminate\Support\ServiceProvider;
     use Illuminate\Contracts\Foundation\Application as ApplicationInterface;
 	use vierbergenlars\SemVer\version as SemVersion;
 	use Illuminate\Container\Container;
@@ -475,9 +476,30 @@
 		
 		public function boot() {
 			
-			$namespace = $this->namespace;
-			
 			if ( $this->booted ) return;
+			
+			// Once the application has booted we will also fire some "booted" callbacks
+	        // for any listeners that need to do work after this initial booting gets
+	        // finished. This is useful when ordering the boot-up processes we run.
+	        $this->fireAppCallbacks($this->bootingCallbacks);
+	        array_walk($this->serviceProviders, function ($p)
+	        {
+	            $this->bootProvider($p);
+	        });
+	        array_walk($this->plugins, function ($p)
+	        {
+	            if ( ! method_exists($p, 'boot'))
+	            {
+	                return;
+	            }
+	            $this->call([$p, 'boot'], ['app' => $this]);
+	        });
+	        if (count($this->mismatched) !== 0)
+	        {
+	            $this->notifyMismatched();
+	        }
+	        $this->booted = true;
+	        $this->fireAppCallbacks($this->bootedCallbacks);
 			
 			if( defined( 'FUNCTIONS_DIR' ) && FUNCTIONS_DIR ) {
 			
@@ -499,7 +521,7 @@
 			
 				foreach( glob( POST_TYPES_DIR . DS . '*.php' ) as $post_type ) {
 					
-					$post_type = $namespace . '\PostTypes\\' . basename($post_type, '.php');
+					$post_type = $this->getNamespace() . '\PostTypes\\' . basename($post_type, '.php');
 					
 					$this->make($post_type);
 					
@@ -515,7 +537,7 @@
 			
 				foreach( glob( TAXONOMIES_DIR . DS . '*.php' ) as $taxonomy ) {
 					
-					$taxonomy = $namespace .'\Taxonomies\\' . basename($taxonomy, '.php');
+					$taxonomy = $this->getNamespace() . '\Taxonomies\\' . basename($taxonomy, '.php');
 					
 					$this->make($taxonomy);
 					
@@ -531,7 +553,7 @@
 			
 				foreach( glob( SHORTCODES_DIR . DS . '*.php' ) as $shortcode ) {
 	    			
-	    			$class = $namespace . '\Shortcodes\\' . basename($shortcode, '.php');
+	    			$class = $this->getNamespace() . '\Shortcodes\\' . basename($shortcode, '.php');
 	    			
 	    			$shortcode = $this->make($class);
 
@@ -549,7 +571,7 @@
 			
 				foreach( glob( WIDGETS_DIR . DS . '*.php' ) as $widget) {
 					
-					$class = $namespace .'\Widgets\\' . basename($widget, '.php');
+					$class = $this->getNamespace() . '\Widgets\\' . basename($widget, '.php');
 					
 					add_action( 'widgets_init', function() use ($widget, $class) {
 	    				
@@ -565,7 +587,7 @@
 				
 			}
 			
-			if( $this->inWp ) {
+			if( $this->inWp() ) {
 			
 				$this->requirePlugins();
 				
@@ -577,6 +599,35 @@
 			
 		}
 		
+		/**
+		 * Call the booting callbacks for the application.
+	     *
+	     * @param  array  $callbacks
+	     * @return void
+	     */
+	    protected function fireAppCallbacks(array $callbacks)
+	    {
+	        foreach ($callbacks as $callback)
+	        {
+	            call_user_func($callback, $this);
+	        }
+	    }
+	    
+	    /**
+	     * Boot the given service provider.
+	     *
+	     * @param  \Illuminate\Support\ServiceProvider  $provider
+	     * @return mixed
+	     */
+	    protected function bootProvider(ServiceProvider $provider)
+	    {
+	        if (method_exists($provider, 'boot'))
+	        {
+	            return $this->call([$provider, 'boot']);
+	        }
+	        return null;
+	    }
+		
 		public function setNamespace($namespace) {
 			
 			$this->namespace = $namespace;
@@ -584,6 +635,96 @@
 			return $this;
 			
 		}
+		
+		public function getNamespace() {
+			
+			return $this->namespace;
+			
+		}
+		
+		public function getControllerName($controller) {
+			
+			return $this->getNamespace() . "\Controllers\\$controller";
+			
+		}
+		
+		public function inWp() {
+			
+			return $this->inWp;
+			
+		}
+		
+		/**
+	     * Get all loaded plugins.
+	     *
+	     * @return array
+	     */
+	    public function getPlugins() {
+		    
+	        return $this->plugins;
+	        
+	    }
+	    
+	    /**
+	     * Get all the view globals.
+	     *
+	     * @return array
+	     */
+	    public function getViewGlobals() {
+		    
+	        if ($this->builtViewGlobals === null) {
+		        
+	            $this->buildViewGlobals();
+	            
+	        }
+	        
+	        return $this->builtViewGlobals;
+	        
+	    }
+	    
+	    /**
+	     * Builds the view globals.
+	     *
+	     * @return void
+	     */
+	    protected function buildViewGlobals() {
+		    
+	        $globals = [];
+	        
+	        foreach ($this->viewGlobals as $global) {
+		        
+	            list($key, $val) = $global;
+	            
+	            try {
+	                $val = $this->call($val, ['app' => $this]);
+	            }
+	            catch (\Exception $e)
+	            {
+	                if ((is_numeric($key) || $key === null) && is_string($val))
+	                {
+	                    continue;
+	                }
+	            }
+	            if ($key !== null)
+	            {
+	                $val = [$key => $val];
+	            }
+	            $val = (array) $val;
+	            $globals = array_merge($globals, $val);
+	            
+	        }
+	        
+	        foreach ($this->apis as $api) {
+		        
+	            list($name, $instance) = $api;
+	            
+	            $globals[$name] = $instance;
+	            
+	        }
+	        
+	        $this->builtViewGlobals = $globals;
+	        
+	    }
 		
 		public function requirePlugins($plugins = array()) {
     		
@@ -690,7 +831,7 @@
 		
 		public function addIntegrations($integrations) {
 			
-			if( $this->inWp ) {
+			if( $this->inWp() ) {
 			
 				foreach($integrations as $integration => $settings) {
 	    			
@@ -716,15 +857,13 @@
 		
 		public function addIntegration($integration, $settings) {
 			
-			if( $this->inWp ) {
-				
-				$namespace = $this->namespace;
+			if( $this->inWp() ) {
 			
 				if( ! $this->hasIntegration( $integration ) ) {
 				
 					$core_integration_class = 'WPKit\Integrations\\' . inflector()->camelize($integration);
 			    		
-		    		$integration_class = $namespace . '\Integrations\\' . inflector()->camelize($integration);
+		    		$integration_class = $this->getNamespace() . '\Integrations\\' . inflector()->camelize($integration);
 		    		
 		    		if( class_exists( $core_integration_class ) ) {
 		        		
@@ -756,7 +895,7 @@
 		
 		public function hasIntegration($integration) {
 			
-			if( $this->inWp ) {
+			if( $this->inWp() ) {
 				
     			return array_key_exists($integration, $this->integrations) && $this->integrations[$integration];
     			

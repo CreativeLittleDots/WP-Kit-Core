@@ -729,10 +729,9 @@
     
     if ( ! function_exists('force_rest') ) {
 	
-		function force_rest(WPKit\Core\Auth $auth = null, $controller = '\WPKit\Http\Controllers\RestController') {
+		function force_rest($controller = '\WPKit\Http\Controllers\RestController') {
 				
 			$restController = wpkit()->make($controller);
-			$auth && $auth->beforeAuth();
 			
 			route( BASE_PATH . '/:controller/:action/:id', array( $restController, 'action' ), '*' );
 			route( BASE_PATH . '/:controller/:action', array( $restController, 'action' ), '*' );

@@ -295,7 +295,7 @@
 	            $this->blog_id = $entity->blog_id;
 				$this->author_id = $entity->author;
 				$this->thumbnail_id = get_post_thumbnail_id( $entity->ID );
-				$this->date_modified = get_post_modified_time( 'Y-m-d', false, $entity->ID );
+				$this->date_modified = get_post_modified_time( 'Y-m-d H:i:s', false, $entity->ID );
 				$this->status = $entity->post_status;
 		    	
 		    }

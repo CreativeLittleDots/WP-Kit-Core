@@ -57,6 +57,16 @@
 	            'notifier',
 	            'WPKit\Core\Notifier'
 	        );
+	        
+	        $this->app->instance(
+	            'invoker',
+	            $this->app->make('WPKit\Core\Invoker', ['app' => $this->app])
+	        );
+	        
+	        $this->app->alias(
+	            'invoker',
+	            'WPKit\Core\Invoker'
+	        );
 	
 	        $this->app->singleton(
 	            'errors',

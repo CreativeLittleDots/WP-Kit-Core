@@ -185,23 +185,35 @@
     
     if ( ! function_exists('get_element') ) {
     
-	    function get_element($path = '', $template, $vars = array(), $echo = true, $dir = VIEWS_DIR) {
+	    function get_element($path = '', $template, $vars = array(), $echo = true) {
 		    
-		    $file = $dir . DS . $path . DS . $template;
+		    $file = $path . DS . $template;
 			
 			$html = '';
 			
-			if( file_exists($file . '.twig') ) {
+			if( file_exists( COMPONENTS_DIR . DS . $file . '.twig' ) || file_exists( VIEWS_DIR . DS . $file . '.twig' ) ) {
 				
 				$html = twigify($file . '.twig', $vars);
 	    		
-	        } else if( file_exists($file . '.php') ) {
+	        } else if( file_exists( COMPONENTS_DIR . DS . $file . '.php') ) {
 	    		
 	    		ob_start();
 	    		
 	    		extract($vars);
 	    			
-				include( $file . '.php' );
+				include( COMPONENTS_DIR . DS . $file . '.php' );
+			
+				$html = ob_get_contents();
+				
+				ob_end_clean();
+				
+			} else if( file_exists( VIEWS_DIR . DS . $file . '.php') ) {
+	    		
+	    		ob_start();
+	    		
+	    		extract($vars);
+	    			
+				include( VIEWS_DIR . DS . $file . '.php' );
 			
 				$html = ob_get_contents();
 				
@@ -227,7 +239,7 @@
     
 	    function get_component($path = '', $template, $vars = array(), $echo = true) {
 		    
-		    $html = get_element($path, $template, $vars, $echo, COMPONENTS_DIR);
+		    $html = get_element($path, $template, $vars, $echo);
 		    
 		    if($echo)
 	            echo $html;
@@ -401,7 +413,13 @@
 	
 	if ( ! function_exists('twigify') ) {
     
-	    function twigify($template, $data) {;
+	    function twigify($template, $data) {
+		    
+		    if( class_exists('Timber') ) {
+		    
+		    	return Timber::compile($template, $data);
+		    	
+		    }
 		    
 		    return wpkit('Twig_Environment')->render($template, $data);
 		    

@@ -15,7 +15,7 @@
 				
 			}
 	
-			Timber::$locations = array( TIMBER_VIEWS_DIR );
+			Timber::$locations = array( '/', VIEWS_DIR, COMPONENTS_DIR );
 			
 			if( ! empty($settings['context']) && is_array($settings['context']) && count($settings['context']) > 0 ) {
 				

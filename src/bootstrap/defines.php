@@ -107,18 +107,6 @@
 	    
     }
     
-    if( ! defined( 'TIMBER_VIEWS_FOLDER' ) ) {
-	    
-	    define( 'TIMBER_VIEWS_FOLDER', COMPONENTS_FOLDER );
-	    
-    }
-    
-    if( ! defined( 'TIMBER_VIEW_DIR' ) ) {
-	    
-	    define( 'TIMBER_VIEWS_DIR', APP . DS . TIMBER_VIEWS_FOLDER );
-	    
-    }
-    
     if( ! defined( 'FUNCTIONS_DIR' ) ) {
     
     	define( 'FUNCTIONS_DIR', APP . DS . 'Functions' );

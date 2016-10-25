@@ -23,7 +23,7 @@
 		public function __construct(Application $app, Http $http) {
 			
 			$this->app = $app;
-			$this->http = $http;
+		    $this->http = $http;
 			
 			// when using REST api OPTIONS needs to return successful
 			
@@ -160,13 +160,13 @@
     		
 		}
 		
-		protected function render( $view, $vars = array(), $echo = true, $dir = VIEWS_DIR ) {
+		protected function render( $view, $vars = array(), $echo = true ) {
 			
 			$reflect = new ReflectionClass($this);
 			
 			$path = str_replace( 'Controller', '', $reflect->getShortName() );
 			
-			$html = get_element( $path, $view, $vars, $echo, $dir );
+			$html = get_element( $path, $view, $vars, $echo );
 			
 			if( $echo ) {
 				
@@ -198,7 +198,7 @@
 		
 		protected function renderComponent( $view, $vars = array(), $echo = true ) {
 			
-			$html = $this->render( $view, $vars, $echo, COMPONENTS_DIR );
+			$html = $this->render( $view, $vars, $echo );
 			
 			if( $echo ) {
 				

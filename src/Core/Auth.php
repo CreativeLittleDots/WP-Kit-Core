@@ -16,12 +16,12 @@
     	
     	public $settings = array();
     	
-    	public function __construct(Application $app, Http $http, $settings = array()) {
+    	public function __construct($params = array(), Application $app, Http $http) {
 	    	
 	    	$this->app = $app;
 	    	$this->http = $http;
 	    	
-	    	$this->mergeSettings($settings);
+	    	$this->mergeSettings($params);
 	    	
 	    	$this->beforeAuth();
 			

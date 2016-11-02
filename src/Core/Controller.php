@@ -53,7 +53,7 @@
 				
 				$script = is_array($script) ? $script : ['file' => $script];
 				
-				if ( $script['file'] = $this->getScriptPath( $script['file'] ) ) {
+				if ( $script['file'] = $this->getScriptPath( ! empty( $script['file'] ) ? $script['file'] : '' ) ) {
 						
     				$info = pathinfo( $script['file'] );
     				

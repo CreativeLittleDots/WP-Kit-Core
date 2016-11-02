@@ -628,13 +628,33 @@
 	    
 	}
 	
+	if( ! function_exists('get_current_url') ) {
+		
+		function get_current_url() {
+			
+			return "//" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			
+		}
+		
+	}
+	
+	if( ! function_exists('get_current_url_path') ) {
+		
+		function get_current_url_path() {
+			
+			$path = explode( '?', $_SERVER['REQUEST_URI'] );
+			
+			return $path[0];
+			
+		}
+		
+	}
+	
 	if ( ! function_exists('is_route') ) {
     
 	    function is_route( $path ) {
-		    
-		    global $wp;
 
-			return home_url( $path ) == home_url( add_query_arg( array(), $wp->request ) );
+			return home_url( $path ) == home_url( get_current_url_path() );
 		    
 	    }
 	    
@@ -661,13 +681,13 @@
 			    'offset'     => 1,
 			);
 			
-			$blogs = wp_get_sites( $blogArgs );
+			$blogs = get_sites( $blogArgs );
 			
 			foreach($blogs as $i => $blog) {
 				
-				$status = get_blog_status($blog['blog_id'], 'public');
+				$status = get_blog_status($blog->blog_id, 'public');
 				
-				if( ! $status && ( ! is_user_logged_in() || ( ! is_user_member_of_blog(get_current_user_id(), $blog['blog_id']) && !is_super_admin() ) ) )
+				if( ! $status && ( ! is_user_logged_in() || ( ! is_user_member_of_blog(get_current_user_id(), $blog->blog_id) && !is_super_admin() ) ) )
 					unset($blogs[$i]);
 				
 			}
@@ -700,15 +720,17 @@
 			
 			$posts = array();
 			
+			$current_blog = get_current_blog_id();
+			
 			foreach($blogs as $blog) {
 				
-				switch_to_blog($blog['blog_id']);
+				switch_to_blog($blog->blog_id);
 				
 				$blog_posts = get_posts($args);
 				
 				foreach($blog_posts as $blog_post) {
 					
-					$blog_post->blog_id = $blog['blog_id'];
+					$blog_post->blog_id = $blog->blog_id;
 					
 					if($orderby === 'date') 
 						$ordering = strtotime($blog_post->$orderbyVal);
@@ -771,7 +793,7 @@
 				
 			if( class_exists( $class ) ) {
 				
-				return wpkit()->make($class, $params);
+				return wpkit()->make($class, compact('params'));
 				
 			}
 			

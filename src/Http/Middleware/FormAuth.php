@@ -21,22 +21,40 @@
 			), $settings));
 
 		}
+		
+		public function isAllowed() {
+			
+			extract($this->settings);
+	    	
+	    	if( ! $mask_wp_login && is_wp_login() ) {
+		    	
+		    	return true;
+		    	
+	    	}
+	    	
+	    	return parent::isAllowed();
+	    	
+    	}
     	
     	public function get_login_url($login_url, $redirect, $force_reauth) {
         		
     		extract($this->settings);
 			
-			if( $logout_redirect ) {
+			if( $logout_redirect && $mask_wp_login ) {
+				
+				$login_url = home_url($logout_redirect);
 
             	if ( ! empty($redirect) )
-            		$logout_redirect = add_query_arg('redirect_to', urlencode($redirect), $logout_redirect);
+            		$login_url = add_query_arg('redirect_to', urlencode($redirect), $login_url);
             
             	if ( $force_reauth )
-            		$logout_redirect = add_query_arg('reauth', '1', $logout_redirect);
+            		$login_url = add_query_arg('reauth', '1', $login_url);
+            		
+            	
     			
 			}
     		
-    		return $logout_redirect;
+    		return $login_url;
     		
 		}
 		
@@ -48,18 +66,12 @@
 
             if ( ! is_user_logged_in() && ! $is_allowed ) {
                 
-                $current_url = "//" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+                $current_url = get_current_url();
                 
                 wp_redirect( add_query_arg('redirect_to', urlencode($current_url), $this->settings['logout_redirect']) );
                 
                 exit;
                 
-            } else if( is_user_logged_in() && $is_allowed ) {
-                
-                wp_redirect( $this->settings['logout_redirect'] );
-                
-                exit;
-            
             }
 	        
         }

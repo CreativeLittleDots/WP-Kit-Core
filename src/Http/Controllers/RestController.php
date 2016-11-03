@@ -17,7 +17,7 @@
 		    
 		    if( empty( $action ) ) {
 			    
-			    $action = 'index';
+				$action = $this->http->method() == 'POST' ? 'save' : 'get';
 			    
 		    }
 		    

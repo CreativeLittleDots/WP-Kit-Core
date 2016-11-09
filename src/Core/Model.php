@@ -13,6 +13,9 @@
 		/* General entity content */
 		public $content;
 		
+		/* General entity excerpt */
+		public $excerpt;
+		
 		/* General entity url */
 		public $url;
 		
@@ -24,6 +27,9 @@
 		
 		/* General entity thumbnail id */
 		public $thumbnail_id;
+		
+		/* General entity date added */
+		public $date_added;
 		
 		/* General entity date modified */
 		public $date_modified;
@@ -107,9 +113,11 @@
 	    	
 	    	$meta_data = array();
 	    	
-	    	foreach($class::$meta as $meta_key) {
+	    	foreach($class::$meta as $meta_key => $meta_value) {
 		    	
-		    	$meta_data[$meta_key] = $this->$meta_key;
+		    	$property = ! is_numeric($meta_key) ? $meta_key : $meta_value;
+		    	
+		    	$meta_data[$meta_value] = $this->$property;
 		    	
 	    	}
 	    	
@@ -144,6 +152,16 @@
 	    	if( self::getModel() == 'WP_Post' ) {
 		    	
 		    	return apply_filters( 'the_content', $this->content, $this->entity );
+		    	
+	    	}
+	    	
+    	}
+    	
+    	public function getExcerpt() {
+	    	
+	    	if( self::getModel() == 'WP_Post' ) {
+		    	
+		    	return apply_filters( 'the_excerpt', $this->excerpt ? $this->excerpt : $this->content, $this->entity );
 		    	
 	    	}
 	    	
@@ -193,6 +211,14 @@
 	    	
     	}
     	
+    	public function getDateAdded( $date = null ) {
+	    	
+	    	$date = $date ? $date : get_option( 'date_format' );
+	    	
+	    	return date( $date, strtotime( $this->date_added ) );
+	    	
+    	}
+    	
     	public function getDateModified( $date = null ) {
 	    	
 	    	$date = $date ? $date : get_option( 'date_format' );
@@ -219,7 +245,7 @@
 	    			'offset' => '',
 	    			'orderby' => '',
 	    			'order' => 'DESC',
-	    			'parent' => '',
+	    			'parent' => 0,
 	    			'post_author__in' => '',
 	    			'post_author__not_in' => '',
 	    			'post_ID' => '', // ignored (use post_id instead)
@@ -296,6 +322,7 @@
 				$this->author_id = $entity->author;
 				$this->thumbnail_id = get_post_thumbnail_id( $entity->ID );
 				$this->date_modified = get_post_modified_time( 'Y-m-d H:i:s', false, $entity->ID );
+				$this->date_added = get_post_time( 'Y-m-d H:i:s', false, $entity->ID );
 				$this->status = $entity->post_status;
 		    	
 		    }

@@ -25,14 +25,6 @@
 			$this->app = $app;
 		    $this->http = $http;
 			
-			// when using REST api OPTIONS needs to return successful
-			
-			if ( 'OPTIONS' == $this->http->method() ) {
-					    
-		        wp_send_json_success( 'authorised' );
-		        
-		    }
-			
 		}
         
         public function beforeFilter() {

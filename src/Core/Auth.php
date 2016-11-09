@@ -14,20 +14,38 @@
 	     */
 	    protected $http;
     	
+    	/**
+	     * @var array
+	     */
     	public $settings = array();
+    	
+    	/**
+	     * @var string
+	     */
+    	public $action = 'init';
     	
     	public function __construct($params = array(), Application $app, Http $http) {
 	    	
 	    	$this->app = $app;
 	    	$this->http = $http;
 	    	
+	    	// when using REST api OPTIONS needs to return successful
+			
+			if ( 'OPTIONS' == $this->http->method() ) {
+				
+				status_header(200);
+					    
+		        wp_send_json_success( 'authorised' );
+		        
+		    }
+	    	
 	    	$this->mergeSettings($params);
 	    	
 	    	$this->beforeAuth();
 			
-			add_action( 'init', array($this, 'authenticate'), 1 );
+			add_action( $this->action, array($this, 'authenticate'), 1 );
 			
-			if( did_action( 'init' ) ) {
+			if( did_action(  $this->action ) ) {
 				
 				$this->authenticate();
 				

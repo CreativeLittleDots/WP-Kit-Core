@@ -5,6 +5,11 @@
     use WPKit\Core\Auth;
 
 	class FormAuth extends Auth {
+		
+		/**
+	     * @var string
+	     */
+    	public $action = 'wp';
     	
     	public function beforeAuth() {
 			

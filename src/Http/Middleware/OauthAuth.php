@@ -53,6 +53,8 @@
 			
 			if( ! $token ) {
 				
+				status_header(401);
+				
 				wp_send_json_error( 'no access token provided' );
 				
 			}
@@ -71,6 +73,8 @@
 				
 			} else {
 				
+				status_header(401);
+				
 				wp_send_json_error( 'invalid access token provided' );
 				
 			}
@@ -80,6 +84,8 @@
 		public function token() {
 			
 			if( ! $grant_type = $this->http->get('grant_type') ) {
+				
+				status_header(401);
 				
 				wp_send_json_error( 'The grant type was not specified in the request' );
 				
@@ -91,11 +97,15 @@
 			
 				if( ! $client_id = $this->http->get('client_id') ) {
 					
+					status_header(401);
+					
 					wp_send_json_error( 'Missing parameter: client_id' );
 					
 				}
 				
 				if( ! $client_secret = $this->http->get('client_secret') ) {
+					
+					status_header(401);
 					
 					wp_send_json_error( 'Missing parameter: client_secret' );
 					
@@ -105,11 +115,15 @@
 				
 					if( ! $username = $this->http->get('username') ) {
 						
+						status_header(401);
+						
 						wp_send_json_error( 'Missing parameter: username' );
 						
 					}
 					
 					if( ! $password = $this->http->get('password') ) {
+						
+						status_header(401);
 						
 						wp_send_json_error( 'Missing parameter: password' );
 						
@@ -134,8 +148,10 @@
 					}
 					
 					add_user_meta( $user->ID, 'access_token', $token );
+					
+					status_header(200);
 				
-					wp_send_json(array(
+					wp_send_json_success(array(
 						'access_token' => $token,
 						'expires_in' => 3600,
 						'token_type' => 'Bearer',
@@ -145,15 +161,15 @@
 					
 				} else {
 					
-					wp_die(
-						'You need to enter a Username and a Password if you want to see this website.',
-						'Authorization Required',
-						array( 'response' => 401 )
-					);
+					status_header(401);
+					
+					wp_send_json_error($is_authenticated->get_error_message());
 					
 				}
 				
 			} else {
+				
+				status_header(401);
 				
 				wp_send_json_error( 'Unsupported grant type: ' . $grant_type );
 				

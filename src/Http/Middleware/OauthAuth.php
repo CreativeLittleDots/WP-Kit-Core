@@ -131,7 +131,23 @@
 					
 				}
 				
-				$user = get_user_by( $this->settings['username'], $username );
+				if( is_array( $this->settings['username'] ) ) {
+					
+					foreach($this->settings['username'] as $property) {
+						
+						if( $user = get_user_by( $property, $username ) ) {
+							
+							break;
+							
+						}
+						
+					}
+					
+				} else {
+				
+					$user = get_user_by( $this->settings['username'], $username );
+					
+				}
 				
 				$is_authenticated = wp_authenticate($user->user_login, $password);
 				

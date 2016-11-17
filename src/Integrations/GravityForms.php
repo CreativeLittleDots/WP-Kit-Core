@@ -207,6 +207,12 @@
 		
 		public function custom_markup($html, $form) {
 			
+			if( is_admin() ) {
+        		return $html;
+    		}
+			
+			libxml_use_internal_errors(true);
+			
 			$find = apply_filters('wpkit_gforms_find', ! empty( $this->settings['find'] ) ? $this->settings['find'] : array());
 			
 			$replace = apply_filters('wpkit_gforms_replace', ! empty( $this->settings['replace'] ) ? $this->settings['replace'] : array());

@@ -23,6 +23,14 @@
 	            $loader = new Twig_Loader_Filesystem(array(
 		            '__MAIN__' => '/'
 	            ));
+	            
+	            if(file_exists(VIEWS_DIR)) {
+	            	$loader->addPath(VIEWS_DIR);
+	            }
+	            
+	            if(file_exists(COMPONENTS_DIR)) {
+	            	$loader->addPath(COMPONENTS_DIR);
+	            }
 	
 	            foreach ($this->app->getPlugins() as $plugin)
 	            {

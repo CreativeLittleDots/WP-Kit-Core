@@ -185,7 +185,7 @@
     
     if ( ! function_exists('get_element') ) {
     
-	    function get_element($path = '', $template, $vars = array(), $echo = true) {
+	    function get_element($path = '', $template, $vars = array(), $echo = false) {
 		    
 		    $file = $path . DS . $template;
 			
@@ -237,7 +237,7 @@
     
     if ( ! function_exists('get_component') ) {
     
-	    function get_component($path = '', $template, $vars = array(), $echo = true) {
+	    function get_component($path = '', $template, $vars = array(), $echo = false) {
 		    
 		    $html = get_element($path, $template, $vars, $echo);
 		    
@@ -291,7 +291,7 @@
     
     if ( ! function_exists('get_view') ) {
     
-	    function get_view($path = '', $template, $vars = array(), $echo = true) {
+	    function get_view($path = '', $template, $vars = array(), $echo = false) {
 		    
 		    $html = get_element( $path, $template, $vars, $echo );
 		    

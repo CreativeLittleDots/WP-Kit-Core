@@ -8,13 +8,13 @@
 		public $id;
 		
 		/* General entity title */
-		public $title;
+		public $title = '';
 		
 		/* General entity content */
-		public $content;
+		public $content = '';
 		
 		/* General entity excerpt */
-		public $excerpt;
+		public $excerpt = '';
 		
 		/* General entity url */
 		public $url;
@@ -24,6 +24,9 @@
 		
 		/* General entity author id */
 		public $author_id;
+		
+		/* General entity parent id */
+		public $parent_id;
 		
 		/* General entity thumbnail id */
 		public $thumbnail_id;
@@ -115,7 +118,7 @@
 	    	
 	    	foreach($class::$meta as $meta_key => $meta_value) {
 		    	
-		    	$property = ! is_numeric($meta_key) ? $meta_key : $meta_value;
+		    	$property = is_string($meta_key) ? $meta_key : $meta_value;
 		    	
 		    	$meta_data[$meta_value] = $this->$property;
 		    	
@@ -369,7 +372,10 @@
 				        'ID' => $this->id,
 				        'post_title' => $this->title,
 				        'post_status' => $this->status,
-				        'post_content' => $this->content
+				        'post_content' => $this->content,
+				        'post_excerpt' => $this->excerpt,
+				        'post_author' => $this->author_id,
+				        'post_parent' => $this->parent_id
 			        ));
 			        
 		        } else {
@@ -378,7 +384,10 @@
 				        'post_title' => $this->title,
 				        'post_type' => self::getPostType(),
 				        'post_status' => $this->status,
-				        'post_content' => $this->content
+				        'post_content' => $this->content,
+				        'post_excerpt' => $this->excerpt,
+				        'post_author' => $this->author_id,
+				        'post_parent' => $this->parent_id
 			        )); 
 			        
 			        $this->is_new = true;

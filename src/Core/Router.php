@@ -22,7 +22,7 @@
 		        'DELETE'
 		    ] : $method;
 			
-			$methods = is_array( $methods ) ? $methods : array_map( 'strtoupper', array( $methods ) );
+			$methods = array_map( 'strtoupper', is_array( $methods ) ? $methods : array( $methods ) );
 			
 			if( in_array( $this->http->method(), $methods ) ) {
 			

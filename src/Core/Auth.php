@@ -59,6 +59,7 @@
 	    	
 	    	$this->settings = array_merge(array(
     			'allow' => array(),
+    			'disallow' => array(),
     			'logout_redirect' => '/wp-login.php',
 			), $settings);
 	    	
@@ -71,11 +72,37 @@
 	    	$is_allowed = is_user_logged_in() || is_page( $this->settings['logout_redirect'] ) || is_route( $this->settings['logout_redirect'] );
 			
 			if( ! $is_allowed ) {
-			
-				foreach($this->settings['allow'] as $page) {
+				
+				if( ! empty( $this->settings['disallow'] ) ) {
+					
+					$is_allowed = true;
+					
+					foreach($this->settings['disallow'] as $page) {
 	    			
-	    			$is_allowed = is_page( $page ) || is_route( BASE_PATH . $page ) ? true : $is_allowed;
+		    			$is_allowed = is_page( $page ) || is_route( BASE_PATH . $page ) ? false : $is_allowed;
+		    			
+		    			if( ! $is_allowed ) {
+			    			
+			    			break;
+			    			
+		    			}
+		    			
+					}
+				
+				} else {
+					
+					foreach($this->settings['allow'] as $page) {
 	    			
+		    			$is_allowed = is_page( $page ) || is_route( BASE_PATH . $page ) ? true : $is_allowed;
+		    			
+		    			if( $is_allowed ) {
+			    			
+			    			break;
+			    			
+		    			}
+		    			
+					}
+					
 				}
 				
 			}

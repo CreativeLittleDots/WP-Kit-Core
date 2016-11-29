@@ -3,7 +3,6 @@
 	namespace WPKit\Models;
 
 	use Carbon\Carbon;
-	use Illuminate\Database\Eloquent\Model;
 	use WPKit\Models\SoftDeletes\SoftDeletes;
 	
 	class Post extends Model {

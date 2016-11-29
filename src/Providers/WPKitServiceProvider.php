@@ -68,6 +68,11 @@
 	            'WPKit\Core\Invoker'
 	        );
 	
+			$this->app->singleton(
+			    'Illuminate\Contracts\Debug\ExceptionHandler',
+			    'WPKit\Core\ExceptionHandler'
+			);
+
 	        $this->app->singleton(
 	            'errors',
 	            function ()

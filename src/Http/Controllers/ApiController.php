@@ -134,7 +134,7 @@
 				
 				if( ! empty( $this->http->get('orderby') ) ) {
 					
-					$query->orderBy( $this->http->get('orderby'), $this->http->get('order') ? $this->http->get('order') : 'ASC' );
+					$query->orderBy( $this->http->get('orderby'), $this->http->get('order') ? $this->http->get('order') : 'DESC' );
 					
 				}
 				

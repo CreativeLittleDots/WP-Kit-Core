@@ -17,7 +17,7 @@
 				
 				$query->where( 'post_title', 'like', '%' . $this->http->get('s') . '%' );
 				
-				foreach($model->getMetaKeys() as $meta_key) {
+				foreach($model->getPublicMeta() as $meta_key) {
 					
 					$query->join(
 		    			'postmeta as ' . $meta_key, 

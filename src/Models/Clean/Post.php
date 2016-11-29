@@ -2,7 +2,7 @@
 	
 	namespace WPKit\Models\Clean;
 	
-	use WPKit\Models\PostClass;
+	use WPKit\Models\Post as PostClass;
 	
 	class Post extends PostClass {
 		
@@ -12,6 +12,7 @@
 	     * @var array
 	     */
 		protected $hidden = [
+			'ID',
 			'post_title',
 			'post_status',
 			'post_author', 
@@ -37,26 +38,63 @@
 		];
 		
 		/**
-	     * The appends attributes that are mass assignable.
+	     * Create a new Eloquent model instance.
 	     *
-	     * @var array
+	     * @param  array  $attributes
+	     * @return void
 	     */
-		protected $appends = [
-			'title',
-			'status',
-			'date_added',
-			'date_modified'
-		];
+	    public function __construct(array $attributes = [])
+	    {
+	        parent::__construct($attributes);
+		        $this->appends = array_merge([
+					'id',
+					'title',
+					'content',
+					'url',
+					'author_id',
+					'blog_id',
+					'thumbnail_id', 
+					'status',
+					'date_added',
+					'date_modified'
+				], $this->appends);
+	    }
+	    
+	    /**
+	     * Get Id Attribute
+	     *
+	     * @var string
+	     */
+	    public function getIdAttribute(){
+		    return $this->attributes['ID'];
+		}
 		
 		/**
-	     * The fillable attributes that are mass assignable.
+	     * Get Author Id Attribute
 	     *
-	     * @var array
+	     * @var string
 	     */
-	    protected $fillable = [
-	        'post_title',
-	        'post_status'
-	    ];
+	    public function getAuthorIdAttribute(){
+		    return $this->attributes['post_author'];
+		}
+		
+		/**
+	     * Get Blog Id Attribute
+	     *
+	     * @var string
+	     */
+	    public function getBlogIdAttribute(){
+		    return ! empty( $this->attributes['blog_id'] ) ? $this->attributes['blog_id'] : null;
+		}
+		
+		/**
+	     * Get Thumbnail Id Attribute
+	     *
+	     * @var string
+	     */
+	    public function getThumbnailIdAttribute(){
+		    return get_post_thumbnail_id( $this->ID );
+		}
 	    
 	    /**
 	     * Get Title Attribute
@@ -65,6 +103,24 @@
 	     */
 	    public function getTitleAttribute(){
 		    return $this->attributes['post_title'];
+		}
+		
+		/**
+	     * Get Url Attribute
+	     *
+	     * @var string
+	     */
+	    public function getUrlAttribute(){
+		    return get_permalink( $this->ID );
+		}
+		
+		/**
+	     * Get Content Attribute
+	     *
+	     * @var string
+	     */
+	    public function getContentAttribute(){
+		    return $this->attributes['post_content'];
 		}
 		
 		/**

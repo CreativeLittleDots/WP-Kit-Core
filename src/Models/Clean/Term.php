@@ -1,10 +1,10 @@
-<?php
+<?php 
 	
 	namespace WPKit\Models\Clean;
 	
-	use WPKit\Models\PostMeta as PostMetaClass;
+	use WPKit\Models\Term as TermClass;
 	
-	class PostMeta extends PostMetaClass {
+	class Term extends TermClass {
 		
 		/**
 	     * The hidden attributes that are mass assignable.
@@ -12,10 +12,10 @@
 	     * @var array
 	     */
 		protected $hidden = [
-			'meta_id',
-			'post_id',
-			'meta_key', 
-			'meta_value'
+			'term_id',
+			'name',
+			'slug',
+			'term_group'
 		];
 		
 		/**
@@ -28,27 +28,27 @@
 	    {
 	        parent::__construct($attributes);
 		        $this->appends = array_merge([
-					'key',
-					'value'
+					'id',
+					'title'
 				], $this->appends);
 	    }
-	    
-	    /**
-	     * Get Key Attribute
+		
+		/**
+	     * Get Id Attribute
 	     *
 	     * @var string
 	     */
-	    public function getKeyAttribute(){
-		    return $this->attributes['meta_key'];
+	    public function getIdAttribute(){
+		    return $this->attributes['term_id'];
 		}
 		
 		/**
-	     * Get Value Attribute
+	     * Get Title Attribute
 	     *
 	     * @var string
 	     */
-		public function getValueAttribute(){
-		    return maybe_unserialize( $this->attributes['meta_value'] );
+	    public function getTitleAttribute(){
+		    return $this->attributes['name'];
 		}
-		
+	
 	}

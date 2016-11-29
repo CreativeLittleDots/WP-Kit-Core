@@ -3,6 +3,7 @@
 	namespace WPKit\Models;
 
 	use Carbon\Carbon;
+	use Illuminate\Database\Eloquent\Builder; 
 	use WPKit\Models\SoftDeletes\SoftDeletes;
 	
 	class Post extends Model {
@@ -84,6 +85,18 @@
 	     * @var array
 	     */
 		protected $public_meta = [];
+		
+		/**
+	     * Boot process.
+	     *
+	     * @return Void
+	     */
+		protected static function boot() {
+		    parent::boot();
+		    static::addGlobalScope('order', function (Builder $builder) {
+		        $builder->orderBy('post_date', 'desc');
+		    });
+		}
 	
 	    /**
 	     * Comment relationship.

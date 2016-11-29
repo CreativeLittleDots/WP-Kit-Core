@@ -2,6 +2,8 @@
 	
 	namespace WPKit\Models;
 	
+	use Illuminate\Database\Eloquent\Builder; 
+	
 	class Comment extends Model {
 	
 	    /**
@@ -17,6 +19,18 @@
 	     * @var string
 	     */
 	    protected $primaryKey = 'comment_ID';
+	    
+	    /**
+	     * Boot process.
+	     *
+	     * @return Void
+	     */
+		protected static function boot() {
+		    parent::boot();
+		    static::addGlobalScope('order', function (Builder $builder) {
+		        $builder->orderBy('comment_date', 'desc');
+		    });
+		}
 	
 	    /**
 	     * The name of the "created at" column.

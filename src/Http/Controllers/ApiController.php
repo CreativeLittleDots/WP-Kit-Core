@@ -19,7 +19,7 @@
 	     * @param  int  $id
 	     * @return void
 	     */
-		protected function save( $id = null ) {
+		public function save( $id = null ) {
 			
 			try {
 				
@@ -41,7 +41,7 @@
 	     * @param  int  $id
 	     * @return Model
 	     */
-		protected function get( $id = null ) {
+		public function get( $id = null ) {
 			
 			try {
 				
@@ -134,7 +134,7 @@
 				
 				if( ! empty( $this->http->get('orderby') ) ) {
 					
-					$query->orderBy( $this->http->get('orderby'), $this->http->get('order') ? $this->http->get('order') : 'ASC' )
+					$query->orderBy( $this->http->get('orderby'), $this->http->get('order') ? $this->http->get('order') : 'ASC' );
 					
 				}
 				

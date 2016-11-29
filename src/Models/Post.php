@@ -194,7 +194,8 @@
 	     */
 	    public static function query()
 	    {
-	        return parent::query()->where( 'post_type', $this->getPostType() );
+		    $model = new static;
+	        return parent::query()->where( 'post_type', $model->getPostType() );
 	    }
 	    
 	    /**

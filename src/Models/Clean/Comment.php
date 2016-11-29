@@ -50,7 +50,7 @@
 					'type',
 					'parent_id'
 				], $this->appends);
-	    }
+	    }   
 		
 		/**
 	     * Get Post Id Attribute

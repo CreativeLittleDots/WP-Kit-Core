@@ -2,6 +2,7 @@
 	
 	namespace WPKit\Models;
 	
+	use Carbon\Carbon;
 	use Illuminate\Database\Eloquent\Builder; 
 	
 	class Comment extends Model {
@@ -29,6 +30,7 @@
 		    parent::boot();
 		    static::addGlobalScope('order', function (Builder $builder) {
 		        $builder->orderBy('comment_date', 'desc');
+		        $builder->where('comment_approved', 1);
 		    });
 		}
 	

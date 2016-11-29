@@ -55,6 +55,7 @@
 					'blog_id',
 					'thumbnail_id', 
 					'status',
+					'comments_open',
 					'date_added',
 					'date_modified'
 				], $this->appends);
@@ -148,6 +149,17 @@
 	     */
 		public function getDateModifiedAttribute(){
 		    return $this->attributes['post_modified'];
+		}
+		
+		/**
+	     * Get Comments Open Attribute
+	     *
+	     * @var boolean
+	     */
+		public function getCommentsOpenAttribute() {
+			
+			return 'open' == $this->comment_status;
+			
 		}
 		
 		/**

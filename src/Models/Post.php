@@ -22,7 +22,7 @@
 	     *
 	     * @var string
 	     */
-	    protected $post_type = 'post';
+	    protected $post_type = '';
 	
 	    /**
 	     * The primary key for the model.
@@ -93,8 +93,15 @@
 	     */
 		protected static function boot() {
 		    parent::boot();
-		    static::addGlobalScope('order', function (Builder $builder) {
+		    $model = new static;
+		    static::addGlobalScope('order', function (Builder $builder) use($model) {
 		        $builder->orderBy('post_date', 'desc');
+		        if( $model->getPostType() ) {
+		        	$builder->where( 'post_type', $model->getPostType() );
+		        }
+		        if( $model->getPublicMeta() ) {
+					$builder->with('meta');
+				}
 		    });
 		}
 	
@@ -198,31 +205,6 @@
 	    public function getPublicMeta()
 	    {
 		    return $this->public_meta;
-	    }
-	    
-	    /**
-	     * Begin querying the model.
-	     *
-	     * @return \Illuminate\Database\Eloquent\Builder
-	     */
-	    public static function query()
-	    {
-		    $model = new static;
-	        return parent::query()->where( 'post_type', $model->getPostType() );
-	    }
-	    
-	    /**
-	     * Begin making the model.
-	     *
-	     * @return \Illuminate\Database\Eloquent\Model
-	     */
-	    public static function make()
-	    {
-		    $model = parent::make();
-		    if( $this->getPublicMeta() ) {
-				$model->with('meta');
-			}
-	        return $model;
 	    }
 	
 	}

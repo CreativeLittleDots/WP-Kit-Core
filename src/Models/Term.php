@@ -90,11 +90,12 @@
     			'term_relationships as tr', 
     			'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id'
     		);
+
+    		$post_ids = Post::query()->select( 'ID' )->where( $args )->get()->map( function($post) {
+	    		return $post['ID'];
+    		} )->toArray();
 			
-			$query->whereIn( 'tr.object_id', get_posts( array_merge( $args, array(
-				'fields' => 'ids',
-				'showposts' => -1
-			) ) ) );
+			$query->whereIn( 'tr.object_id', $post_ids );
 			
 			$query->groupBy('terms.term_id');
 			

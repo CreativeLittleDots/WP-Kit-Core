@@ -15,6 +15,13 @@
 	     * @var string
 	     */
 	    protected $table = 'posts';
+	    
+	    /**
+	     * The post_type associated with the model.
+	     *
+	     * @var string
+	     */
+	    protected $post_type = 'post';
 	
 	    /**
 	     * The primary key for the model.
@@ -70,6 +77,13 @@
 	        'post_date', 'post_date_gmt',
 	        'post_modified', 'post_modified_gmt'
 	    ];
+	    
+	    /**
+	     * The public_meta attributes that are mass assignable.
+	     *
+	     * @var array
+	     */
+		protected $public_meta = [];
 	
 	    /**
 	     * Comment relationship.
@@ -98,7 +112,11 @@
 	     */
 	    public function meta()
 	    {
-	        return $this->hasMany(__NAMESPACE__ . '\PostMeta', 'post_id');
+		    $meta = $this->hasMany(__NAMESPACE__ . '\PostMeta', 'post_id');
+		    if( ! empty( $this->public_meta ) ) {
+				$meta->whereIn( 'meta_key', $this->public_meta );
+			}
+	        return $meta;
 	    }
 	
 	    /**
@@ -147,6 +165,50 @@
 	        }
 	
 	        $this->{static::UPDATED_AT . '_gmt'} = $value->timezone('GMT');
+	    }
+	    
+	    /**
+	     * Get the post type of current instance
+	     *
+	     * @return string
+	     */
+	    public function getPostType()
+	    {
+		    return $this->post_type;
+	    }
+	    
+	    /**
+	     * Get the public meta of current instance
+	     *
+	     * @return array
+	     */
+	    public function getPublicMeta()
+	    {
+		    return $this->public_meta;
+	    }
+	    
+	    /**
+	     * Begin querying the model.
+	     *
+	     * @return \Illuminate\Database\Eloquent\Builder
+	     */
+	    public static function query()
+	    {
+	        return parent::query()->where( 'post_type', $this->getPostType() );
+	    }
+	    
+	    /**
+	     * Begin making the model.
+	     *
+	     * @return \Illuminate\Database\Eloquent\Model
+	     */
+	    public static function make()
+	    {
+		    $model = parent::make();
+		    if( $this->getPublicMeta() ) {
+				$model->with('meta');
+			}
+	        return $model;
 	    }
 	
 	}

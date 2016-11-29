@@ -73,6 +73,16 @@
 	    {
 	        return $this->hasMany(__NAMESPACE__ . '\CommentMeta', 'comment_id');
 	    }
+	    
+	    /**
+	     * Comments relationship.
+	     *
+	     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	     */
+	    public function comments()
+	    {
+	        return $this->hasMany(__NAMESPACE__ . '\Comments', 'comment_parent');
+	    }
 	
 	    /**
 	     * Set the value of the "created at" attribute.

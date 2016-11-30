@@ -1,10 +1,70 @@
 <?php
 	
-	namespace WPKit\Http\Controllers;
+	namespace WPKit\Http\Controllers\Api;
 	
 	use Exception;
 	
-	class ApiPostController extends ApiController {
+	class PostController extends Controller {
+		
+		/**
+	     * Save an post
+	     *
+	     * @param  int  $id
+	     * @return Model
+	     */
+		protected function saveEntity( $id = null ) {
+			
+			$model = $this->getModel();
+			
+			if( $id ) {
+				
+				$model->find($id);
+				
+			}
+			
+			$data = $this->validateParams( $this->http->all(), $id ? false : true );
+			
+			$model->fill( $data )->save();
+			
+			foreach($data as $key => $value) {
+				
+				if( in_array( $key, $model->getMagicMeta() ) ) {
+					
+					$model->updateMetaValue( $model->getMagicMetaKey( $key ), $value );
+					
+					unset( $data[$key] );
+					
+				} 
+				
+			}
+			
+			return $model;
+			
+		}
+		
+		/**
+	     * Validate Params
+	     *
+	     * @param  array  $params
+	     * @return array
+	     */
+		protected function validateParams( $params = array(), $creating = false ) {
+			
+			if( $creating ) {
+				
+				if( empty( $params['title'] ) ) {
+				
+					throw new Exception('Please provide a title');
+					
+				}
+				
+				$params['post_title'] = $params['title'];
+				
+			}
+			
+			return $params;
+			
+		}
 		
 		/**
 	     * Where query
@@ -12,18 +72,20 @@
 	     * @return Model Query
 	     */
 		protected function whereQuery( $query, $model ) {
+			
+			$query->select( 'posts.*' );
 				
 			if( ! empty( $this->http->get('s') ) ) {
 				
 				$query->where( 'post_title', 'like', '%' . $this->http->get('s') . '%' );
 				
-				foreach($model->getPublicMeta() as $meta_key) {
+				foreach($model->getMagicMeta() as $meta_key => $key) {
 					
 					$query->join(
-		    			'postmeta as ' . $meta_key, 
-		    			function($join) use($query, $model, $meta_key) {
-					        $join->on($meta_key . '.post_id', '=', 'ID');
-					        $join->where($meta_key . '.meta_key', '=', $meta_key);
+		    			'postmeta as ' . $key, 
+		    			function($join) use($key, $meta_key) {
+					        $join->on($key . '.post_id', '=', 'ID');
+					        $join->where($key . '.meta_key', '=', $meta_key);
 					    }
 		    		);
 					
@@ -115,6 +177,39 @@
 				    	$query->where( $abbrev_t . '.term_id', $tax_query['value'] );
 				    	
 			    	}
+					
+				}
+				
+			}
+			
+			if( $magic_meta = array_filter( $this->http->only( $model->getMagicMeta() ) ) ) {
+				
+				foreach($magic_meta as $key => $meta) {
+					
+					$meta = is_array($meta) ? $meta : [
+						'compare' => '=',
+						'value' => $meta
+					];
+					
+					if( empty( $this->http->get('s') ) ) {
+						
+						$meta_key = $model->getMagicMetaKey( $key );
+					
+						$query->join(
+			    			'postmeta as ' . $key, 
+			    			function($join) use($key, $meta_key) {
+						        $join->on($key . '.post_id', '=', 'ID');
+						        $join->where($key . '.meta_key', '=', $meta_key);
+						    }
+			    		);
+			    		
+			    	}
+			    	
+		    		$query->where(
+		    			$key . '.meta_value', 
+		    			! empty( $meta['compare'] ) ? $meta['compare'] : '=', 
+		    			$meta['value']
+		    		);
 					
 				}
 				

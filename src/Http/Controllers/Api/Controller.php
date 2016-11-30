@@ -1,11 +1,11 @@
 <?php
 	
-	namespace WPKit\Http\Controllers;
+	namespace WPKit\Http\Controllers\Api;
 	
-	use WPKit\Core\Controller;
+	use WPKit\Core\Controller as AppController;
 	use Exception;
 	
-	class ApiController extends Controller {
+	class Controller extends AppController {
 		
 		/**
 	     * Model Class Attribute
@@ -73,27 +73,17 @@
 	     */
 		protected function saveEntity( $id = null ) {
 			
-			try {
+			$model = $this->getModel();
 			
-				$model = $this->getModel();
+			if( $id ) {
 				
-				if( $id ) {
-					
-					$model->find($id);
-					
-				}
-				
-				$model->save( $this->http->all() );
-				
-				return $model;
-				
-			} catch(Exception $e) {
-				
-				status_header( 400 );
-				
-				wp_send_json_error( $e->getMessage() );
+				$model->find($id);
 				
 			}
+			
+			$model->fill( $this->http->all() )->save();
+			
+			return $model;
 			
 		}
 		
@@ -105,17 +95,7 @@
 	     */
 		protected function getEntity( $id ) {
 			
-			try {
-						
-				return $this->getModel()->find( $id );
-				
-			} catch(Exception $e) {
-				
-				status_header( 400 );
-				
-				wp_send_json_error( $e->getMessage() );
-				
-			}
+			return $this->getModel()->find( $id );
 			
 		}
 		
@@ -126,31 +106,20 @@
 	     */
 		protected function getEntities() {
 			
-			try {
+			$model = $this->getModel();
+				
+			$query = $model->query();	
 			
-				$model = $this->getModel();
+			if( ! empty( $this->http->get('orderby') ) ) {
 				
-				$query = $model->query();	
-				
-				if( ! empty( $this->http->get('orderby') ) ) {
-					
-					$query->orderBy( $this->http->get('orderby'), $this->http->get('order') ? $this->http->get('order') : 'DESC' );
-					
-				}
-				
-				return $this->whereQuery( $query, $model )
-					->offset( $this->http->get('offset') ? $this->http->get('offset') : 0 )
-	                ->limit( $this->http->get('limit') ? $this->http->get('limit') : 20 )
-	                ->get();
-                
-			} catch(Exception $e) {
-				
-				status_header( 400 );
-				
-				wp_send_json_error( $e->getMessage() );
+				$query->orderBy( $this->http->get('orderby'), $this->http->get('order') ? $this->http->get('order') : 'DESC' );
 				
 			}
 			
+			return $this->whereQuery( $query, $model )
+				->offset( $this->http->get('offset') ? $this->http->get('offset') : 0 )
+                ->limit( $this->http->get('limit') ? $this->http->get('limit') : 20 )
+                ->get();			
 		}
 		
 		/**
@@ -202,7 +171,7 @@
 			
 			preg_match( '/(?P<model>\w+)Controller/', get_called_class(), $matches );
 			
-			$class = '\App\Models\\' . $matches['model'];;
+			$class = '\App\Models\\' . $matches['model'];
 			
 			return class_exists( $class ) ? $class : false;
 			

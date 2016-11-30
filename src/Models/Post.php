@@ -80,11 +80,11 @@
 	    ];
 	    
 	    /**
-	     * The public_meta attributes that are mass assignable.
+	     * The magic_meta attributes that are mass assignable.
 	     *
 	     * @var array
 	     */
-		protected $public_meta = [];
+		protected $magic_meta = [];
 		
 		/**
 	     * Boot process.
@@ -94,14 +94,13 @@
 		protected static function boot() {
 		    parent::boot();
 		    $model = new static;
-		    static::addGlobalScope('order', function (Builder $builder) use($model) {
+		    if( $model->getPostType() ) {
+			    static::addGlobalScope('post_type', function (Builder $builder) use($model) {
+			        $builder->where( 'post_type', $model->getPostType() );
+			    });
+			}
+			static::addGlobalScope('order', function (Builder $builder) {
 		        $builder->orderBy('post_date', 'desc');
-		        if( $model->getPostType() ) {
-		        	$builder->where( 'post_type', $model->getPostType() );
-		        }
-		        if( $model->getPublicMeta() ) {
-					$builder->with('meta');
-				}
 		    });
 		}
 	
@@ -132,12 +131,29 @@
 	     */
 	    public function meta()
 	    {
-		    $meta = $this->hasMany(__NAMESPACE__ . '\PostMeta', 'post_id');
-		    if( ! empty( $this->public_meta ) ) {
-				$meta->whereIn( 'meta_key', $this->public_meta );
-			}
-	        return $meta;
+		    return $this->hasMany(__NAMESPACE__ . '\PostMeta', 'post_id');
 	    }
+	    
+	    /**
+	     * Get Meta
+	     *
+	     * @return string
+	     */
+		public function getMeta($meta_key) 
+		{			
+			return $this->meta()->where('meta_key', $meta_key);	
+		}
+	    
+	    /**
+	     * Get Meta Value
+	     *
+	     * @return string
+	     */
+		public function getMetaValue($meta_key) 
+		{			
+			$meta = $this->getMeta($meta_key)->first();
+			return $meta ? maybe_unserialize($this->getMeta($meta_key)->first()->getValue()) : null;	
+		}
 	
 	    /**
 	     * Get a specific type of post.
@@ -198,13 +214,72 @@
 	    }
 	    
 	    /**
-	     * Get the public meta of current instance
+	     * Get the magic meta of current instance
 	     *
 	     * @return array
 	     */
-	    public function getPublicMeta()
+	    public function getMagicMeta() 
 	    {
-		    return $this->public_meta;
+		    return $this->magic_meta;
 	    }
+	    
+	    /**
+	     * Get the magic meta keys of current instance
+	     *
+	     * @return array
+	     */
+	    public function getMagicMetaKeys() 
+	    {
+		    return array_keys($this->getMagicMeta());
+	    }
+	    
+	    /**
+	     * Get the magic meta keys of current instance
+	     *
+	     * @return array
+	     */
+	    public function getMagicMetaFlipped() 
+	    {
+		    return array_flip($this->getMagicMeta());
+	    }
+	    
+	    /**
+	     * Get a magic meta key of current instance
+	     *
+	     * @return array
+	     */
+	    public function getMagicMetaKey($key) 
+	    {
+		    $magic_meta = $this->getMagicMetaFlipped();
+		    return ! empty($magic_meta[$key]) ? $magic_meta[$key] : null;
+	    }
+	    
+	    /**
+	     * Get a magic meta key of current instance
+	     *
+	     * @return PostMeta
+	     */
+	    public function updateMetaValue($meta_key, $meta_value) {
+		    if( $meta = $this->getMeta($meta_key)->first() ) {
+			    return $meta->updateValue($meta_valuevalue);
+			} else {
+				$meta = new PostMeta(compact('meta_key', 'meta_value'));
+				return $this->meta()->save($meta);
+			}
+	    }
+	    
+	    /**
+	     * Convert the model's attributes to an array.
+	     *
+	     * @return array
+	     */
+	    public function attributesToArray()
+	    {
+		    $attributes = parent::attributesToArray();
+		    foreach($this->getMagicMeta() as $meta_key => $key) {
+			    $attributes[$key] = $this->getMetaValue($meta_key);
+		    }
+		    return $attributes;
+		}
 	
 	}

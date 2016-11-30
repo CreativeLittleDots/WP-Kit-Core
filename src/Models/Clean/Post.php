@@ -46,19 +46,73 @@
 	    public function __construct(array $attributes = [])
 	    {
 	        parent::__construct($attributes);
-		        $this->appends = array_merge([
-					'id',
-					'title',
-					'content',
+	        $this->buildAppends();
+	    }
+	    
+	    /**
+	     * Build $appends property
+	     *
+	     * @return void
+	     */
+	    protected function buildAppends() {
+		    
+		    $appends = [
+				'id',
+			];
+			
+			$post_type = get_post_type_object( $this->getPostType() );
+			
+			if( post_type_supports( $this->getPostType(), 'title' ) ) {
+				
+				$appends = array_merge($appends, [
+					'title'
+				]);
+				
+			}
+			
+			if( post_type_supports( $this->getPostType(), 'editor' ) ) {
+				
+				$appends = array_merge($appends, [
+					'content'
+				]);
+				
+			}
+			
+			if( post_type_supports( $this->getPostType(), 'author' ) ) {
+				
+				$appends = array_merge($appends, [
+					'author_id'
+				]);
+				
+			}
+			
+			if( post_type_supports( $this->getPostType(), 'thumbnail' ) ) {
+				
+				$appends = array_merge($appends, [
+					'thumbnail_id'
+				]);
+				
+			}
+			
+			if( $post_type->public ) {
+				
+				$appends = array_merge($appends, [
 					'url',
-					'author_id',
-					'blog_id',
-					'thumbnail_id', 
-					'status',
-					'comments_open',
-					'date_added',
-					'date_modified'
-				], $this->appends);
+					'comments_open'
+				]);
+				
+			}
+			
+			if( is_multisite() ) {
+				
+				$appends = array_merge($appends, [
+					'blog_id'
+				]);
+				
+			}
+			
+			$this->setAppends(array_merge($appends, $this->appends));
+		    
 	    }
 	    
 	    /**
@@ -157,23 +211,94 @@
 	     * @var boolean
 	     */
 		public function getCommentsOpenAttribute() {
-			
 			return 'open' == $this->comment_status;
-			
 		}
 		
 		/**
-	     * PostMeta relationship.
+	     * Convert the model's attributes to an array.
 	     *
-	     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	     * @return array
 	     */
-	    public function meta()
+	    public function attributesToArray()
 	    {
-		    $meta = $this->hasMany(__NAMESPACE__ . '\PostMeta', 'post_id');
-		    if( ! empty( $this->public_meta ) ) {
-				$meta->whereIn( 'meta_key', $this->public_meta );
-			}
-	        return $meta;
+	        $attributes = $this->getArrayableAttributes();
+	
+	        // If an attribute is a date, we will cast it to a string after converting it
+	        // to a DateTime / Carbon instance. This is so we will get some consistent
+	        // formatting while accessing attributes vs. arraying / JSONing a model.
+	        foreach ($this->getDates() as $key) {
+	            if (! isset($attributes[$key])) {
+	                continue;
+	            }
+	
+	            $attributes[$key] = $this->serializeDate(
+	                $this->asDateTime($attributes[$key])
+	            );
+	        }
+	
+	        $mutatedAttributes = $this->getMutatedAttributes();
+	
+	        // We want to spin through all the mutated attributes for this model and call
+	        // the mutator for the attribute. We cache off every mutated attributes so
+	        // we don't have to constantly check on attributes that actually change.
+	        foreach ($mutatedAttributes as $key) {
+	            if (! array_key_exists($key, $attributes)) {
+	                continue;
+	            }
+	
+	            $attributes[$key] = $this->mutateAttributeForArray(
+	                $key, $attributes[$key]
+	            );
+	        }
+	
+	        // Next we will handle any casts that have been setup for this model and cast
+	        // the values to their appropriate type. If the attribute has a mutator we
+	        // will not perform the cast on those attributes to avoid any confusion.
+	        foreach ($this->getCasts() as $key => $value) {
+	            if (! array_key_exists($key, $attributes) ||
+	                in_array($key, $mutatedAttributes)) {
+	                continue;
+	            }
+	
+	            $attributes[$key] = $this->castAttribute(
+	                $key, $attributes[$key]
+	            );
+	
+	            if ($attributes[$key] && ($value === 'date' || $value === 'datetime')) {
+	                $attributes[$key] = $this->serializeDate($attributes[$key]);
+	            }
+	        }
+	        
+	        // Here we will grab all of the appended, calculated attributes to this model
+	        // as these attributes are not really in the attributes array, but are run
+	        // when we need to array or JSON the model for convenience to the coder.
+	        foreach ($this->getArrayableAppends() as $key) {
+	            $attributes[$key] = $this->mutateAttributeForArray($key, null);
+	        }
+	        
+	        // Here we will grab all of the magic meta, calculated attributes to this model
+	        // as these attributes are not really in the attributes array, but are run
+	        // when we need to array or JSON the model for convenience to the coder.
+	        foreach($this->getMagicMeta() as $meta_key => $key) {
+			    $attributes[$key] = $this->getMetaValue($meta_key);
+		    }
+	
+	        // Here we will grab all of the appended, calculated attributes to this model
+	        // as these attributes are not really in the attributes array, but are run
+	        // when we need to array or JSON the model for convenience to the coder.
+	        foreach ($this->getArrayableAppendsAfterMagicMeta() as $key) {
+	            $attributes[$key] = $this->mutateAttributeForArray($key, null);
+	        }
+	
+	        return $attributes;
+	    }
+	    
+	    public function getArrayableAppendsAfterMagicMeta() {
+		    return [
+				'status',
+				'date_added',
+				'date_modified'
+			];
 	    }
 		
 	}

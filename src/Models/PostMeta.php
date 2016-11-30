@@ -43,5 +43,36 @@
 	    {
 	        return $this->belongsTo(__NAMESPACE__ . '\Post', 'post_id');
 	    }
+	    
+	    /**
+	     * Set the value of current postmeta instance
+	     *
+	     * @return PostMeta
+	     */
+	    public function setValue($value) 
+	    {
+		    $this->meta_value = $value;
+		    return $this;
+	    }
+	    
+	    /**
+	     * Update the value of current postmeta instance
+	     *
+	     * @return PostMeta
+	     */
+	    public function updateValue($value) 
+	    {
+		    return $this->setValue($value)->save();
+	    }
+	    
+	     /**
+	     * Get the value of current postmeta instance
+	     *
+	     * @return string
+	     */
+	    public function getValue() 
+	    {
+		    return $this->meta_value;
+	    }
 	
 	}

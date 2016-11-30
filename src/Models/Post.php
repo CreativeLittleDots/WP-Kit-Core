@@ -261,7 +261,7 @@
 	     */
 	    public function updateMetaValue($meta_key, $meta_value) {
 		    if( $meta = $this->getMeta($meta_key)->first() ) {
-			    return $meta->updateValue($meta_valuevalue);
+			    return $meta->updateValue($meta_value);
 			} else {
 				$meta = new PostMeta(compact('meta_key', 'meta_value'));
 				return $this->meta()->save($meta);

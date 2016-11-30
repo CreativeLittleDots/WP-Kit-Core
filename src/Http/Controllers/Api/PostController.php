@@ -18,23 +18,17 @@
 			
 			if( $id ) {
 				
-				$model->find($id);
+				$model = $model->find($id)->first();
 				
 			}
 			
-			$data = $this->validateParams( $this->http->all(), $id ? false : true );
+			$this->validateParams( $this->http->all(), $id ? false : true );
 			
-			$model->fill( $data )->save();
+			$model->fill( $this->http->except( $model->getMagicMeta() ) )->save();
 			
-			foreach($data as $key => $value) {
+			foreach(array_filter( $this->http->only( $model->getMagicMeta() ) ) as $key => $value) {
 				
-				if( in_array( $key, $model->getMagicMeta() ) ) {
-					
-					$model->updateMetaValue( $model->getMagicMetaKey( $key ), $value );
-					
-					unset( $data[$key] );
-					
-				} 
+				$model->updateMetaValue( $model->getMagicMetaKey( $key ), $value );
 				
 			}
 			

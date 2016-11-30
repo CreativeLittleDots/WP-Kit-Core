@@ -77,7 +77,7 @@
 			
 			if( $id ) {
 				
-				$model->find($id);
+				$model = $model->find($id)->first();
 				
 			}
 			

@@ -92,7 +92,7 @@
     		<ul class="job_listings">
     		<?php while ( $r->have_posts() ) { 
         		$r->the_post();
-        		get_component('elements', 'widget-post');
+        		the_component('Element', 'widget-post');
     		} ?>
     		</ul>
     		<?php echo $args['after_widget']; ?>

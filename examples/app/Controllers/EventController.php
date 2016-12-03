@@ -73,21 +73,21 @@
 		
 		public function after_event_archive_title() {
 	        
-	        get_component('elements', 'event-archive-controls');
+	        $this->render('event-archive-controls');
 	        
 	    }
 	    
 	    public function archive_detail_event_display_meta() {
 		    
-		    get_component('loop', 'post-date-meta');
+		    the_component('Loop', 'post-date-meta');
 		    
-		    get_component('loop', 'event-details-meta');
+		    the_component('Loop', 'event-details-meta');
 		    
 	    }
 	    
 	    public function archive_loop_event_display_meta() {
 		    
-		    get_component('loop', 'post-loop-date-meta');
+		    the_component('Loop', 'post-loop-date-meta');
 		    
 	    }
 	    

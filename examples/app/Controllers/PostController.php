@@ -20,19 +20,19 @@
 		
 		public function after_post_archive_title() {
 		
-			get_component('elements', 'post-archive-controls');
+			$this->render('post-archive-controls');
 			
 		}
 		
 		public function archive_detail_post_display_meta() {
 			
-			get_component('loop', 'post-detail-date-meta');
+			the_component('Loop', 'post-detail-date-meta');
 			
 		}
 		
 		public function archive_loop_post_display_meta() {
 			
-			get_component('loop', 'post-loop-date-meta');
+			the_component('Loop', 'post-loop-date-meta');
 			
 		}
 	    

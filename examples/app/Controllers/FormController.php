@@ -40,7 +40,7 @@
 		
 		public function change_message($message, $form) {
 		
-			return get_component('elements', 'validation-message', compact('message'), false);
+			return $this-render('validation-message', compact('message'), false);
 		  
 		}
 		

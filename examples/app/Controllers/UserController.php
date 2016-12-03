@@ -304,7 +304,7 @@
 	                
 	            }
 	            
-	            get_component('elements', 'alert', compact('message'));
+	            the_component('Elements', 'alert', compact('message'));
 	            
 	        }
 	        

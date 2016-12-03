@@ -39,9 +39,9 @@
 		
 		public function cart_fragments($fragments) {
 			
-			$fragments['li.basket > a .itemCount'] = get_component( 'elements', 'basket-icon', array( 'count' => WC()->cart->get_cart_contents_count() ), false );
+			$fragments['li.basket > a .itemCount'] = get_component( 'elements', 'basket-icon', array( 'count' => WC()->cart->get_cart_contents_count() ) );
 			
-			$fragments['li.basket > .drop'] = get_component( 'elements', 'basket-dropdown', array( 'cart' => WC()->cart ), false );
+			$fragments['li.basket > .drop'] = get_component( 'elements', 'basket-dropdown', array( 'cart' => WC()->cart ) );
 			
 			$url = WC()->cart->get_checkout_url();
 			
@@ -51,7 +51,7 @@
 				
 				wc_add_to_cart_message(end($items)['data']->id);
 				
-				$fragments['.footer-notification'] = get_component( 'elements', 'footer-notification', array(), false );
+				$fragments['.footer-notification'] = get_component( 'elements', 'footer-notification' );
 				
 			}
 			

@@ -83,7 +83,7 @@
             
             $booking_calendar = $this->get_booking_calendar(reset($products));
     		
-            get_component( 'element', 'booking-product', compact('products', 'booking_calendar') );
+            the_component( 'Element', 'booking-product', compact('products', 'booking_calendar') );
     
     		echo $after_widget;
     

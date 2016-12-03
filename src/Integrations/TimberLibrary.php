@@ -7,7 +7,7 @@
 
 	class TimberLibrary extends Integration {
 		
-		public function __construct( $settings ) {
+		public function startIntegration( $settings ) {
 			
 			if( ! class_exists('Timber') ) {
 				

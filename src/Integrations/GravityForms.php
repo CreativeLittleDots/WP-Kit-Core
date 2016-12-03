@@ -9,7 +9,7 @@
 
 	class GravityForms extends Integration {
 		
-		public function __construct( $settings ) {
+		public function startIntegration( $settings ) {
     		
     		$this->settings = is_array($settings) ? array_merge($this->settings, $settings) : array();
 			

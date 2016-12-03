@@ -2,7 +2,6 @@
     
     namespace WPKit\Integrations;
     
-    use WPKit\Application as WPKit;
     use WPKit\Core\Integration;
     use WPBMap;
 
@@ -13,7 +12,7 @@
 			'support' => array()
 		);
     	
-    	public function __construct( $settings ) {
+    	public function startIntegration( $settings ) {
         	
         	$this->settings = is_array($settings) ? array_merge($this->settings, $settings) : array();
         	
@@ -23,7 +22,7 @@
         	
         	vc_set_shortcodes_templates_dir( COMPONENTS_DIR . DS . 'vc' );
         	
-        	foreach( WPKit::get_shortcodes() as $shortcode ) {
+        	foreach( $this->app->getShortcodes() as $shortcode ) {
     	        
     	        if( $shortcode->compose ) {
         	        
@@ -55,7 +54,7 @@
 	        
 	        foreach( WPBMap::getAllShortCodes() as $base => $element ) {
     	        
-    	        if( ! in_array( $base, array_merge( $this->settings['support'], array_keys( WPKit::get_shortcodes() ) ) ) ) {
+    	        if( ! in_array( $base, array_merge( $this->settings['support'], array_keys( $this->app->getShortcodes() ) ) ) ) {
         	        
         	        WPBMap::dropShortcode( $base );
     	            

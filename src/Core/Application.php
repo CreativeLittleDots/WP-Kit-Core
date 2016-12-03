@@ -867,11 +867,17 @@
 		    		
 		    		if( class_exists( $core_integration_class ) ) {
 		        		
-		        		$this->integrations[$integration] = $this->make($core_integration_class, compact('settings'));
+		        		$this->integrations[$integration] = $this->make($core_integration_class, [
+			        		'app' => $this,
+			        		'settings' => $settings
+		        		]);
 		        		
 		    		} else if( class_exists( $integration_class ) ) {
 		        		
-		        		$this->integrations[$integration] = $this->make($integration_class, compact('settings'));
+		        		$this->integrations[$integration] = $this->make($integration_class, [
+			        		'app' => $this,
+			        		'settings' => $settings
+		        		]);
 		        		
 		    		}
 		    	

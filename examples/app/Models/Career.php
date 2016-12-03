@@ -2,21 +2,50 @@
     
     namespace App\Models;
     
-    use WPKit\Classes\Model;
+    use WPKit\Models\Post;
     
-    class Career extends Model {
+    class Career extends Post {
+	    
+	    /**
+	     * The post_type associated with the model.
+	     *
+	     * @var string
+	     */
+	    protected $post_type = 'career';
+	    
+	    /**
+	     * The appends attributes that are mass assignable.
+	     *
+	     * @var array
+	     */
+		protected $appends = [
+			'days_ago',
+			'end'
+		];
+		
+		/**
+	     * Get Days Ago Attribute
+	     *
+	     * @var string
+	     */
+		public function getDaysAgoAttribute() {
+			
+			return round( ( date('U') - get_the_time('U', $this->ID) ) / ( 60 * 60 * 24 ) );
+			
+		}
+		
+		/**
+	     * Get End Attribute
+	     *
+	     * @var string
+	     */
+		public function getEndAttribute() {
+			
+			return round( ( date( 'U', strtotime( get_field('career_closing_date', $this->ID) ) ) - date('U') ) / ( 60 * 60 * 24 ) );
+			
+		}
         
-        var $days_ago;
-        var $end;
-        
-        public function populate( $post ) {
-            
-            $this->days_ago = round( ( date('U') - get_the_time('U', $this->id) ) / ( 60 * 60 * 24 ) );
-            $this->end = round( ( date( 'U', strtotime( get_field('career_closing_date', $this->id) ) ) - get_the_time('U', $this->id) ) / ( 60 * 60 * 24 ) );
-            
-        }
-        
-        public function get_days_ago() {
+        public function getDaysAgo() {
             
         	if ( $this->days_ago == 0 ) {
             	
@@ -34,29 +63,31 @@
             
         }
         
-        public function get_categories($fields = 'all') {
+        public function getCategories($fields = 'all') {
             
-            return array_filter(wp_get_object_terms($this->id, 'career_category', ['fields' => $fields]), function($term) {
-               
-               return ( is_object( $term ) && $term->name != 'Featured' ) || ( is_string( $term ) && $term !== 'Featured' );
-                
-            });
+            return wp_get_object_terms($this->ID, 'career_category', ['fields' => $fields]);
             
         }
         
-        public function get_colour() {
+         public function getLocations($fields = 'all') {
             
-            $categories = $this->get_categories();
+            return wp_get_object_terms($this->ID, 'career_location', ['fields' => $fields]);
+            
+        }
+        
+        public function getColour() {
+            
+            $categories = $this->getCategories();
             
             return get_field( 'career_colour', reset( $categories ) );
             
         }
         
-        public function get_ages() {
-            
+        public function getAges() {
+                        
             $ages = [];
             
-            if( get_field('career_promoted', $this->id) == true ) {
+            if( get_field('career_promoted', $this->ID) == true ) {
                 
                 $ages[] = 'Promoted';
                 
@@ -68,14 +99,34 @@
                 
             }
             
-            else if( $this->days_ago <= $this->end ) {
+            else if( $this->end > 0 && ( ( $this->end - $this->days_ago ) < get_field('careers_startend_threshold', 'options') ) ) {
                 
                 $ages[] = 'Ending Soon';
                 
             }
             
+            else if( $this->end < 0 && $this->end > -10000 ) {
+
+                $ages[] = 'Ended';
+                
+            }
+            
             return $ages;
             
+        }
+        
+        public function getDistance() {
+            
+            return property_exists($this->post, 'distance') ? $this->post->distance : false;
+            
+        }
+        
+        public function getClosingDate() {
+	        
+	        $date = get_field('career_closing_date', $this->ID);
+	        
+	        return $date ? date('j F Y', strtotime($date)) : '';
+	        
         }
         
     }

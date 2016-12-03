@@ -117,7 +117,7 @@
 				
 				add_action( 'after_app_main', function() use($form) {
 					
-					echo get_component('elements', 'gform-terms-popup', compact('form'), false);
+					echo get_component('elements', 'gform-terms-popup', compact('form'));
 					
 				});
 	    		
@@ -139,7 +139,7 @@
 			
 			$file['url'] = implode('/', $url);
 			
-			return get_component('twig', 'uploaded-file', compact('file', 'form_id', 'id'), false);
+			return get_component('twig', 'uploaded-file', compact('file', 'form_id', 'id'));
 			
 		}
 		

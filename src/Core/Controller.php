@@ -154,9 +154,7 @@
 		
 		protected function render( $view, $vars = array(), $echo = true ) {
 			
-			$reflect = new ReflectionClass($this);
-			
-			$path = str_replace( 'Controller', '', $reflect->getShortName() );
+			$path = str_replace( 'Controller', '', implode( '/', explode( '\\', str_replace( $this->app->getNamespace() . '\Controllers\\', '', get_called_class() ) ) ) );
 			
 			$html = get_element( $path, $view, $vars, $echo );
 			

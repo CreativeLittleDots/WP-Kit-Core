@@ -14,19 +14,19 @@
 	     */
 		protected function saveEntity( $id = null ) {
 			
-			$model = $this->getModel();
-			
-			if( $id ) {
-				
-				$model = $model->find($id)->first();
-				
-			}
+			$model = $this->getEntity( $id );
 			
 			$this->validateParams( $this->http->all(), $id ? false : true );
 			
 			$model->fill( $this->http->except( $model->getMagicMeta() ) )->save();
 			
-			foreach(array_filter( $this->http->only( $model->getMagicMeta() ) ) as $key => $value) {
+			foreach($this->http->all() as $key => $value) {
+				
+				if( ! in_array( $key, $model->getMagicMeta() ) ) {
+					
+					continue;
+					
+				}
 				
 				$model->updateMetaValue( $model->getMagicMetaKey( $key ), $value );
 				

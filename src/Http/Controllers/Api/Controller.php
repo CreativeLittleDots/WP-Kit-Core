@@ -47,6 +47,12 @@
 				
 				if( $id ) {
 					
+					if( ! $entity = $this->getEntity( $id ) ) {
+						
+						throw new Exception( "Error: Could not find Entity #$id" );
+						
+					}
+					
 					wp_nice_json( $this->getEntity( $id ) );
 					
 				} else {

@@ -81,15 +81,13 @@
 					
 					if( $this->http->get( 'force_delete' ) ) {
 						
-						$entity->delete();
+						$entity->forceDelete();
 						
 					} else {
 						
-						$entity->forceDelete();
+						$entity->delete();
 						
 					}
-					
-					
 					
 				} else {
 					
@@ -97,7 +95,7 @@
 					
 				}
 				
-				wp_nice_json( $this->http->get( 'force_delete' ) ? true : $entity );
+				wp_nice_json( true );
 				
 			} catch(Exception $e) {
 				

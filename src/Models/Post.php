@@ -102,9 +102,6 @@
 			static::addGlobalScope('order', function (Builder $builder) {
 		        $builder->orderBy('post_date', 'desc');
 		    });
-		    static::deleted(function($post) {
-			    wp_delete_post($post->ID);
-    		});
 		}
 	
 	    /**
@@ -283,6 +280,36 @@
 			    $attributes[$key] = $this->getMetaValue($meta_key);
 		    }
 		    return $attributes;
+		}
+		
+		/**
+	     * Perform the actual delete query on this model instance.
+	     *
+	     * @return void
+	     */
+		public function delete() {
+			parent::delete();
+			wp_trash_post($this->ID);	
+		}
+		
+		/**
+	     * Perform the delete query on this model instance.
+	     *
+	     * @return void
+	     */
+		public function forceDelete() {
+			parent::forceDelete();
+			wp_delete_post($this->ID, true);	
+		}
+		
+		/**
+	     * Perform the save query on this model instance.
+	     *
+	     * @return void
+	     */
+		public function save() {
+			$this->attributes['post_type'] = $this->getPostType();
+			parent::save();	
 		}
 	
 	}

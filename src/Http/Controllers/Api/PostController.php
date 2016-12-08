@@ -14,11 +14,15 @@
 	     */
 		protected function saveEntity( $id = null ) {
 			
-			$model = $this->getEntity( $id );
+			$model = $id ? $this->getEntity( $id ) : $this->getModel();
 			
-			$this->validateParams( $this->http->all(), $id ? false : true );
+			$params = $this->validateParams( $this->http->all(), $id ? false : true );
 			
-			$model->fill( $this->http->except( $model->getMagicMeta() ) )->save();
+			$model->fill( array_filter($params, function($param) use($model) {
+				
+				return ! in_array($param, $model->getMagicMeta());
+				
+			}, ARRAY_FILTER_USE_KEY) )->save();
 			
 			foreach($this->http->all() as $key => $value) {
 				

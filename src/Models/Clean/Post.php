@@ -280,7 +280,8 @@
 	        // as these attributes are not really in the attributes array, but are run
 	        // when we need to array or JSON the model for convenience to the coder.
 	        foreach($this->getMagicMeta() as $meta_key => $key) {
-			    $attributes[$key] = $this->getMetaValue($meta_key);
+		        $value = $this->getMetaValue($meta_key);
+			    $attributes[$key] = is_numeric($value) ? (int) $value : $value;
 		    }
 	
 	        // Here we will grab all of the appended, calculated attributes to this model

@@ -17,7 +17,7 @@
 	     * Save an entity handler
 	     *
 	     * @param  int  $id
-	     * @return void
+	     * @return Void
 	     */
 		public function save( $id = null ) {
 			
@@ -39,7 +39,7 @@
 	     * Get an entity handler
 	     *
 	     * @param  int  $id
-	     * @return Model
+	     * @return Void
 	     */
 		public function get( $id = null ) {
 			
@@ -54,6 +54,50 @@
 					wp_nice_json( $this->getEntities() );
 					
 				}
+				
+			} catch(Exception $e) {
+				
+				status_header( 400 );
+				
+				wp_send_json_error( $e->getMessage() );
+				
+			}
+			
+		}
+		
+		/**
+	     * Delete an entity handler
+	     *
+	     * @param  int  $id
+	     * @return Void
+	     */
+		public function delete( $id ) {
+			
+			try {
+				
+				$deleted = false;
+					
+				if( $entity = $this->getEntity( $id ) ) {
+					
+					if( $this->http->get( 'force_delete' ) ) {
+						
+						$entity->delete();
+						
+					} else {
+						
+						$entity->forceDelete();
+						
+					}
+					
+					
+					
+				} else {
+					
+					throw new Exception( "Error: Could not find Entity #$id" );
+					
+				}
+				
+				wp_nice_json( $this->http->get( 'force_delete' ) ? true : $entity );
 				
 			} catch(Exception $e) {
 				

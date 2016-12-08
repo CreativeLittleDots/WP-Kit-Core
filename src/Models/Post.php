@@ -102,6 +102,9 @@
 			static::addGlobalScope('order', function (Builder $builder) {
 		        $builder->orderBy('post_date', 'desc');
 		    });
+		    static::deleted(function($post) {
+			    wp_delete_post($post->ID);
+    		});
 		}
 	
 	    /**

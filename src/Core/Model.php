@@ -319,7 +319,8 @@
 		    	
 		    	$this->id = $entity->ID;
 	            $this->title = $entity->post_title;
-	            $this->content = apply_filters( 'the_content', $entity->post_content, $entity );
+	            $this->content = $entity->post_content;
+	            $this->excerpt = $entity->post_excerpt;
 	            $this->url = get_permalink( $entity->ID );
 	            $this->blog_id = $entity->blog_id;
 				$this->author_id = $entity->author;

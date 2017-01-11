@@ -23,6 +23,13 @@
 	     * @var string/array
 	     */
 	    protected $post_type = '';
+	    
+	    /**
+	     * The post_status associated with the model.
+	     *
+	     * @var string
+	     */
+	    protected $post_status = 'publish';
 	
 	    /**
 	     * The primary key for the model.
@@ -101,6 +108,11 @@
 			        } else {
 				        $builder->where( 'post_type', $model->getPostType() );
 			        }
+			    });
+			}
+			if( $model->post_status ) {
+				static::addGlobalScope('post_status', function (Builder $builder) use($model) {
+				    $builder->where( 'post_status', $model->post_status );
 			    });
 			}
 			static::addGlobalScope('order', function (Builder $builder) {

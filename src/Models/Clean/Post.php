@@ -60,56 +60,64 @@
 				'id',
 			];
 			
-			$post_type = get_post_type_object( $this->getPostType() );
+			$post_types = is_array( $this->getPostType() ) ? $this->getPostType() : [$this->getPostType()];
 			
-			if( post_type_supports( $this->getPostType(), 'title' ) ) {
-				
-				$appends = array_merge($appends, [
-					'title'
-				]);
-				
-			}
+			foreach($post_types as $post_type) {
 			
-			if( post_type_supports( $this->getPostType(), 'editor' ) ) {
+				$post_type = get_post_type_object( $post_type );
 				
-				$appends = array_merge($appends, [
-					'content'
-				]);
+				if( post_type_supports( $post_type->name, 'title' ) ) {
+					
+					$appends = array_merge($appends, [
+						'title'
+					]);
+					
+				}
 				
-			}
-			
-			if( post_type_supports( $this->getPostType(), 'author' ) ) {
+				if( post_type_supports( $post_type->name, 'editor' ) ) {
+					
+					$appends = array_merge($appends, [
+						'content'
+					]);
+					
+				}
 				
-				$appends = array_merge($appends, [
-					'author_id'
-				]);
+				if( post_type_supports( $post_type->name, 'author' ) ) {
+					
+					$appends = array_merge($appends, [
+						'author_id'
+					]);
+					
+				}
 				
-			}
-			
-			if( post_type_supports( $this->getPostType(), 'thumbnail' ) ) {
+				if( post_type_supports( $post_type->name, 'thumbnail' ) ) {
+					
+					$appends = array_merge($appends, [
+						'thumbnail_id'
+					]);
+					
+				}
 				
-				$appends = array_merge($appends, [
-					'thumbnail_id'
-				]);
-				
-			}
-			
-			if( $post_type->public ) {
-				
-				$appends = array_merge($appends, [
-					'url',
-					'comments_open'
-				]);
+				if( $post_type->public ) {
+					
+					$appends = array_merge($appends, [
+						'url',
+						'comments_open'
+					]);
+					
+				}
 				
 			}
 			
 			if( is_multisite() ) {
-				
+					
 				$appends = array_merge($appends, [
 					'blog_id'
 				]);
 				
 			}
+			
+			$appends = array_unique($appends);
 			
 			$this->setAppends(array_merge($appends, $this->appends));
 		    
@@ -185,6 +193,15 @@
 	     */
 		public function getStatusAttribute(){
 		    return ! empty( $this->attributes['post_status'] ) ? $this->attributes['post_status'] : 'publish';
+		}
+		
+		/**
+	     * Get Type Attribute
+	     *
+	     * @var string
+	     */
+		public function getTypeAttribute(){
+		    return ! empty( $this->attributes['post_type'] ) ? $this->attributes['post_type'] : 'post';
 		}
 		
 		/**
@@ -305,6 +322,7 @@
 	    public function getArrayableAppendsAfterMagicMeta() {
 		    return [
 				'status',
+				'type',
 				'date_added',
 				'date_modified'
 			];

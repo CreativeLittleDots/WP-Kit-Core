@@ -323,10 +323,10 @@
 	     *
 	     * @return void
 	     */
-		public function save() {
+		public function save(array $options = array()) {
 			$post_type = $this->getPostType();
 			$this->attributes['post_type'] = is_array($post_type) ? reset($post_type) : $post_type;
-			parent::save();	
+			parent::save($options);	
 		}
 	
 	}

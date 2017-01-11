@@ -168,7 +168,7 @@
 	        static::$instance = $this;
 	        
 	        $this->version = new SemVersion(self::VERSION);
-	        $this->inWp = ( defined( 'WP_USE_THEMES' ) && WP_USE_THEMES ) || ( defined( 'WP_ADMIN' ) && WP_ADMIN );
+	        $this->inWp = ( defined( 'WPINC' ) && WPINC );
 	        
 	        $this->instance('app', $this);
 	        $this->instance('Illuminate\Container\Container', $this);

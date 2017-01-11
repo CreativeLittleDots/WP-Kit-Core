@@ -20,7 +20,7 @@
 	    /**
 	     * The post_type associated with the model.
 	     *
-	     * @var string
+	     * @var string/array
 	     */
 	    protected $post_type = '';
 	
@@ -96,7 +96,11 @@
 		    $model = new static;
 		    if( $model->getPostType() ) {
 			    static::addGlobalScope('post_type', function (Builder $builder) use($model) {
-			        $builder->where( 'post_type', $model->getPostType() );
+				    if(is_array($model->getPostType())) {
+			        	$builder->whereIn( 'post_type', $model->getPostType() );
+			        } else {
+				        $builder->where( 'post_type', $model->getPostType() );
+			        }
 			    });
 			}
 			static::addGlobalScope('order', function (Builder $builder) {
@@ -308,7 +312,8 @@
 	     * @return void
 	     */
 		public function save() {
-			$this->attributes['post_type'] = $this->getPostType();
+			$post_type = $this->getPostType();
+			$this->attributes['post_type'] = is_array($post_type) ? reset($post_type) : $post_type;
 			parent::save();	
 		}
 	

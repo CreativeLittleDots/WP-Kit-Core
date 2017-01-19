@@ -8,7 +8,7 @@
     	
     	public function startIntegration( $settings ) {
         	
-        	if( function_exists('acf_add_options_page') && ! empty(  $settings['options_args'] ) ) {
+        	if( function_exists('acf_add_options_page') ) {
 	        	
 	        	if( ! defined( 'ACF_CONFIG_DIR' ) ) {
 		        	
@@ -16,9 +16,13 @@
 		        	
 	        	}
 				
-				$settings['options_args']['icon_url'] = get_asset($settings['options_args']['icon_url']);
+				if( ! empty(  $settings['options_args'] ) ) {
+					
+					$settings['options_args']['icon_url'] = get_asset( $settings['options_args']['icon_url'] );
 	
-				acf_add_options_page( $settings['options_args'] );
+					acf_add_options_page( $settings['options_args'] );
+					
+				}
 				
 				add_filter('acf/settings/save_json', function($path) {
 				   

@@ -39,7 +39,7 @@
 				$callback = stripos($callback, '\\') === 0 ? $callback : $this->app->getControllerName($callback);
 				$controller = stripos($callback, '::') === false ? $callback : explode('::', $callback);
 				$controller = is_array($controller) ? reset($controller) : $controller;
-				$controller = $this->app->call(array($controller, 'instance'));
+				$controller = $this->app->call(array($controller, 'instance'), [$this->app]);
 			
 			}
 			

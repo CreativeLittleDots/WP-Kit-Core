@@ -22,7 +22,8 @@
 	    "illuminate/auth": "~5.0",
 	    "vierbergenlars/php-semver": "~3.0",
 	    "symfony/var-dumper": "~3.0",
-	    "illuminate/http": "~5.0"
+	    "illuminate/http": "~5.0",
+	    "tgmpa/tgm-plugin-activation": "*"
     },
 	"type": "library",
 	"autoload": {

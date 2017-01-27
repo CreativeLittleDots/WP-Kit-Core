@@ -4,7 +4,7 @@
     
     class Invoker extends Flow {
 	    
-	    public function invokeByCondition( $callback, $action = 'wp', $condition = true, $priority = 20 ) {
+	    public function invokeByCondition( $callback, $action = 'wp', $condition = true, $priority = 10 ) {
 			
 			add_action( $action, function() use($callback, $action, $condition, $priority ) {
 			
@@ -14,11 +14,11 @@
 				
 				}
 				
-			});
+			}, $priority-1 );
 			
 		}
 		
-		public function invoke( $callback, $action = 'wp', $priority = 20 ) {
+		public function invoke( $callback, $action = 'wp', $priority = 10 ) {
 			
 			$callback = $this->getCallback($callback);
 			
@@ -32,7 +32,7 @@
 			
 		}
 		
-		public function isInvoked( $callback, $action = 'wp', $priority = 20 ) {
+		public function isInvoked( $callback, $action = 'wp', $priority = 10 ) {
 			
 			$callback = $this->getCallback($callback);
 			
@@ -50,7 +50,7 @@
 			
 		}
 		
-		public function uninvoke( $callback, $action = 'wp', $priority = 20 ) {
+		public function uninvoke( $callback, $action = 'wp', $priority = 10 ) {
 			
 			$callback = $this->getCallback($callback);
 			

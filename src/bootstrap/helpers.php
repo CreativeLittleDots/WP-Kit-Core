@@ -598,9 +598,9 @@
     
 	    function invoke( $callback, $action = 'wp', $condition = null, $priority = null ) {
 		    
-		    $priority = is_null( $priority ) ? ( is_numeric( $condition ) ? $condition : 20 ) : 20;
+		    $priority = is_null( $priority ) ? ( is_numeric( $condition ) ? $condition : 10 ) : $priority;
 		    
-		    if( is_null( $condition ) ) {
+		    if( is_null( $condition ) || $condition === $priority ) {
 			    
 			    return wpkit('invoker')->invoke( $callback, $action, $priority );
 			    

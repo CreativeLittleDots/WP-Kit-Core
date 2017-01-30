@@ -14,14 +14,16 @@
 		
 		public function mergeSettings($settings = array()) {
 			
-			parent::mergeSettings(array_merge(array(
+			$settings = array_merge(array(
     			'username' => 'login',
     			'callback' => array($this, 'token'),
     			'limit' => 5,
-    			'allow' => array(
-    				'/oauth/token'
-    			)
-			), $settings));
+    			'allow' => array()
+			), $settings);
+			
+			$settings['allow'][] = '/oauth/token';
+			
+			parent::mergeSettings($settings);
 
 		}
 		

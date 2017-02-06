@@ -17,6 +17,7 @@
 			$settings = array_merge(array(
     			'username' => 'login',
     			'callback' => array($this, 'token'),
+    			'issuer' => array(__CLASS__, 'issueToken'),
     			'limit' => 5,
     			'allow' => array()
 			), $settings);
@@ -169,13 +170,7 @@
 					
 					status_header(200);
 				
-					wp_send_json_success(array(
-						'access_token' => $token,
-						'expires_in' => 3600,
-						'token_type' => 'Bearer',
-						'scope' => 'basic',
-						'refresh_token' => null
-					));
+					wp_send_json_success(call_user_func($this->settings['issuer'], $token, $user));
 					
 				} else {
 					
@@ -192,6 +187,18 @@
 				wp_send_json_error( 'Unsupported grant type: ' . $grant_type );
 				
 			}
+			
+		}
+		
+		public static function issueToken( $token, \WP_User $user ) {
+			
+			return array(
+				'access_token' => $token,
+				'expires_in' => 3600,
+				'token_type' => 'Bearer',
+				'scope' => 'basic',
+				'refresh_token' => null
+			);
 			
 		}
     	

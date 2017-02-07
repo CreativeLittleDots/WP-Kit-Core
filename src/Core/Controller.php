@@ -42,7 +42,7 @@
 	            
 	        }
 	
-	        return $instances[$class];
+	        return $instance;
 			
 		}
         

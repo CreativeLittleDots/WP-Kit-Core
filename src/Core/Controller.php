@@ -36,7 +36,7 @@
 			
 			$class = get_called_class();
 
-	        if ( empty( $instances[$class] ) ) {
+	        if ( is_null( $instance ) ) {
 		        
 	            $instance = $app->make($class, [$app]);
 	            

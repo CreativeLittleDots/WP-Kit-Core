@@ -4,7 +4,7 @@
     
     use ReflectionClass;
     
-    class Controller extends Singleton {
+    class Controller {
 	    
 	    /**
 	     * @var \WPKit\Application
@@ -15,6 +15,11 @@
 	     * @var \WPKit\Core\Http
 	     */
 	    protected $http;
+	    
+	    /**
+	     * @var Static
+	     */
+	    public static $instance = null;
         
         protected $scripts = [];
         protected $scripts_action = 'wp_enqueue_scripts';
@@ -24,6 +29,20 @@
 			
 			$this->app = $app;
 		    $this->http = $http;
+			
+		}
+		
+		public static function instance($app) {
+			
+			$class = get_called_class();
+
+	        if ( empty( $instances[$class] ) ) {
+		        
+	            $instance = $app->make($class, [$app]);
+	            
+	        }
+	
+	        return $instances[$class];
 			
 		}
         

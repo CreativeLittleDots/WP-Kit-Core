@@ -2,10 +2,18 @@
 	
 	namespace WPKit\Providers;
 
+	use WPKit\Core\Application;
 	use Illuminate\Database\Capsule\Manager as Capsule;
 	use Illuminate\Support\ServiceProvider;
 	
 	class WPKitServiceProvider extends ServiceProvider {
+		
+		protected $app;
+		
+		public function __construct(Application $app)
+	    {
+	        $this->app = $app;
+	    }
 	
 	    /**
 	     * Register the service provider.

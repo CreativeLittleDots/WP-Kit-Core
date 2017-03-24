@@ -803,9 +803,9 @@
 				
 			if( class_exists( $class ) ) {
 				
-				return wpkit()->make($class, compact('params'));
+				return wpkit()->call(array($class, 'instance'), compact('params'));
 				
-			}
+			} 
 			
 			return false;
 			

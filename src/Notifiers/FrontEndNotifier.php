@@ -26,9 +26,9 @@
 	     * @var array
 	     */
 	    protected $classes = [
-		    'success' => 'success',
-		    'warning' => 'message',
-		    'error' => 'error'
+		    'success' => 'notice success',
+		    'warning' => 'notice warning',
+		    'error' => 'notice error'
 	    ];
 	    
 	    /**
@@ -38,7 +38,7 @@
 	     */
 	    public function runActions() {
 		    
-		    add_action( 'frontend_notices', [$this, 'sendNotices'] );
+		    add_action( 'frontend_notices', [$this, 'displayNotices'] );
 		    add_action( 'wp_footer', [$this, 'clearNotices'] );
 		    
 	    }

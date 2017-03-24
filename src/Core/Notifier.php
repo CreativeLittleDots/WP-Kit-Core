@@ -24,9 +24,9 @@
 	     * @var array
 	     */
 	    protected $classes = [
-		    'success' => 'updated',
-		    'warning' => 'update-nag',
-		    'error' => 'error'
+		    'success' => 'notice notice-success',
+		    'warning' => 'notice notice-warning',
+		    'error' => 'notice notice-error'
 	    ];
 	
 	    /**
@@ -94,7 +94,7 @@
 	     */
 	    public function success($message, $flash = false)
 	    {
-	        $this->addNotice($message, $this->getTypeClass( 'success' ), $flash);
+	        $this->addNotice($message, 'success', $flash);
 	    }
 	
 	    /**
@@ -105,7 +105,7 @@
 	     */
 	    public function warning($message, $flash = false)
 	    {
-	        $this->addNotice($message, $this->getTypeClass( 'warning' ), $flash);
+	        $this->addNotice($message, 'warning', $flash);
 	    }
 	
 	    /**
@@ -116,7 +116,7 @@
 	     */
 	    public function error($message, $flash = false)
 	    {
-	        $this->addNotice($message, $this->getTypeClass( 'error' ), $flash);
+	        $this->addNotice($message, 'error', $flash);
 	    }
 	    
 	    /**

@@ -27,7 +27,7 @@
 	     */
 	    protected function runActions() {
 		    
-		    add_action( 'admin_notices', [$this, 'sendNotices'] );
+		    add_action( 'admin_notices', [$this, 'displayNotices'] );
 		    add_action( 'admin_footer', [$this, 'clearNotices'] );
 		    
 	    }

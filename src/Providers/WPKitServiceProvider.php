@@ -2,16 +2,10 @@
 	
 	namespace WPKit\Providers;
 
-	use WPKit\Core\Application;
 	use Illuminate\Database\Capsule\Manager as Capsule;
 	use Illuminate\Support\ServiceProvider;
 	
 	class WPKitServiceProvider extends ServiceProvider {
-		
-		public function __construct(Application $app)
-	    {
-	        parent::__construct($app);
-	    }
 	
 	    /**
 	     * Register the service provider.
@@ -78,16 +72,6 @@
 			    'Illuminate\Contracts\Debug\ExceptionHandler',
 			    'WPKit\Core\ExceptionHandler'
 			);
-
-	        $this->app->singleton(
-	            'errors',
-	            function ()
-	            {
-	                return session_flashed('__validation_errors', []);
-	            }
-	        );
-	
-	        $_GLOBALS['errors'] = $this->app['errors'];
 	        
 	    }
 	

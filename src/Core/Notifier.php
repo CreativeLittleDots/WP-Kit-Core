@@ -7,16 +7,27 @@
 	    /**
 	     * The notifier instance.
 	     *
-	     * @var \Herbert\Framework\Notifier
+	     * @var \WPKit\Core\Notifier
 	     */
 	    protected static $instance;
-	
+	    
 	    /**
-	     * The accumulated notices.
+	     * The session key.
+	     *
+	     * @var string
+	     */
+	    protected $session_key = '__wpkit_notifications';
+	    
+	    /**
+	     * The notifier classes.
 	     *
 	     * @var array
 	     */
-	    protected $notices = [];
+	    protected $classes = [
+		    'success' => 'updated',
+		    'warning' => 'update-nag',
+		    'error' => 'error'
+	    ];
 	
 	    /**
 	     * Constructs the Notifier.
@@ -26,12 +37,8 @@
 	        if ( ! self::$instance)
 	        {
 	            self::$instance = $this;
-	
-	            $this->gatherFlashed();
 	        }
-	
-	        add_action('admin_notices', [$this, 'sendNotices']);
-	        add_action('shutdown', [$this, 'sendNotices']);
+	        $this->runActions();
 	    }
 	
 	    /**
@@ -41,23 +48,42 @@
 	     * @param string  $class
 	     * @param boolean $flash
 	     */
-	    protected function notify($message, $class = 'updated', $flash = false)
+	    public function addNotice($message, $type = 'success')
 	    {
 	        $notification = [
 	            'message' => $message,
-	            'class'   => $class
+	            'class'   => $this->getTypeClass( $type )
 	        ];
 	
-	        if ( ! $flash)
-	        {
-	            $this->notices[] = $notification;
-	
-	            return;
-	        }
-	
-	        $notices = session('__notifier_flashed', []);
+	        $notices = $this->getNotices();
 	        $notices[] = $notification;
-	        session()->getFlashBag()->set('__notifier_flashed', $notices);
+	        session()->set($this->session_key, $notices);
+	        
+	        return $notification;
+	    }
+	    
+	    /**
+	     * Runs actions of Notifer
+	     *
+	     * return void
+	     */
+	    protected function runActions() {
+		    
+		    add_action('shutdown', [$this, 'clearNotices']);
+		    
+	    }
+	    
+	    /**
+	     * Get type class
+	     *
+	     * return string
+	     */
+	    protected function getTypeClass( $type ) {
+		    
+		    $type = ! empty( $this->classes[$type] ) ? $type : 'warning';
+		    
+		    return $this->classes[$type];
+		    
 	    }
 	
 	    /**
@@ -66,9 +92,9 @@
 	     * @param string  $message
 	     * @param boolean $flash
 	     */
-	    protected function success($message, $flash = false)
+	    public function success($message, $flash = false)
 	    {
-	        $this->notify($message, 'updated', $flash);
+	        $this->addNotice($message, $this->getTypeClass( 'success' ), $flash);
 	    }
 	
 	    /**
@@ -77,9 +103,9 @@
 	     * @param string  $message
 	     * @param boolean $flash
 	     */
-	    protected function warning($message, $flash = false)
+	    public function warning($message, $flash = false)
 	    {
-	        $this->notify($message, 'update-nag', $flash);
+	        $this->addNotice($message, $this->getTypeClass( 'warning' ), $flash);
 	    }
 	
 	    /**
@@ -88,34 +114,75 @@
 	     * @param string  $message
 	     * @param boolean $flash
 	     */
-	    protected function error($message, $flash = false)
+	    public function error($message, $flash = false)
 	    {
-	        $this->notify($message, 'error', $flash);
+	        $this->addNotice($message, $this->getTypeClass( 'error' ), $flash);
+	    }
+	    
+	    /**
+	     * Gets all the accumulated notices.
+	     *
+	     * @return array
+	     */
+	    public function getNotices()
+	    {
+	        return session()->get($this->session_key, []);
 	    }
 	
 	    /**
-	     * Sends all the accumulated notices.
+	     * Displays all the accumulated notices.
 	     *
 	     * @return void
 	     */
-	    public function sendNotices()
+	    public function displayNotices()
 	    {
-	        foreach ($this->notices as $notice)
+	        foreach ($this->getNotices() as $notice)
 	        {
-	            echo "<div class=\"{$notice['class']}\"><p>{$notice['message']}</p></div>";
+	            $this->renderNotice( $notice, true );
 	        }
 	
-	        $this->notices = [];
+	        $this->clearNotices();
 	    }
-	
+	    
 	    /**
-	     * Gathers all the flashed notify messages.
+	     * Renders a single notice.
 	     *
 	     * @return void
 	     */
-	    protected function gatherFlashed()
+	    public function renderNotice( $notice = array(), $echo = false )
 	    {
-	        $this->notices = session()->getFlashBag()->get('__notifier_flashed', []);
+	        $html = $this->getTemplate( $notice );
+	        
+	        if( $echo ) {
+		        
+		        echo $html;
+		        
+		        return;
+		        
+	        }
+	        
+	        return $html;
+	        
+	    }
+	    
+	    /**
+	     * Get Notifier Template
+	     *
+	     * @return string
+	     */
+	    public function getTemplate( $notice = array() ) 
+	    {
+		    return "<div class=\"{$notice['class']}\"><p>{$notice['message']}</p></div>";
+	    }
+	    
+	    /**
+	     * Clears all the accumulated notices.
+	     *
+	     * @return void
+	     */
+	    public function clearNotices()
+	    {
+	    	session()->set($this->session_key, []);
 	    }
 	
 	    /**

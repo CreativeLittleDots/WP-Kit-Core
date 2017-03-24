@@ -836,7 +836,7 @@
 	    }
 	}
 	
-	if ( ! function_exists('session_flashed') ) {
+	if ( ! function_exists('notifier') ) {
 	    /**
 	     * Gets the session flashbag or a key from the session flashbag.
 	     *
@@ -844,16 +844,23 @@
 	     * @param  mixed  $default
 	     * @return \Illuminate\Session\Store|mixed
 	     */
-	    function session_flashed($key = null, $default = [])
+	    function notifier($notifier = 'frontend')
 	    {
-	        if ($key === null)
-	        {
-	            return wpkit('session')->getFlashBag();
+	        switch($notifier) {
+		        case 'admin' :
+		        	$notifier = 'WPKit\Notifiers\AdminNotifier';
+		        break;
+		        default :
+		        	$notifier = 'WPKit\Notifiers\FrontEndNotifier';
+		        break;
 	        }
-	        return wpkit('session')->getFlashBag()->get($key, $default);
+	        return wpkit($notifier);
 	    }
 	}
 	
+	/*----------------------------------------------*\
+    	#NGINX FIXES
+    \*----------------------------------------------*/
 	
 	// apache_request_headers replicement for nginx
 	if ( ! function_exists('apache_request_headers') ) {

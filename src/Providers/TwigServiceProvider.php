@@ -2,7 +2,6 @@
 	
 	namespace WPKit\Providers;
 
-	use WPKit\Core\Application;
 	use Illuminate\Support\ServiceProvider;
 	use Twig_Environment;
 	use Twig_Loader_Filesystem;
@@ -11,11 +10,6 @@
 	
 
 	class TwigServiceProvider extends ServiceProvider {
-		
-		public function __construct(Application $app)
-	    {
-	        parent::__construct($app);
-	    }
 	
 	    /**
 	     * Register the service provider.

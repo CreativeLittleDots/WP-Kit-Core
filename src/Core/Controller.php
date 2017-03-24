@@ -4,7 +4,7 @@
     
     use ReflectionClass;
     
-    class Controller {
+    class Controller extends Singleton {
 	    
 	    /**
 	     * @var \WPKit\Application
@@ -29,20 +29,6 @@
 			
 			$this->app = $app;
 		    $this->http = $http;
-			
-		}
-		
-		public static function instance($app) {
-			
-			$class = get_called_class();
-
-	        if ( is_null( $instance ) ) {
-		        
-	            $instance = $app->make($class, [$app]);
-	            
-	        }
-	
-	        return $instance;
 			
 		}
         

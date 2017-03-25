@@ -3,8 +3,23 @@
     namespace WPKit\Http\Middleware;
     
     use WPKit\Core\Auth;
+    use League\OAuth2\Server\AuthorizationServer;
+    use Zend\Diactoros\Response as Psr7Response;
 
 	class OauthAuth extends Auth {
+		
+		/**
+	     * @var \League\OAuth2\Server\AuthorizationServer
+	     */
+	    protected $server;
+	    
+	    public function __construct($params = array(), Application $app, Http $http, AuthorizationServer $server) {
+	    	
+	    	$this->server = $server;
+	    	
+	    	parent::__construct($params, $app, $http);
+	    	 
+    	}
 		
 		public function beforeAuth() {
 			
@@ -16,8 +31,7 @@
 			
 			$settings = array_merge(array(
     			'username' => 'login',
-    			'callback' => array($this, 'token'),
-    			'issuer' => array(__CLASS__, 'issueToken'),
+    			'callback' => array($this, 'issueToken'),
     			'limit' => 5,
     			'allow' => array()
 			), $settings);
@@ -84,7 +98,13 @@
 			
 		}
 		
-		public function token() {
+		public function issueToken() {
+			
+			return $this->server->respondToAccessTokenRequest($request, new Psr7Response());
+			
+		}
+		
+		public function oldIssueToken() {
 			
 			if( ! $grant_type = $this->http->get('grant_type') ) {
 				
@@ -170,7 +190,13 @@
 					
 					status_header(200);
 				
-					wp_send_json_success(call_user_func($this->settings['issuer'], $token, $user));
+					wp_send_json_success(array(
+						'access_token' => $token,
+						'expires_in' => 3600,
+						'token_type' => 'Bearer',
+						'scope' => 'basic',
+						'refresh_token' => null
+					));
 					
 				} else {
 					
@@ -187,18 +213,6 @@
 				wp_send_json_error( 'Unsupported grant type: ' . $grant_type );
 				
 			}
-			
-		}
-		
-		public static function issueToken( $token, \WP_User $user ) {
-			
-			return array(
-				'access_token' => $token,
-				'expires_in' => 3600,
-				'token_type' => 'Bearer',
-				'scope' => 'basic',
-				'refresh_token' => null
-			);
 			
 		}
     	

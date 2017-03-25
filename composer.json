@@ -23,7 +23,8 @@
 	    "vierbergenlars/php-semver": "~3.0",
 	    "symfony/var-dumper": "~3.0",
 	    "illuminate/http": "5.*",
-	    "tgmpa/tgm-plugin-activation": "*"
+	    "tgmpa/tgm-plugin-activation": "*",
+	    "league/oauth2-server": "*"
     },
 	"type": "library",
 	"autoload": {

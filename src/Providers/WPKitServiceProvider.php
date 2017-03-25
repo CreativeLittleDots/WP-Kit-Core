@@ -37,6 +37,11 @@
 	            'router',
 	            'WPKit\Core\Router'
 	        );
+	        
+	        $this->app->bind(
+	            'route',
+	            'WPKit\Core\Route'
+	        );
 	
 	        $this->app->instance(
 	            'session',
@@ -46,6 +51,16 @@
 	        $this->app->alias(
 	            'session',
 	            'WPKit\Core\Session'
+	        );
+	        
+	        $this->app->instance(
+	            'kernal',
+	            $this->app->make('WPKit\Core\Kernal', ['app' => $this->app])
+	        );
+	
+	        $this->app->alias(
+	            'kernal',
+	            'WPKit\Core\Kernal'
 	        );
 	
 	        $this->app->instance(

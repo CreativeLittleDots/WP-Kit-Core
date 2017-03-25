@@ -2,7 +2,7 @@
     
     namespace WPKit\Core;
 
-	class Auth extends Singleton {
+	class Auth extends Middleware {
 		
 		/**
 	     * @var \WPKit\Application

@@ -2,7 +2,18 @@
     
     namespace WPKit\Core;
     
-    class Invoker extends Flow {
+    class Invoker extends Singleton {
+	    
+	    /**
+	     * @var \WPKit\Application
+	     */
+	    protected $app;
+
+		public function __construct(Application $app) {
+	    	
+	    	$this->app = $app;
+	    	
+	    }
 	    
 	    public function invokeByCondition( $callback, $action = 'wp', $condition = true, $priority = 10 ) {
 			
@@ -16,27 +27,31 @@
 				
 			}, $priority-1 );
 			
+			$meta = compact( 'action', 'priority' );
+			
+			$route = $this->app->make( 'route', compact('callback', 'meta') );
+			
+			return $route;
+			
 		}
 		
 		public function invoke( $callback, $action = 'wp', $priority = 10 ) {
 			
-			$callback = $this->getCallback($callback);
+			$meta = compact( 'action', 'priority' );
 			
-			$this->routes[] = [
-				$callback,
-				$action,
-				$priority
-			];
+			$route = $this->app->make( 'route', compact('callback', 'meta') );
+						
+			$this->routes[] = $route;
 			
-			add_action( $action, $callback, $priority );
+			add_action( $action, array( $route, 'run' ), $priority );
+			
+			return $route;
 			
 		}
 		
 		public function isInvoked( $callback, $action = 'wp', $priority = 10 ) {
 			
-			$callback = $this->getCallback($callback);
-			
-			$index = array_search(array_merge(array(
+			extract(array_merge(array(
 				'callback' => '',
 				'action' => 'wp',
 				'priority' => 20
@@ -44,7 +59,13 @@
 				'callback',
 				'action',
 				'priority'
-			)), $this->routes);
+			)));
+			
+			$meta = compact( 'action', 'priority' );
+			
+			$route = $this->app->make( 'route', compact('callback', 'meta') );
+			
+			$index = array_search($route, $this->routes);
 			
 			return $index > -1 ? (object) $this->routes[$index] : false;
 			
@@ -52,9 +73,7 @@
 		
 		public function uninvoke( $callback, $action = 'wp', $priority = 10 ) {
 			
-			$callback = $this->getCallback($callback);
-			
-			$index = array_search(array_merge(array(
+			extract(array_merge(array(
 				'callback' => '',
 				'action' => 'wp',
 				'priority' => 20
@@ -62,15 +81,23 @@
 				'callback',
 				'action',
 				'priority'
-			)), $this->routes);
+			)));
+			
+			$meta = compact( 'action', 'priority' );
+			
+			$route = $this->app->make( 'route', compact('callback', 'meta') );
+			
+			$index = array_search($route, $this->routes);
 			
 			if( $index > -1 ) {
 				
-				unset( $this->routes[$index] );
+				unset( $this->routes[ $index ] );
 				
 			}
 			
 			remove_action( $action, $method, $priority );
+			
+			return $this;
 			
 		}
 	    

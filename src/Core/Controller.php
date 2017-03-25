@@ -21,8 +21,19 @@
 	     */
 	    public static $instance = null;
         
+        /**
+	     * @var array
+	     */
         protected $scripts = [];
+        
+        /**
+	     * @var string
+	     */
         protected $scripts_action = 'wp_enqueue_scripts';
+        
+        /**
+	     * @var int
+	     */
         protected $scripts_priority = 10;
 	   
 		public function __construct(Application $app, Http $http) {
@@ -31,8 +42,14 @@
 		    $this->http = $http;
 			
 		}
+		
+		public function dispatch() {
+			
+			$this->beforeFilter();
+			
+		}
         
-        public function beforeFilter() {
+        protected function beforeFilter() {
 			
 			add_action( $this->scripts_action, array($this, 'enqueueScripts'), $this->scripts_priority );
 			

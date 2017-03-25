@@ -2,15 +2,33 @@
     
     namespace WPKit\Core;
     
+    use Exception;
     use Routes;
     
-    class Router extends Flow {
+    class Router extends Singleton {
+	    
+	    /**
+	     * @var \WPKit\Application
+	     */
+	    protected $app;
+	    
+	    /**
+	     * @var \WPKit\Core\Http
+	     */
+	    protected $http;
+
+		public function __construct(Application $app, Http $http) {
+	    	
+	    	$this->app = $app;
+	    	$this->http = $http;
+	    	
+	    }
 		
-		public function map( $route, $callback, $method = 'get' ) {
+		public function map( $path, $callback, $method = 'get' ) {
 			
 			if( ! class_exists( 'Routes' ) ) {
 				
-				return;
+				throw new Exception( 'Upstatement Routes is not installed' );
 				
 			}
 			
@@ -24,29 +42,19 @@
 			
 			$methods = array_map( 'strtoupper', is_array( $methods ) ? $methods : array( $methods ) );
 			
-			if( in_array( $this->http->method(), $methods ) ) {
+			$meta = compact( 'path', 'method' );
 			
-				$controller = $this->getController($callback);
+			$route = $this->app->make( 'route', compact('callback', 'meta') );
+			
+			if( in_array( $this->http->method(), $methods ) ) {
 	
-				Routes::map($route, function( $params ) use($controller, $callback) {
-					
-					if( $controller ) {
-						
-						$this->app->call(array($controller, 'beforeFilter'), compact('params'));
-						
-					}
-					
-					$this->app->call($this->getCallback($callback), $params);
-					
-				});
+				Routes::map( $path, array($route, 'run') );
 				
-				$this->routes[] = new Route([
-					$route,
-					$callback,
-					$method
-				]);
+				$this->routes[] = $route;
 				
 			}
+			
+			return $route;
 			
 		}
 		
@@ -56,19 +64,23 @@
 			
 		}
 		
-		public function isMapped( $route, $callback, $method = 'get' ) {
+		public function isMapped( $path, $callback, $method = 'get' ) {
 			
-			$callback = $this->getCallback($callback);
-			
-			return array_search(new Route(array_merge(array(
-				'route' => '',
+			extract(array_merge(array(
+				'path' => '',
 				'callback' => '',
 				'method' => 'get'
 			), compact(
-				'route',
+				'path',
 				'callback',
 				'method'
-			))), $this->routes) > -1 ? true : false;
+			)));
+			
+			$meta = compact( 'path', 'method' );
+			
+			$route = $this->app->make( 'route', compact('callback', 'meta') );
+			
+			return array_search($route, $this->routes) > -1 ? true : false;
 			
 		}
 		

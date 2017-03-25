@@ -44,7 +44,7 @@
 			
 			add_action( $action, array( $route, 'run' ), $priority );
 			
-			return $controllerCallback[0];
+			return $route;
 			
 		}
 		

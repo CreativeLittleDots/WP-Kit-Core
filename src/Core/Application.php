@@ -231,6 +231,12 @@
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\TwigServiceProvider'
 	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\RouteServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\FacadeServiceProvider'
+	        ));
 	    }
 
 		

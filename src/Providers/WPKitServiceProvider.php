@@ -33,16 +33,6 @@
 	            'WPKit\Core\Http'
 	        );
 	
-	        $this->app->bind(
-	            'router',
-	            'WPKit\Core\Router'
-	        );
-	        
-	        $this->app->bind(
-	            'route',
-	            'WPKit\Core\Route'
-	        );
-	
 	        $this->app->instance(
 	            'session',
 	            $this->app->make('WPKit\Core\Session', ['app' => $this->app])

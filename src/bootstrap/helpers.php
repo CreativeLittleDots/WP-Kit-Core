@@ -624,7 +624,7 @@
     
 	    function route( $uri, $callback, $method = 'get' ) {
 		    
-		    return wpkit('router')->map( $uri, $callback, $method );
+		    return WPKit\Facades\Route::map( $uri, $callback, $method );
 		    
 	    }
 	    

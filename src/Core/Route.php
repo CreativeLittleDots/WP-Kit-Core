@@ -3,7 +3,6 @@
     namespace WPKit\Core;
     
     use Illuminate\Routing\Route as BaseRoute;
-    use WPKit\Helpers\Str;
     
     class Route extends BaseRoute {
 	    
@@ -40,7 +39,7 @@
 	     */
 	    protected function parseControllerCallback()
 	    {
-		    $callback = Str::parseCallback( $this->action['uses'] );
+		    $callback = Str::parseCallback( str_replace( '::', '@', $this->action['uses'] ), 'dispatch' );
 		    $callback[0] = stripos( $callback[0], '\\' ) === 0 ? $callback[0] : $this->app->getControllerName( $callback[0] );
 	        return $callback;
 	    }

@@ -18,7 +18,17 @@
 			
 			$methods = array_map( 'strtoupper', is_array( $methods ) ? $methods : array( $methods ) );
 			
-			return $this->addRoute( $methods, $path, $callback );
+			$route = $this->createRoute( $methods, $path, $callback );
+			
+			add_action( 'init', function() use ( $route ) {
+				
+				$this->routes->add( $route );
+				
+				$this->dispatch();
+				
+			} );
+			
+			return $route;
 			
 		}
 	    

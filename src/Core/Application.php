@@ -500,14 +500,6 @@
 	        }
 	        $this->booted = true;
 	        $this->fireAppCallbacks($this->bootedCallbacks);
-	        
-	        add_action( 'wp_loaded', function() {
-		        
-		        global $upstatement_routes;
-	        
-				remove_action('wp_loaded', array($upstatement_routes, 'match_current_request') );
-		        
-	        }, 0);
 			
 			if( defined( 'FUNCTIONS_DIR' ) && FUNCTIONS_DIR ) {
 			

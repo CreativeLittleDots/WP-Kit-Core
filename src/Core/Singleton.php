@@ -9,13 +9,13 @@
 	     */
 	    public static $instances = [];
 
-	    public static function instance() {
+	    public static function instance($app) {
 			
 			$class = get_called_class();
 
 	        if ( empty( static::$instances[$class] ) ) {
 		        
-	            static::$instances[$class] = wpkit()->make($class, func_get_args());
+	            static::$instances[$class] = $app->make($class, func_get_args());
 	            
 	        }
 	

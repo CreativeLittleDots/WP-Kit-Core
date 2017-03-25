@@ -2,19 +2,20 @@
     
     namespace WPKit\Core;
     
-    use ReflectionClass;
+    use Illuminate\Foundation\Bus\DispatchesJobs;
+	use Illuminate\Routing\Controller as BaseController;
+	use Illuminate\Foundation\Validation\ValidatesRequests;
+	use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+	use Illuminate\Support\Facades\Auth;
     
-    class Controller extends Singleton {
+    class Controller extends BaseController {
+	    
+	    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 	    
 	    /**
 	     * @var \WPKit\Application
 	     */
 	    protected $app;
-	    
-	    /**
-	     * @var \WPKit\Core\Http
-	     */
-	    protected $http;
 	    
 	    /**
 	     * @var Static
@@ -35,32 +36,89 @@
 	     * @var int
 	     */
         protected $scripts_priority = 10;
-	   
-		public function __construct(Application $app, Http $http) {
+        
+        /**
+	     * Instance function to return only once instance of the controller
+	     *
+	     * @return \WPKit\Core\Controller
+	     */
+        public function instance( $app ) {
+	        
+	        $class = get_called_class();
+	        
+	        if( empty( static::$instance ) ) {
+		        
+		        static::$instance = $app->make($class, func_get_args()); 
+		        
+	        }
+	        
+	        return static::$instance;
+	        
+        }
+		
+		/**
+	     * Controller constructor
+	     *
+	     * @param  \WPKit\Core\Application  $app
+	     * @return void
+	     */
+		public function __construct(Application $app) {
 			
 			$this->app = $app;
-		    $this->http = $http;
-			
-		}
-		
-		public function dispatch() {
-			
-			$this->beforeFilter();
 			
 		}
         
+        /**
+	     * Before filter method used before every action
+	     *
+	     * @return void
+	     */
         protected function beforeFilter() {
 			
 			add_action( $this->scripts_action, array($this, 'enqueueScripts'), $this->scripts_priority );
 			
 		}
+		
+		/**
+	     * Default controller action should the controller be invoked
+	     *
+	     * @return void
+	     */
+		public function dispatch() {
+			
+		}
+		
+		/**
+	     * Execute an action on the controller.
+	     *
+	     * @param  string  $method
+	     * @param  array   $parameters
+	     * @return \Symfony\Component\HttpFoundation\Response
+	     */
+	    public function callAction($method, $parameters) {
+		    
+		    call_user_func_array([$this, 'beforeFilter'], $parameters);
+		    
+	        return call_user_func_array([$this, $method], $parameters);
+	        
+	    }
         
+        /**
+	     * Get scripts for controller
+	     *
+	     * @return array
+	     */
         protected function getScripts() {
 	        
 	        return $this->scripts;
 	        
         }
         
+        /**
+	     * Enqueue scripts for controller
+	     *
+	     * @return void
+	     */
         public function enqueueScripts() {
 			
 			foreach($this->getScripts() as $script) {

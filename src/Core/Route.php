@@ -2,197 +2,47 @@
     
     namespace WPKit\Core;
     
-    class Route extends Singleton {
+    use Illuminate\Routing\Route as BaseRoute;
+    use WPKit\Helpers\Str;
+    
+    class Route extends BaseRoute {
 	    
 	    /**
 	     * @var \WPKit\Core\Application
 	     */
 	    protected $app;
 	    
-	    /**
-	     * @var \WPKit\Core\Kernal
-	     */
-	    protected $kernal;
-		
-		/**
-	     * @var array
-	     */
-	    protected $middleware = [];
-	    
-	    /**
-	     * @var string
-	     */
-	    protected $callback;
-	    
-	    /**
-	     * @var array
-	     */
-	    protected $meta;
-	    
-	    public function __construct(Application $app, Kernal $kernal, $callback, $meta = array()) 
+	    public function __construct($methods, $uri, $action, Application $app) 
 	    {
 		    $this->app = $app;
-		    $this->kernal = $kernal;
-		    $this->callback = $callback;
-		    $this->meta = $meta;
+		    parent::__construct($methods, $uri, $action);
 		    
 	    }
 	    
 	    /**
-	     * Run the route.
-	    */
-	    public function run( $params = array() ) {
-		    
-		    $params = is_array( $params ) ? $params : array();
-			
-			if( $middleware = $this->getMiddleware() ) {
-				
-				if( is_callable( $middleware ) ) {
-			    
-				    call_user_func( $middleware );
-				    
-			    } else {
-		
-					foreach( $middleware as $m ) {
-				
-						$this->app->call( array( $m['middleware'], 'instance' ), $m['options'] );
-						
-					}
-					
-				}
-				
-			}
-			
-			if( $controller = $this->getController() ) {
-				
-				$this->app->call( array( $controller, 'dispatch' ), compact('params') );
-			
-				if( $this->getMethod() !== 'dispatch' ) {
-				
-					$this->app->call( $this->getCallback(), $params );
-					
-				}
-				
-			}
-		    
-	    }
-	    
-	     /**
-	     * Register middleware on the route.
+		 * Get the controller instance for the route.
 	     *
-	     * @param  array|string|\Closure  $middleware
-	     * @param  array   $options
-	     * @return void
+	     * @return mixed
 	     */
-	    public function middleware( $middleware ) 
+	    public function getController()
 	    {
-		    
-		    if( is_callable( $middleware ) ) {
-			    
-			    $this->middleware = $middleware;
-			    
-		    } else {
-			
-				$middleware = is_array( $middleware ) ? $middleware : array(
-					$middleware => array_slice(func_get_args(), 1)
-				);
-				
-				foreach($middleware as $m => $options) {
-					
-					$class = $this->kernal->getMiddleware( $m ) ? $this->kernal->getMiddleware( $m ) : false;
-					
-					if( $class ) {
-					
-						$this->middleware[] = [
-							'middleware' => $class,
-							'options' => $options
-						];
-						
-					}
-					
-				}
-				
-			}
-			
-		}
+	        $class = $this->parseControllerCallback()[0];
+	        if (! $this->controller) {
+	            $this->controller = $this->app->call(array($class, 'instance'), [$this->app]);
+	        }
+	        return $this->controller;
+	    }
 		
 		/**
-	     * Get the middleware assigned to the controller.
+	     * Parse the controller.
 	     *
 	     * @return array
 	     */
-	    public function getMiddleware()
+	    protected function parseControllerCallback()
 	    {
-	        return $this->middleware;
+		    $callback = Str::parseCallback( $this->action['uses'] );
+		    $callback[0] = stripos( $callback[0], '\\' ) === 0 ? $callback[0] : $this->app->getControllerName( $callback[0] );
+	        return $callback;
 	    }
-	    
-	    /**
-	     * Get callback.
-	     *
-	     * @return callable
-	     */
-	    public function getCallback() 
-	    {
-			
-			$callback = $this->callback;
-			
-			$controller = $this->getController();
-			$method = $this->getMethod();
-			
-			if( $controller && $method ) {
-				
-				return array($controller, $method);
-				
-			}
-			
-			return $callback;
-			
-		}
-		
-		/**
-	     * Get controller.
-	     *
-	     * @return WPKit\Core\Controller
-	     */
-		public function getController() {
-			
-			$callback = $this->callback;
-		    
-		    $controller = false;
-			
-			if( is_string($callback) ) {
-			
-				$callback = stripos($callback, '\\') === 0 ? $callback : $this->app->getControllerName($callback);
-				$controller = stripos($callback, '::') === false ? $callback : explode('::', $callback);
-				$controller = is_array($controller) ? reset($controller) : $controller;
-				$controller = $this->app->call(array($controller, 'instance'), [$this->app]);
-			
-			}
-			
-			return $controller;
-			
-		}
-		
-		/**
-	     * Get controller method.
-	     *
-	     * @return string
-	     */
-		public function getMethod() {
-			
-			$callback = $this->callback;
-			
-			$method = false;
-			
-			if( is_string($callback) ) {
-			
-				$method = stripos($callback, '::') === false ? 'dispatch' : explode('::', $callback);
-				$method = is_array($method) ? end($method) : $method;
-			
-			}
-			
-			return $method;
-			
-		}
 	    
     }

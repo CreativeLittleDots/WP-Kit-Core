@@ -77,6 +77,11 @@
 			    'Illuminate\Contracts\Debug\ExceptionHandler',
 			    'WPKit\Core\ExceptionHandler'
 			);
+			
+			$this->app->instance(
+				'events',
+				$this->app->make('Illuminate\Events\Dispatcher', ['app' => $this->app])
+			);
 	        
 	    }
 	

@@ -345,13 +345,15 @@
     
     if ( ! function_exists('get_asset') ) {
     
-	    function get_asset($file) {
+	    function get_asset($file, $server_path = false) {
 	        
 	        foreach( array_map( 'trim', explode(',', ASSET_DIRS) ) as $dir ) {
 	                    
 	            if( file_exists( THEME_DIR . DS . $dir . DS . $file ) ) {
+		            
+		            $path = $server_path ? THEME_DIR : THEME_URI;
 	                
-	                return THEME_URI . DS . $dir . DS . $file;
+	                return $path . DS . $dir . DS . $file;
 	                
 	            }
 	            

@@ -1,12 +1,14 @@
 <?php
     
-    namespace WPKit\Integrations;
+    namespace WPKit\Integrations\Plugins;
     
-    use WPKit\Core\Integration;
+    use WPKit\Integrations\Integration;
 
 	class AdvancedCustomFieldsPro extends Integration {
     	
-    	public function startIntegration( $settings ) {
+    	public function startIntegration() {
+	    	
+	    	$settings = $this->settings;
         	
         	if( function_exists('acf_add_options_page') ) {
 	        	

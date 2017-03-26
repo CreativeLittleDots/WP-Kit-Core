@@ -34,9 +34,10 @@
 	     */
 	    protected function parseAction($action)
 	    {
+		    
 		    // If the action is a string nest inside for route methods
 		    if(is_string($action)) {
-		        $action = ['uses' => str_replace( '::', '@', $action)];
+		        $action = ['uses' => $action];
 	        }
 	        
 	        // If the action is already a Closure instance, we will just set that instance
@@ -54,6 +55,8 @@
 	        }
 	
 	        if (is_string($action['uses'])) {
+		        
+		        $action['uses'] = str_replace( '::', '@', $action['uses']);
 		        
 		        if(! Str::contains($action['uses'], '@') ) {
 	            	$action['uses'] .= '@dispatch';

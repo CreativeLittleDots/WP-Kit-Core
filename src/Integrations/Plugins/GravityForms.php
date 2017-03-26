@@ -1,8 +1,8 @@
 <?php
 	
-	namespace WPKit\Integrations;
+	namespace WPKit\Integrations\Plugins;
 	
-	use WPKit\Core\Integration;
+	use WPKit\Integrations\Integration;
 	use GFCommon;
 	use GFFormsModel;
 	use Timber;
@@ -10,8 +10,6 @@
 	class GravityForms extends Integration {
 		
 		public function startIntegration( $settings ) {
-    		
-    		$this->settings = is_array($settings) ? array_merge($this->settings, $settings) : array();
 			
 			add_filter( 'gform_cdata_open', array($this, 'wrap_gform_cdata_open') );
 			add_filter( 'gform_cdata_close', array($this, 'wrap_gform_cdata_close') );

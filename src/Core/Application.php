@@ -136,12 +136,6 @@
 	     */
 	    protected $builtViewGlobals = null;
 		/**
-	     * The integrations.
-	     *
-	     * @var array
-	     */
-		protected $integrations = array();
-		/**
 	     * The shortcodes.
 	     *
 	     * @var array
@@ -225,6 +219,9 @@
 	     */
 	    protected function registerBaseProviders()
 	    {
+		    $this->register($this->resolveProviderClass(
+	            'Illuminate\Session\SessionServiceProvider'
+	        ));
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\WPKitServiceProvider'
 	        ));
@@ -232,11 +229,12 @@
 	            'WPKit\Providers\TwigServiceProvider'
 	        ));
 	        $this->register($this->resolveProviderClass(
-	            'WPKit\Providers\RouteServiceProvider'
+	            'WPKit\Routing\RoutingServiceProvider'
 	        ));
 	        $this->register($this->resolveProviderClass(
-	            'WPKit\Providers\FacadeServiceProvider'
+	            'WPKit\Notifications\NotificationServiceProvider'
 	        ));
+	        
 	    }
 
 		
@@ -471,14 +469,6 @@
 	        $this->bootingCallbacks[] = $callback;
 	        
 	    }
-		
-		public function init() {
-			
-			_deprecated_function( __METHOD__, '1.3', __CLASS__ . '::boot' );
-			
-			$this->boot();
-			
-		}
 		
 		public function boot() {
 			
@@ -850,11 +840,9 @@
 			
 		}
 		
-		public function add_integrations($integrations) {
+		private function getIntegrationClass($integration) {
 			
-			_deprecated_function( __METHOD__, '1.3', __CLASS__ . '::addIntegrations' );
-			
-			return $this->addIntegrations($integrations);
+			return 'WPKit\Integrations\Plugins\\' . inflector()->camelize($integration);
 			
 		}
 		
@@ -864,41 +852,21 @@
 			
 				if( ! $this->hasIntegration( $integration ) ) {
 				
-					$core_integration_class = 'WPKit\Integrations\\' . inflector()->camelize($integration);
-			    		
-		    		$integration_class = $this->getNamespace() . '\Integrations\\' . inflector()->camelize($integration);
+					$class = $this->getIntegrationClass($integration);
 		    		
-		    		if( class_exists( $core_integration_class ) ) {
-		        		
-		        		$this->integrations[$integration] = $this->make($core_integration_class, [
-			        		'app' => $this,
-			        		'settings' => $settings
-		        		]);
-		        		
-		    		} else if( class_exists( $integration_class ) ) {
-		        		
-		        		$this->integrations[$integration] = $this->make($integration_class, [
-			        		'app' => $this,
-			        		'settings' => $settings
-		        		]);
+		    		if( class_exists( $class ) ) {
+			    		
+			    		$property = $class . '\IntegrationSettings';
+			    		
+			    		$this->register($this->resolveProviderClass($class), [
+			    			$property => $settings
+			    		]);
 		        		
 		    		}
 		    	
 				}
 				
-			} else {
-				
-				// admin error
-				
 			}
-			
-		}
-		
-		public function add_integration($integration, $settings) {
-			
-			_deprecated_function( __METHOD__, '1.3', __CLASS__ . '::addIntegration' );
-			
-			return $this->addIntegration($integrations);
 			
 		}
 		
@@ -906,12 +874,8 @@
 			
 			if( $this->inWp() ) {
 				
-    			return array_key_exists($integration, $this->integrations) && $this->integrations[$integration];
+    			return $this->getProvider($this->getIntegrationClass($integration));
     			
-    		} else {
-	    		
-	    		// admin error
-	    		
     		}
     		
 		}

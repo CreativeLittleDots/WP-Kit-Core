@@ -3,10 +3,30 @@
     namespace WPKit\Core;
     
     use Illuminate\Http\Request;
+    use Illuminate\Contracts\Events\Dispatcher;
+    use Illuminate\Container\Container;
     use Illuminate\Routing\Router as BaseRouter;
     
     class Router extends BaseRouter {
 		
+		 /**
+	     * Create a new Router instance.
+	     *
+	     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+	     * @param  \Illuminate\Container\Container  $container
+	     * @return void
+	     */
+	    public function __construct(Dispatcher $events, Container $container = null)
+	    {
+	        $this->events = $events;
+	        $this->routes = new RouteCollection;
+	        $this->container = $container ?: new Container;
+	
+	        $this->bind('_missing', function ($v) {
+	            return explode('/', $v);
+	        });
+	    }
+    
 		 /**
 	     * Register a new route with the given verbs.
 	     *
@@ -32,17 +52,16 @@
 		}
 		
 		/**
-	     * Dispatch the request to the application.
+	     * Add a route to the underlying route collection.
 	     *
-	     * @param  \Illuminate\Http\Request  $request
-	     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+	     * @param  array|string  $methods
+	     * @param  string  $uri
+	     * @param  \Closure|array|string  $action
+	     * @return \Illuminate\Routing\Route
 	     */
-	    public function dispatch(Request $request) {
-		    
-		    $this->currentRequest = $request;
-			    
-			return $this->dispatchToRoute($request);
-	        
+	    public function forceAddRoute(Route $route)
+	    {
+	        return $this->routes->add($route);
 	    }
 	    
 	    /**

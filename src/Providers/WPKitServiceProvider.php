@@ -25,62 +25,37 @@
 	
 	        $this->app->instance(
 	            'http',
-	            \WPKit\Core\Http::capture()
-	        );
-	
-	        $this->app->alias(
-	            'http',
-	            'WPKit\Core\Http'
-	        );
-	
-	        $this->app->instance(
-	            'session',
-	            $this->app->make('WPKit\Core\Session', ['app' => $this->app])
-	        );
-	
-	        $this->app->alias(
-	            'session',
-	            'WPKit\Core\Session'
-	        );
-	        
-	        $this->app->instance(
-	            'kernal',
-	            $this->app->make('WPKit\Core\Kernal', ['app' => $this->app])
-	        );
-	
-	        $this->app->alias(
-	            'kernal',
-	            'WPKit\Core\Kernal'
-	        );
-	
-	        $this->app->instance(
-	            'notifier',
-	            $this->app->make('WPKit\Core\Notifier', ['app' => $this->app])
-	        );
-	
-	        $this->app->alias(
-	            'notifier',
-	            'WPKit\Core\Notifier'
+	            \Illuminate\Http\Request::capture()
 	        );
 	        
 	        $this->app->instance(
 	            'invoker',
-	            $this->app->make('WPKit\Core\Invoker', ['app' => $this->app])
+	            $this->app->make('WPKit\Routing\Invoker', ['app' => $this->app])
 	        );
-	        
-	        $this->app->alias(
-	            'invoker',
-	            'WPKit\Core\Invoker'
-	        );
-	
-			$this->app->singleton(
-			    'Illuminate\Contracts\Debug\ExceptionHandler',
-			    'WPKit\Core\ExceptionHandler'
-			);
 			
 			$this->app->instance(
 				'events',
-				$this->app->make('WPKit\Core\Dispatcher', ['app' => $this->app])
+				$this->app->make('WPKit\Events\Dispatcher', ['app' => $this->app])
+			);
+			
+			$this->app->singleton(
+			    \Illuminate\Contracts\Debug\ExceptionHandler::class,
+			    \WPKit\Core\ExceptionHandler::class
+			);
+			
+			$this->app->singleton(
+			    \Illuminate\Contracts\Http\Kernel::class,
+			    \Illuminate\Foundation\Http\Kernel::class
+			);
+			
+			$this->app->singleton(
+			    \Illuminate\Contracts\Console\Kernel::class,
+			    \Illuminate\Foundation\Console\Kernel::class
+			);
+			
+			$this->app->singleton(
+			    \Illuminate\Contracts\Debug\ExceptionHandler::class,
+			    \WPKit\Exceptions\Handler::class
 			);
 	        
 	    }
@@ -118,7 +93,7 @@
 	     */
 	    public function boot()
 	    {
-	        $this->app['session']->start();
+	        //$this->app['session']->start();
 	    }
 	
 	}

@@ -1,20 +1,18 @@
 <?php
     
-    namespace WPKit\Integrations;
+    namespace WPKit\Integrations\Plugins;
     
-    use WPKit\Core\Integration;
+    use WPKit\Integrations\Integration;
     use WPBMap;
 
 	class JsComposer extends Integration {
-		
-		var $settings = array(
-			'params' => array(),
-			'support' => array()
-		);
     	
     	public function startIntegration( $settings ) {
         	
-        	$this->settings = is_array($settings) ? array_merge($this->settings, $settings) : array();
+        	$this->settings = is_array( $this->settings ) ? array_merge($this->settings, array(
+				'params' => array(),
+				'support' => array()
+			)) : array();
         	
         	if( ! function_exists('vc_set_shortcodes_templates_dir') ) {
             	return;

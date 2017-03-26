@@ -1,6 +1,6 @@
 <?php
 	
-	namespace WPKit\Core;
+	namespace WPKit\Events;
 	
 	use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 	

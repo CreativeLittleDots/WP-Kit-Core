@@ -1,19 +1,21 @@
 <?php
 	
-	namespace WPKit\Integrations;
+	namespace WPKit\Integrations\Plugins;
 	
-	use WPKit\Core\Integration;
+	use WPKit\Integrations\Integration;
 	use Timber;
 
 	class TimberLibrary extends Integration {
 		
-		public function startIntegration( $settings ) {
+		public function startIntegration() {
 			
 			if( ! class_exists('Timber') ) {
 				
 				return;
 				
 			}
+			
+			$settings = $this->settings;
 	
 			Timber::$locations = array( VIEWS_DIR, COMPONENTS_DIR );
 			

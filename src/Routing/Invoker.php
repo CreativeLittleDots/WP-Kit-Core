@@ -1,8 +1,10 @@
 <?php
     
-    namespace WPKit\Core;
+    namespace WPKit\Routing;
     
-    class Invoker extends Singleton {
+    use WPKit\Core\Application;
+    
+    class Invoker {
 	    
 	    /**
 	     * @var \WPKit\Application
@@ -19,10 +21,9 @@
 	     */
 	    protected $routes = array();
 
-		public function __construct(Application $app, Http $http) {
+		public function __construct(Application $app) {
 	    	
 	    	$this->app = $app;
-	    	$this->http = $http;
 	    	
 	    }
 	    
@@ -55,7 +56,7 @@
 			$route->bind( $this->http );
 			
 			add_action( $action, function() use ( $route ) {
-					
+									
 				$this->app->call( array( $route, 'run' ) );
 				
 			}, $priority );

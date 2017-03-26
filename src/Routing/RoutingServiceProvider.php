@@ -1,11 +1,11 @@
 <?php
 
-namespace WPKit\Providers;
+namespace WPKit\Routing;
 
-use Illuminate\Routing\RoutingServiceProvider;
+use Illuminate\Routing\RoutingServiceProvider as ServiceProvider;
 use WPKit\Core\Router;
 
-class RouteServiceProvider extends RoutingServiceProvider
+class RoutingServiceProvider extends ServiceProvider
 {
     
     /**
@@ -15,9 +15,17 @@ class RouteServiceProvider extends RoutingServiceProvider
      */
     protected function registerRouter()
     {
+	    
         $this->app['router'] = $this->app->share(function ($app) {
             return new Router($app['events'], $app);
         });
+        
+        add_action( 'init', function() {
+	        
+	        $this->app['router']->dispatch( $this->app['http'] );
+	        
+        });
+        
     }
     
 }

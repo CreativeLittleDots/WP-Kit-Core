@@ -1,12 +1,12 @@
 <?php
 
-	namespace WPKit\Core;
+	namespace WPKit\Exceptions;
 	
 	use Exception;
     use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
     use Illuminate\Http\Response;
 	
-	class ExceptionHandler implements ExceptionHandlerContract {
+	class Handler implements ExceptionHandlerContract {
 
         protected $handlers = array();
 

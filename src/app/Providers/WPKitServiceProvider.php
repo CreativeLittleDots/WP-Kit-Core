@@ -45,12 +45,12 @@
 			
 			$this->app->singleton(
 			    \Illuminate\Contracts\Http\Kernel::class,
-			    \Illuminate\Foundation\Http\Kernel::class
+			    \WPKit\Http\Kernel::class
 			);
 			
 			$this->app->singleton(
 			    \Illuminate\Contracts\Console\Kernel::class,
-			    \Illuminate\Foundation\Console\Kernel::class
+			    \WPKit\Console\Kernel::class
 			);
 			
 			$this->app->singleton(

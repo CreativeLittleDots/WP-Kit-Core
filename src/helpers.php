@@ -773,6 +773,16 @@
 		}
 	}
 	
+	if( ! function_exists( 'get_wpmu_site_slug' ) ) {
+		
+		function get_wpmu_site_slug() {
+			
+			return str_replace( get_site_url(1), '', get_site_url() );
+			
+		}
+		
+	}
+	
 	/*----------------------------------------------*\
     	#FORCE REST
     \*----------------------------------------------*/

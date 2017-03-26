@@ -48,8 +48,6 @@
 			
 			$this->routes[$callback] = $route = $this->getRoute( $callback );
 			
-			$route->bind( $this->app['http'] );
-			
 			add_action( $action, function() use ( $route ) {
 									
 				$this->app->call( array( $route, 'run' ) );

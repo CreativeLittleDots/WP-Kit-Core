@@ -75,4 +75,23 @@
 	        return $action;
 	    }
 	    
+	    /**
+			* Get the key / value list of parameters for the route.
+	     *
+	     * @return array
+	     *
+	     * @throws \LogicException
+	     */
+	    public function parameters()
+	    {
+	        if (isset($this->parameters)) {
+	            return array_map(function ($value) {
+	                return is_string($value) ? rawurldecode($value) : $value;
+	
+	            }, $this->parameters);
+	        }
+	        
+	        return [];
+	    }
+	    
     }

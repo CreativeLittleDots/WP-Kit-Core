@@ -2,7 +2,7 @@
     
     namespace WPKit\Core;
     
-    use Illuminate\Bus\DispatchesJobs;
+    use Illuminate\Bus\Queueable;
 	use Illuminate\Routing\Controller as BaseController;
 	use Illuminate\Validation\ValidatesRequests;
 	use Illuminate\Auth\Access\HandlesAuthorization;
@@ -10,7 +10,7 @@
     
     class Controller extends BaseController {
 	    
-	    use HandlesAuthorization, DispatchesJobs, ValidatesRequests;
+	    use HandlesAuthorization, Queueable, ValidatesRequests;
 	    
 	    /**
 	     * @var \WPKit\Application

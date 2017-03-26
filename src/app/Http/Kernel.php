@@ -34,10 +34,6 @@ class Kernel implements KernelContract
      * @var array
      */
     protected $bootstrappers = [
-        'WPKit\Bootstrap\DetectEnvironment',
-        'WPKit\Bootstrap\LoadConfiguration',
-        'WPKit\Bootstrap\ConfigureLogging',
-        'WPKit\Bootstrap\HandleExceptions',
         'WPKit\Bootstrap\RegisterFacades',
         'WPKit\Bootstrap\RegisterProviders',
         'WPKit\Bootstrap\BootProviders',
@@ -51,7 +47,7 @@ class Kernel implements KernelContract
     protected $middleware = [
 	    'oauth' => 'WPKit\Http\Middleware\OauthAuth',
 	    'form' => 'WPKit\Http\Middleware\FormAuth',
-	    'basic' => 'WPKit\Http\Middleware\BasicAuth',
+	    'basic' => 'WPKit\Http\Middleware\BasicAuth'
     ];
 
     /**

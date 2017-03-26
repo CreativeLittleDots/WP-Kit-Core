@@ -11,11 +11,6 @@
 	     */
 	    protected $app;
 	    
-	    /**
-	     * @var \WPKit\Http
-	     */
-	    protected $http;
-	    
 	     /**
 	     * @var array
 	     */
@@ -53,7 +48,7 @@
 			
 			$this->routes[$callback] = $route = $this->getRoute( $callback );
 			
-			$route->bind( $this->http );
+			$route->bind( $this->app['http'] );
 			
 			add_action( $action, function() use ( $route ) {
 									

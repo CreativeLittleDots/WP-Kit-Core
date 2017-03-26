@@ -22,25 +22,10 @@
 	                : ( defined('WP_DEBUG') ? 'local'
 	                    : 'production')
 	        );
-	
-	        $this->app->instance(
-	            'http',
-	            \Illuminate\Http\Request::capture()
-	        );
-	        
-	        $this->app->instance(
-	            'invoker',
-	            $this->app->make('WPKit\Routing\Invoker', ['app' => $this->app])
-	        );
-			
-			$this->app->instance(
-				'events',
-				$this->app->make('WPKit\Events\Dispatcher', ['app' => $this->app])
-			);
 			
 			$this->app->singleton(
-			    \Illuminate\Contracts\Debug\ExceptionHandler::class,
-			    \WPKit\Core\ExceptionHandler::class
+			    \Illuminate\Contracts\Events\Dispatcher::class,
+			    \WPKit\Events\Dispatcher::class
 			);
 			
 			$this->app->singleton(
@@ -57,6 +42,18 @@
 			    \Illuminate\Contracts\Debug\ExceptionHandler::class,
 			    \WPKit\Exceptions\Handler::class
 			);
+			
+			$this->app->instance(
+	            'http',
+	            \Illuminate\Http\Request::capture()
+	        );
+			
+			$this->app->instance(
+				'events',
+				$this->app->make('WPKit\Events\Dispatcher')
+			);
+			
+			$this->app['http']->setSession( $this->app->make( 'Symfony\Component\HttpFoundation\Session\Session' ) );
 	        
 	    }
 	
@@ -87,13 +84,17 @@
 	    }
 	
 	    /**
-	     * Boots the service provider.
+	     * Bootstrap the application services.
 	     *
 	     * @return void
 	     */
 	    public function boot()
 	    {
-	        //$this->app['session']->start();
+	        
+	        $this->app['http']->session()->start();
+	        
+	        $this->app->handle( $this->app['http'] );
 	    }
+
 	
 	}

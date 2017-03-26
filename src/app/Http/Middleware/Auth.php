@@ -1,8 +1,16 @@
 <?php
     
-    namespace WPKit\Core;
+    namespace WPKit\Http\Middleware;
+    
+    use WPKit\Core\Application;
+    use Illuminate\Http\Request;
 
-	class Auth extends Middleware {
+	class Auth {
+		
+		/**
+	     * @var Static
+	     */
+	    public static $instance = null;
 		
 		/**
 	     * @var \WPKit\Application
@@ -24,7 +32,26 @@
 	     */
     	public $action = 'init';
     	
-    	public function __construct($params = array(), Application $app, Http $http) {
+    	/**
+	     * Instance function to return only once instance of the controller
+	     *
+	     * @return \WPKit\Http\Middleware\Auth
+	     */
+        public static function instance( $params, Application $app ) {
+	        
+	        $class = get_called_class();
+	        
+	        if( empty( static::$instance ) ) {
+		        
+		        static::$instance = $app->make($class, func_get_args()); 
+		        
+	        }
+	        
+	        return static::$instance;
+	        
+        }
+    	
+    	public function __construct($params = array(), Application $app, Request $http) {
 	    	
 	    	$this->app = $app;
 	    	$this->http = $http;

@@ -1,6 +1,6 @@
 <?php
     
-    namespace WPKit\Core;
+    namespace WPKit\Routing;
     
     use Illuminate\Routing\Route as BaseRoute;
     use Illuminate\Support\Str;

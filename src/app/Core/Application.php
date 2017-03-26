@@ -27,6 +27,8 @@
     use Illuminate\Support\ServiceProvider;
     use Illuminate\Contracts\Foundation\Application as ApplicationInterface;
 	use vierbergenlars\SemVer\version as SemVersion;
+	use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+	use Illuminate\Http\Request;
 	use Illuminate\Container\Container;
 
 	class Application extends Container implements ApplicationInterface {
@@ -130,6 +132,12 @@
 	     */
 	    protected $viewGlobals = [];
 	    /**
+	     * Indicates if the application has been bootstrapped before.
+	     *
+	     * @var bool
+	     */
+	    protected $hasBeenBootstrapped = false;
+	    /**
 	     * The built view globals.
 	     *
 	     * @var array
@@ -219,11 +227,11 @@
 	     */
 	    protected function registerBaseProviders()
 	    {
-		    $this->register($this->resolveProviderClass(
-	            'Illuminate\Session\SessionServiceProvider'
-	        ));
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\WPKitServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Cache\CacheServiceProvider'
 	        ));
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\TwigServiceProvider'
@@ -235,6 +243,35 @@
 	            'WPKit\Notifications\NotificationServiceProvider'
 	        ));
 	        
+	    }
+	    
+	    /**
+	     * Determine if the application has been bootstrapped before.
+	     *
+	     * @return bool
+	     */
+	    public function hasBeenBootstrapped()
+	    {
+	        return $this->hasBeenBootstrapped;
+	    }
+	    
+	    /**
+			* Run the given array of bootstrap classes.
+	     *
+	     * @param  array  $bootstrappers
+	     * @return void
+	     */
+	    public function bootstrapWith(array $bootstrappers)
+	    {
+	        $this->hasBeenBootstrapped = true;
+	
+	        foreach ($bootstrappers as $bootstrapper) {
+	            $this['events']->fire('bootstrapping: '.$bootstrapper, [$this]);
+	
+	            $this->make($bootstrapper)->bootstrap($this);
+	
+	            $this['events']->fire('bootstrapped: '.$bootstrapper, [$this]);
+	        }
 	    }
 
 		
@@ -305,6 +342,14 @@
 	    {
 	        //
 	    }
+	    
+	    /**
+		* {@inheritdoc}
+	     */
+	    public function handle(SymfonyRequest $request)
+	    {
+	        return $this['Illuminate\Contracts\Http\Kernel']->handle(Request::createFromBase($request));
+    	}
 	    
 	    /**
 	     * Register a service provider with the application.

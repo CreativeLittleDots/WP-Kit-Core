@@ -1,8 +1,6 @@
 <?php
     
     namespace WPKit\Http\Middleware;
-    
-    use WPKit\Core\Auth;
 
 	class BasicAuth extends Auth {
     	

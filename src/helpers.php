@@ -634,7 +634,7 @@
 		
 		function get_current_url() {
 			
-			return "//" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			return wpkit('http')->fullUrl();
 			
 		}
 		
@@ -644,9 +644,7 @@
 		
 		function get_current_url_path() {
 			
-			$path = explode( '?', $_SERVER['REQUEST_URI'] );
-			
-			return $path[0];
+			return wpkit('http')->url();
 			
 		}
 		
@@ -830,11 +828,12 @@
 	     */
 	    function session($key = null, $default = null)
 	    {
+		    $session = wpkit('http')->session();
 	        if ($key === null)
 	        {
-	            return wpkit('session');
+	            return $session;
 	        }
-	        return wpkit('session')->get($key, $default);
+	        return $session->get($key, $default);
 	    }
 	}
 	
@@ -850,10 +849,10 @@
 	    {
 	        switch($notifier) {
 		        case 'admin' :
-		        	$notifier = 'WPKit\Notifiers\AdminNotifier';
+		        	$notifier = 'WPKit\Notifications\Notifiers\AdminNotifier';
 		        break;
 		        default :
-		        	$notifier = 'WPKit\Notifiers\FrontEndNotifier';
+		        	$notifier = 'WPKit\Notifications\Notifiers\FrontEndNotifier';
 		        break;
 	        }
 	        return wpkit($notifier);

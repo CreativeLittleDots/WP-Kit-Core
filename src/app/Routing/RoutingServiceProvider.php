@@ -3,7 +3,6 @@
 namespace WPKit\Routing;
 
 use Illuminate\Routing\RoutingServiceProvider as ServiceProvider;
-use WPKit\Core\Router;
 
 class RoutingServiceProvider extends ServiceProvider
 {
@@ -19,6 +18,11 @@ class RoutingServiceProvider extends ServiceProvider
         $this->app['router'] = $this->app->share(function ($app) {
             return new Router($app['events'], $app);
         });
+        
+        $this->app->instance(
+            'invoker',
+            $this->app->make('WPKit\Routing\Invoker', ['app' => $this->app])
+        );
         
         add_action( 'init', function() {
 	        

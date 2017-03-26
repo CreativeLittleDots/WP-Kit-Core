@@ -2,7 +2,6 @@
     
     namespace WPKit\Http\Middleware;
     
-    use WPKit\Core\Auth;
     use League\OAuth2\Server\AuthorizationServer;
     use Zend\Diactoros\Response as Psr7Response;
 

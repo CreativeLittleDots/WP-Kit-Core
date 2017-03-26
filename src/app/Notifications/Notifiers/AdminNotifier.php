@@ -1,8 +1,6 @@
 <?php 
 	
-	namespace WPKit\Notifiers;
-	
-	use WPKit\Core\Notifier;
+	namespace WPKit\Notifications\Notifiers;
 
 	class AdminNotifier extends Notifier {
 	

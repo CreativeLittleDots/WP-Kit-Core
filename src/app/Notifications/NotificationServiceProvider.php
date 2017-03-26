@@ -14,10 +14,15 @@ class NotificationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-	    
-        $this->app->alias(
-            'notifier',
-            \WPKit\Notifications\Notifier::class
+        
+        $this->app->instance(
+            'frontEndNotifier',
+            $this->app->make('WPKit\Notifications\Notifiers\FrontEndNotifier')
+        );
+        
+        $this->app->instance(
+            'adminNotifier',
+            $this->app->make('WPKit\Notifications\Notifiers\AdminNotifier')
         );
         
     }

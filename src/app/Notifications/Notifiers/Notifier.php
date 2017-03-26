@@ -1,6 +1,6 @@
 <?php 
 	
-	namespace WPKit\Notifications;
+	namespace WPKit\Notifications\Notifiers;
 
 	class Notifier {
 	

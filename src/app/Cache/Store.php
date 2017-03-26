@@ -1,8 +1,8 @@
 <?php
     
-    namespace WPKit\Core;
+    namespace WPKit\Cache;
 
-	class Cache extends Singleton {
+	class Store {
 		
 		public static $vars;
 		

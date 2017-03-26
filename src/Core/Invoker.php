@@ -28,7 +28,11 @@
 			
 				if( ( is_callable( $condition ) && $this->app->call( $condition ) ) || ( ! is_callable( $condition ) && $condition ) ) {
 			
-					add_action( $action, array( $route, 'run' ), $priority );
+					add_action( $action, function() use ( $route ) {
+					
+						$this->app->call( array( $route, 'run' ) );
+						
+					}, $priority );
 				
 				}
 				
@@ -40,21 +44,15 @@
 		
 		public function invoke( $callback, $action = 'wp', $priority = 10 ) {
 			
-			$route = $this->getRoute( $callback );
+			$this->routes[$callback] = $route = $this->getRoute( $callback );
 			
-			add_action( $action, array( $route, 'run' ), $priority );
+			add_action( $action, function() use ( $route ) {
+					
+				$this->app->call( array( $route, 'run' ) );
+				
+			}, $priority );
 			
 			return $route;
-			
-		}
-		
-		public function uninvoke( $callback, $action = 'wp', $priority = 10 ) {
-			
-			$route = $this->getRoute( $callback );
-			
-			remove_action( $action, array( $route, 'run' ), $priority );
-			
-			return $this;
 			
 		}
 		
@@ -62,7 +60,7 @@
 			
 			if( empty( $this->routes[$callback] ) ) {
 				
-				$this->routes[$callback] = new Route( [
+				$this->routes[$callback] = $this->newRoute( [
 			        'GET',
 			        'POST',
 			        'PUT',
@@ -75,5 +73,21 @@
 			return $this->routes[$callback];
 			
 		}
+		
+		 /**
+	     * Create a new Route object.
+	     *
+	     * @param  array|string  $methods
+	     * @param  string  $uri
+	     * @param  mixed   $action
+	     * @return \Illuminate\Routing\Route
+	     */
+	    protected function newRoute($methods, $uri, $action)
+	    {
+	        return (new Route($methods, $uri, $action))
+	                    ->setRouter($this->app['router'])
+	                    ->setContainer($this->app)
+	                    ->reparseAction();
+	    }
 	    
 	}

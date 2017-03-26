@@ -624,7 +624,7 @@
     
 	    function route( $uri, $callback, $method = 'get' ) {
 		    
-		    return WPKit\Facades\Route::map( $uri, $callback, $method );
+		    return Illuminate\Support\Facades\Route::map( $uri, $callback, $method );
 		    
 	    }
 	    

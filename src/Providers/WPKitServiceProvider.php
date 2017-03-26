@@ -80,7 +80,7 @@
 			
 			$this->app->instance(
 				'events',
-				$this->app->make('Illuminate\Events\Dispatcher', ['app' => $this->app])
+				$this->app->make('WPKit\Core\Dispatcher', ['app' => $this->app])
 			);
 	        
 	    }

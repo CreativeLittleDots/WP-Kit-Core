@@ -39,13 +39,9 @@
 	     */
 	    public function dispatch(Request $request) {
 		    
-		    add_action( 'init', function() {
+		    $this->currentRequest = $request;
 			    
-			    $this->currentRequest = $request;
-			    
-				return $this->dispatchToRoute($request);
-			    
-		    });
+			return $this->dispatchToRoute($request);
 	        
 	    }
 	    

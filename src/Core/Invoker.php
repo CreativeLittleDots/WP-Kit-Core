@@ -9,14 +9,20 @@
 	     */
 	    protected $app;
 	    
+	    /**
+	     * @var \WPKit\Http
+	     */
+	    protected $http;
+	    
 	     /**
 	     * @var array
 	     */
 	    protected $routes = array();
 
-		public function __construct(Application $app) {
+		public function __construct(Application $app, Http $http) {
 	    	
 	    	$this->app = $app;
+	    	$this->http = $http;
 	    	
 	    }
 	    
@@ -45,6 +51,8 @@
 		public function invoke( $callback, $action = 'wp', $priority = 10 ) {
 			
 			$this->routes[$callback] = $route = $this->getRoute( $callback );
+			
+			$route->bind( $this->http );
 			
 			add_action( $action, function() use ( $route ) {
 					

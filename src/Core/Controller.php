@@ -4,13 +4,13 @@
     
     use Illuminate\Bus\Queueable;
 	use Illuminate\Routing\Controller as BaseController;
-	use Illuminate\Validation\ValidatesRequests;
+	use Illuminate\Validation\ValidatesWhenResolvedTrait;
 	use Illuminate\Auth\Access\HandlesAuthorization;
 	use Illuminate\Support\Facades\Auth;
     
     class Controller extends BaseController {
 	    
-	    use HandlesAuthorization, Queueable, ValidatesRequests;
+	    use HandlesAuthorization, Queueable, ValidatesWhenResolvedTrait;
 	    
 	    /**
 	     * @var \WPKit\Application
@@ -120,7 +120,7 @@
 	     * @return void
 	     */
         public function enqueueScripts() {
-			
+	        
 			foreach($this->getScripts() as $script) {
 				
 				$script = is_array($script) ? $script : ['file' => $script];

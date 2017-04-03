@@ -1,6 +1,6 @@
 <?php
 
-namespace WPKit\Notifications;
+namespace WPKit\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

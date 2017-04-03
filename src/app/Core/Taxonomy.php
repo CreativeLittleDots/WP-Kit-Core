@@ -2,7 +2,7 @@
     
     namespace WPKit\Core;
 
-	class Taxonomy extends Singleton {
+	class Taxonomy { // to be deprecated 2.0
 		
 		var $blog_ids = [];
 		var $exclude_blog_ids = [];

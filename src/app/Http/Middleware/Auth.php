@@ -2,7 +2,7 @@
     
     namespace WPKit\Http\Middleware;
     
-    use WPKit\Core\Application;
+    use Illuminate\Container\Container as Application;
     use Illuminate\Http\Request;
 
 	class Auth {

@@ -47,9 +47,9 @@ class Kernel implements KernelContract
      * @var array
      */
     protected $bootstrappers = [
-        'WPKit\Bootstrap\RegisterFacades',
-        'WPKit\Bootstrap\RegisterProviders',
-        'WPKit\Bootstrap\BootProviders',
+        'WPKit\Foundation\Bootstrap\RegisterFacades',
+        'WPKit\Foundation\Bootstrap\RegisterProviders',
+        'WPKit\Foundation\Bootstrap\BootProviders',
     ];
 
     /**

@@ -2,8 +2,7 @@
 	
 	namespace WPKit\Http\Controllers;
 	
-	use WPKit\Core\Application;
-	use WPKit\Core\Controller;
+	use WPKit\Routing\Controller;
 	
 	class RestController extends Controller {
 	    

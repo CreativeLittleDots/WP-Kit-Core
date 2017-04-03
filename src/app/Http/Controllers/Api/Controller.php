@@ -2,7 +2,7 @@
 	
 	namespace WPKit\Http\Controllers\Api;
 	
-	use WPKit\Core\Controller as AppController;
+	use WPKit\Routing\Controller as AppController;
 	use Exception;
 	
 	class Controller extends AppController {

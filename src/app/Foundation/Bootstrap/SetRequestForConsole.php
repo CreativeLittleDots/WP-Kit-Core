@@ -1,9 +1,9 @@
 <?php
 
-namespace WPKit\Bootstrap;
+namespace WPKit\Foundation\Bootstrap;
 
 use Illuminate\Http\Request;
-use WPKit\Core\Application;
+use Illuminate\Contracts\Foundation\Application;
 
 class SetRequestForConsole
 {

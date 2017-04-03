@@ -2,7 +2,7 @@
     
     namespace WPKit\Core;
 
-	class PostType extends Singleton {
+	class PostType { // to be deprecated 2.0
 
 		var $blog_ids = [];
 		var $exclude_blog_ids = [];

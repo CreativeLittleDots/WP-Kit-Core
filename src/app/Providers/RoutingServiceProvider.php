@@ -1,8 +1,9 @@
 <?php
 
-namespace WPKit\Routing;
+namespace WPKit\Providers;
 
 use Illuminate\Routing\RoutingServiceProvider as ServiceProvider;
+use WPKit\Routing\Router;
 
 class RoutingServiceProvider extends ServiceProvider
 {

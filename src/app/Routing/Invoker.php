@@ -2,7 +2,7 @@
     
     namespace WPKit\Routing;
     
-    use WPKit\Core\Application;
+    use Illuminate\Container\Container as Application;
     
     class Invoker {
 	    

@@ -1,8 +1,8 @@
 <?php
 
-namespace WPKit\Bootstrap;
+namespace WPKit\Foundation\Bootstrap;
 
-use WPKit\Core\Application;
+use Illuminate\Contracts\Foundation\Application;
 
 class RegisterProviders
 {

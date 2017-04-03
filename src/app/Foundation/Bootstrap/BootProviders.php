@@ -1,6 +1,6 @@
 <?php
 
-namespace WPKit\Bootstrap;
+namespace WPKit\Foundation\Bootstrap;
 
 use Illuminate\Contracts\Foundation\Application;
 

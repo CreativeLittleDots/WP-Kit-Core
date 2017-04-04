@@ -71,7 +71,6 @@
 	        $this->bootedCallbacks = [
 		        [$this, 'bootServices']
 	        ];
-	        $this->registerBaseProviders();
 	    }
 	    
 	    /**
@@ -118,10 +117,13 @@
 	     *
 	     * @return void
 	     */
-	    protected function registerBaseProviders()
+	    protected function registerBaseServiceProviders()
 	    {
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\WPKitServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\AuthServiceProvider'
 	        ));
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\CacheServiceProvider'

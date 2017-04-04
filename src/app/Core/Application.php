@@ -139,6 +139,16 @@
 	        ));
 	        
 	    }
+	    
+	    /**
+	     * Get the path to the bootstrap directory.
+	     *
+	     * @return string
+	     */
+	    public function bootstrapPath()
+	    {
+	        return $this->basePath.DIRECTORY_SEPARATOR.'config';
+	    }
 		
 		/**
 		 * Boot several services

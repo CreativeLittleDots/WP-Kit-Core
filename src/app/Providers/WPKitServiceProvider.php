@@ -54,6 +54,8 @@
 			);
 			
 			$this->app['http']->setSession( $this->app->make( 'Symfony\Component\HttpFoundation\Session\Session' ) );
+			
+			$this->app['config']['app.providers'] = ! empty( $this->app['config']['app.providers'] ) ? $this->app['config']['app.providers'] : [];
 	        
 	    }
 	

@@ -4,6 +4,7 @@
     
     use Illuminate\Container\Container as Application;
     use Illuminate\Bus\Queueable;
+    use Illuminate\Http\Request;
 	use Illuminate\Routing\Controller as BaseController;
 	use Illuminate\Validation\ValidatesWhenResolvedTrait;
 	use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,6 +18,11 @@
 	     * @var \WPKit\Application
 	     */
 	    protected $app;
+	    
+	    /**
+	     * @var \Illuminate\Http\Request
+	     */
+	    protected $http;
 	    
 	    /**
 	     * @var Static
@@ -63,9 +69,10 @@
 	     * @param  \WPKit\Core\Application  $app
 	     * @return void
 	     */
-		public function __construct(Application $app) {
+		public function __construct(Application $app, Request $http) {
 			
 			$this->app = $app;
+			$this->http = $http;
 			
 		}
         

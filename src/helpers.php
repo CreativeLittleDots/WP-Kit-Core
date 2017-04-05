@@ -674,9 +674,9 @@
     	#MULTISITE
     \*----------------------------------------------*/
     
-    if ( ! function_exists('get_wpmu_posts') ) {
+    if ( ! function_exists('get_wpmu_query') ) {
     	    
-	    function get_wpmu_posts($args = array()) {
+	    function get_wpmu_query($args = array()) {
 			
 			global $wpdb;
 			
@@ -703,7 +703,7 @@
 			}
 			
 			$args = array_merge(array(
-				'posts_per_page'   => 5,
+				'posts_per_page'   => get_blog_option( 1, 'posts_per_page' ),
 				'offset'           => 0,
 				'category'         => '',
 				'category_name'    => '',
@@ -718,7 +718,7 @@
 				'post_parent'      => '',
 				'post_status'      => 'publish',
 				'suppress_filters' => true,
-				'paged' => get_query_var('paged') ? get_query_var('paged') : 1, 
+				'paged' => get_query_var('page') ? get_query_var('page') : 1, 
 			), $args);
 			
 			extract($args);
@@ -764,11 +764,19 @@
 			
 			krsort($posts);
 			
-			if($posts_per_page == -1)
-				return array_slice($posts, 0, count($posts));
-				
-			else
-				return array_slice($posts, ($paged-1)*$posts_per_page, $posts_per_page);
+			$query = new WP_Query( $args );
+			
+			$query->found_posts = count( $posts );
+			
+			$query->is_paged = $paged > 1;
+			
+			$query->posts = array_values( array_slice( $posts, ( $paged -1 ) * $posts_per_page, $posts_per_page ) );
+			
+			$query->post_count = $posts_per_page;
+			
+			$query->max_num_pages = ceil( $query->found_posts / $query->post_count );
+			
+			return $query;
 			
 		}
 	}

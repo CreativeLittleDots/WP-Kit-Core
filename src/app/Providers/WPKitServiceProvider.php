@@ -55,6 +55,11 @@
 			
 			$this->app['http']->setSession( $this->app->make( 'Symfony\Component\HttpFoundation\Session\Session' ) );
 			
+			$this->app->instance(
+				'session',
+				$this->app['http']->session()
+			);
+			
 			$this->app['config']['app.providers'] = ! empty( $this->app['config']['app.providers'] ) ? $this->app['config']['app.providers'] : [];
 	        
 	    }
@@ -93,7 +98,7 @@
 	    public function boot()
 	    {
 	        
-	        $this->app['http']->session()->start();
+	        $this->app['session']->start();
 	        
 	        $this->app->handle( $this->app['http'] );
 	    }

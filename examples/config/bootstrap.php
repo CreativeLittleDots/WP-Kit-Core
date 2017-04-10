@@ -1,8 +1,10 @@
 <?php
 	
+	namespace App;
+	
 	// if we don't have WPKit at this point we probably should die
 	    
-	if( ! class_exists('WPKit\\Application') ) {
+	if( ! class_exists('WPKit\\Core\\Application') ) {
 	
 	    wp_die('Creative Little WP Kit Core is not installed, try running composer', 'Dependancy Error');
 	    
@@ -10,11 +12,11 @@
 	
 	// initialise WPKit to invoke classes etc.
 
-	wpkit()->init();
+	wpkit()->setNamespace( __NAMESPACE__ )->boot();
 	
 	// define some integrations, both WPKit Core & WPKit
 	
-	wpkit()->add_integrations(array(
+	wpkit()->addIntegrations(array(
 		'advanced-custom-fields-pro' => array(
 			'file' => 'advanced-custom-fields-pro/acf.php',
 			'options_args' =>  array(
@@ -76,7 +78,7 @@
 	
 	// now require some plugins, make sure the zip files are in your plugins directory, or set 'external_url'
 	
-	wpkit()->require_plugins(array(
+	wpkit()->requirePlugins(array(
 	    array(
 	        'name'			=> 'Visual Composer', // The plugin name
 	        'slug'			=> 'js_composer', // The plugin slug (typically the folder name)

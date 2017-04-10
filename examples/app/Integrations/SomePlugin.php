@@ -2,13 +2,11 @@
 	
 	namespace App\Integrations;
 	
-	use WPKit\Framework\Classes\Integration;
+	use WPKit\Integrations\Integration;
 
 	class SomePlugin extends Integration {
 		
-		public function __construct( $settings ) {
-    		
-    		$this->settings = is_array($settings) ? array_merge($this->settings, $settings) : array();
+		public function startIntegration( ) {
 			
 			add_filter( 'some_plugin_array', array($this, 'customise_some_plugin_array') );
 			

@@ -21,17 +21,4 @@
 	        
 	    }
 	
-	    /**
-	     * Bootstrap the application services.
-	     *
-	     * @return void
-	     */
-	    public function boot()
-	    {
-	        
-	        $this->app->handle( $this->app['http'] );
-	        
-	    }
-
-	
 	}

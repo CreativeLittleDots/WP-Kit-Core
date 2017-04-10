@@ -46,11 +46,6 @@
 			);
 			
 			$this->app->singleton(
-			    \Illuminate\Contracts\Console\Kernel::class,
-			    \WPKit\Console\Kernel::class
-			);
-			
-			$this->app->singleton(
 			    \Illuminate\Contracts\Debug\ExceptionHandler::class,
 			    \WPKit\Exceptions\Handler::class
 			);

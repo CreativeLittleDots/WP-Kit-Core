@@ -84,6 +84,7 @@
 	            'app'                  => [\Illuminate\Foundation\Application::class, \Illuminate\Contracts\Container\Container::class, \Illuminate\Contracts\Foundation\Application::class],
 	            'auth'                 => [\Illuminate\Auth\AuthManager::class, \Illuminate\Contracts\Auth\Factory::class],
 				'auth.driver'          => [\Illuminate\Contracts\Auth\Guard::class],
+				'cookie'               => [\Illuminate\Cookie\CookieJar::class, \Illuminate\Contracts\Cookie\Factory::class, \Illuminate\Contracts\Cookie\QueueingFactory::class],
 	        ];
 	        foreach ($aliases as $key => $aliases)
 	        {
@@ -140,6 +141,9 @@
 	        ));
 	        $this->register($this->resolveProvider(
 	            'Illuminate\Auth\AuthServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	            'WPKit\Providers\AuthServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\CacheServiceProvider'
@@ -269,6 +273,8 @@
 				]);
 				
 			}
+			
+			$this->handle( $this['http'] );
 			
 		}
 		

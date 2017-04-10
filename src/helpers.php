@@ -846,12 +846,13 @@
 	     */
 	    function session($key = null, $default = null)
 	    {
-		    $session = wpkit('http')->session();
-	        if ($key === null)
-	        {
-	            return $session;
+		     if (is_null($key)) {
+	            return wpkit('session');
 	        }
-	        return $session->get($key, $default);
+	        if (is_array($key)) {
+	            return wpkit('session')->put($key);
+	        }
+	        return wpkit('session')->get($key, $default);
 	    }
 	}
 	

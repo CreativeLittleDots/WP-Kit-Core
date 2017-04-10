@@ -54,20 +54,6 @@
 		}
 		
 		/**
-	     * Dispatch the request to the application.
-	     *
-	     * @param  \Illuminate\Http\Request  $request
-	     * @return \Illuminate\Http\Response
-	     */
-	    public function dispatch(Request $request)
-	    {
-	        $this->currentRequest = $request;
-	        if($response = $this->dispatchToRoute($request)) {
-	        	return $this->prepareResponse($request, $response);
-	        }
-	    }
-		
-		/**
 	     * Dispatch the request to a route and return the response.
 	     *
 	     * @param  \Illuminate\Http\Request  $request
@@ -83,23 +69,12 @@
 		            return $route;
 		        });
 		        $this->events->fire(new RouteMatched($route, $request));
-		        $response = $this->runRouteWithinStack($route, $request);
-		        return $this->prepareResponse($request, $response);
+		        
+			} else {
+				$route = $this->newRoute($request->getMethod(), '/', '\WPKit\Routing\Controller::dispatch');
 			}
-	    }
-		
-		/**
-	     * Find the route matching a given request.
-	     *
-	     * @param  \Illuminate\Http\Request  $request
-	     * @return \Illuminate\Routing\Route
-	     */
-	    protected function findRoute($request)
-	    {
-	        if($this->current = $route = $this->routes->match($request)) {
-	        	$this->container->instance('WPKit\Routing\Route', $route);
-				return $this->substituteBindings($route);
-			}
+			$response = $this->runRouteWithinStack($route, $request);
+		    return $this->prepareResponse($request, $response);
 	    }
 		
 		/**

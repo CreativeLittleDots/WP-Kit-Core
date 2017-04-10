@@ -83,8 +83,7 @@
 	        $aliases = [
 	            'app'                  => [\Illuminate\Foundation\Application::class, \Illuminate\Contracts\Container\Container::class, \Illuminate\Contracts\Foundation\Application::class],
 	            'auth'                 => [\Illuminate\Auth\AuthManager::class, \Illuminate\Contracts\Auth\Factory::class],
-				'auth.driver'          => [\Illuminate\Contracts\Auth\Guard::class],
-				'cookie'               => [\Illuminate\Cookie\CookieJar::class, \Illuminate\Contracts\Cookie\Factory::class, \Illuminate\Contracts\Cookie\QueueingFactory::class],
+				'auth.driver'          => [\Illuminate\Contracts\Auth\Guard::class]
 	        ];
 	        foreach ($aliases as $key => $aliases)
 	        {
@@ -129,6 +128,9 @@
 	        ));
 	        $this->register($this->resolveProvider(
 	            'Illuminate\Session\SessionServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	            'Illuminate\Cookie\CookieServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\HttpServiceProvider'
@@ -274,7 +276,11 @@
 				
 			}
 			
-			$this->handle( $this['http'] );
+			$response = $this->handle( $this['http'] );
+			
+			//$response->send();
+			
+			//$this[HttpKernelContract::class]->terminate($request, $response);
 			
 		}
 		

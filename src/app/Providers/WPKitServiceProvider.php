@@ -21,6 +21,9 @@
 		                'providers' => []
 		            ],
 		            'session' => [
+			            'path' => '/',
+			            'domain' => get_site_url(),
+			            'secure' => is_ssl(),
 			            'driver' => 'file',
 			            'lifetime' => 120,
 			            'files' => $this->app->bootstrapPath('sessions'),

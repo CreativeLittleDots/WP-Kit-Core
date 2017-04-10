@@ -2,6 +2,7 @@
 
 namespace WPKit\Foundation\Bootstrap;
 
+use WPKit\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Contracts\Foundation\Application;
 
@@ -18,6 +19,7 @@ class RegisterFacades
         Facade::clearResolvedInstances();
 
         Facade::setFacadeApplication($app);
-        
+
+        AliasLoader::getInstance($app->make('config')->get('app.aliases', []))->register();
     }
 }

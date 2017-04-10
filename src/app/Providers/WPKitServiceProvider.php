@@ -17,7 +17,7 @@
 		    
 		    $this->app->singleton('config', function () {
 	            return new Config([
-		            'auth' => [
+		            'app' => [
 		                'providers' => []
 		            ],
 		        ]);
@@ -32,7 +32,7 @@
 			
 			$this->app->singleton(
 			    \Illuminate\Contracts\Events\Dispatcher::class,
-			    \WPKit\Events\Dispatcher::class
+			    \Illuminate\Events\Dispatcher::class
 			);
 			
 			$this->app->singleton(

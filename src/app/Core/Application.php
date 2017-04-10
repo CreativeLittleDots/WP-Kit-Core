@@ -117,37 +117,37 @@
 	     */
 	    protected function registerBaseServiceProviders()
 	    {
-		    $this->register($this->resolveProviderClass(
-	            'WPKit\Providers\EventsServiceProvider'
+		    $this->register($this->resolveProvider(
+	            'Illuminate\Events\EventServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\HttpServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\WPKitServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
-	            'WPKit\Providers\SessionServiceProvider'
+	        $this->register($this->resolveProvider(
+	            'Illuminate\Session\SessionServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\EloquentServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'Illuminate\Hashing\HashServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
-	            'WPKit\Providers\AuthServiceProvider'
+	        $this->register($this->resolveProvider(
+	            'Illuminate\Auth\AuthServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\CacheServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\TwigServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\RoutingServiceProvider'
 	        ));
-	        $this->register($this->resolveProviderClass(
+	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\NotificationServiceProvider'
 	        ));
 	        
@@ -158,7 +158,7 @@
 	     *
 	     * @return string
 	     */
-	    public function bootstrapPath()
+	    public function bootstrapPath($path = '')
 	    {
 	        return $this->basePath.DIRECTORY_SEPARATOR.'config';
 	    }
@@ -493,7 +493,7 @@
 			    		
 			    		$property = $class . '\IntegrationSettings';
 			    		
-			    		$this->register($this->resolveProviderClass($class), [
+			    		$this->register($this->resolveProvider($class), [
 			    			$property => $settings
 			    		]);
 		        		

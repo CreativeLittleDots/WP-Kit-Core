@@ -7,14 +7,22 @@
 	
 	class RouteCollection extends BaseRouteCollection {
 	    
-	    public function match(Request $request) {
-		    
+	    /**
+	     * Find the first route matching a given request.
+	     *
+	     * @param  \Illuminate\Http\Request  $request
+	     * @return \Illuminate\Routing\Route
+	     *
+	     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	     */
+	    public function match(Request $request)
+	    {
 	        $routes = $this->get($request->getMethod());
 	
 	        // First, we will see if we can find a matching route for this current request
 	        // method. If we can, great, we can just return it so that it can be called
 	        // by the consumer. Otherwise we will check for routes with another verb.
-	        $route = $this->check($routes, $request);
+	        $route = $this->matchAgainstRoutes($routes, $request);
 	
 	        if (! is_null($route)) {
 	            return $route->bind($request);
@@ -28,7 +36,7 @@
 	        if (count($others) > 0) {
 	            return $this->getRouteForMethods($request, $others);
 	        }
-	        
+
 	    }
 	   
 	}

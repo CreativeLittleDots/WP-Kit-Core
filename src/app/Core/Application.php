@@ -121,13 +121,16 @@
 	            'Illuminate\Events\EventServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
-	            'WPKit\Providers\HttpServiceProvider'
-	        ));
-	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\WPKitServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
+	            'Illuminate\Filesystem\FilesystemServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
 	            'Illuminate\Session\SessionServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	            'WPKit\Providers\HttpServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\EloquentServiceProvider'
@@ -160,7 +163,7 @@
 	     */
 	    public function bootstrapPath($path = '')
 	    {
-	        return $this->basePath.DIRECTORY_SEPARATOR.'config';
+	        return $this->basePath.DIRECTORY_SEPARATOR.'config'.($path ? DIRECTORY_SEPARATOR.$path : $path);
 	    }
 		
 		/**

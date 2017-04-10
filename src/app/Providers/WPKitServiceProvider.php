@@ -20,6 +20,11 @@
 		            'app' => [
 		                'providers' => []
 		            ],
+		            'session' => [
+			            'driver' => 'file',
+			            'lifetime' => 120,
+			            'files' => $this->app->bootstrapPath('sessions'),
+		            ]
 		        ]);
 	        });
 	

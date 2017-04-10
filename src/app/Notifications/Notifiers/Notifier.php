@@ -57,7 +57,7 @@
 	
 	        $notices = $this->getNotices();
 	        $notices[] = $notification;
-	        session()->set($this->session_key, $notices);
+	        session()->put($this->session_key, $notices);
 	        
 	        return $notification;
 	    }
@@ -141,7 +141,7 @@
 	            $this->renderNotice( $notice, true );
 	        }
 	
-	        $this->clearNotices();
+			$this->clearNotices();
 	    }
 	    
 	    /**
@@ -182,7 +182,7 @@
 	     */
 	    public function clearNotices()
 	    {
-	    	session()->set($this->session_key, []);
+	    	session()->put($this->session_key, []);
 	    }
 	
 	    /**

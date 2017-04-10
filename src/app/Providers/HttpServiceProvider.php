@@ -19,8 +19,6 @@
 	            \Illuminate\Http\Request::capture()
 	        );
 	        
-			$this->app['http']->setSession( $this->app->make( 'Symfony\Component\HttpFoundation\Session\Session' ) );
-	        
 	    }
 	
 	    /**

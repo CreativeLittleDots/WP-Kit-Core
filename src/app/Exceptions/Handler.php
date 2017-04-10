@@ -22,7 +22,7 @@
 	        
 	        if ( defined('WP_DEBUG') && true === WP_DEBUG ) {
 
-				wp_die( $e->getMessage() );
+				//wp_die( $e->getMessage() );
 				
 			} else {
 				

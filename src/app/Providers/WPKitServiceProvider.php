@@ -3,6 +3,7 @@
 	namespace WPKit\Providers;
 
 	use Illuminate\Support\ServiceProvider;
+	use Illuminate\Config\Repository as Config;
 	
 	class WPKitServiceProvider extends ServiceProvider {
 	
@@ -13,6 +14,14 @@
 	     */
 	    public function register()
 	    {
+		    
+		    $this->app->singleton('config', function () {
+	            return new Config([
+		            'auth' => [
+		                'providers' => []
+		            ],
+		        ]);
+	        });
 	
 	        $this->app->instance(
 	            'env',

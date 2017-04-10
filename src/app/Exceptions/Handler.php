@@ -19,7 +19,17 @@
          * @return void
          */
         public function report( Exception $e ) {
+	        
+	        if ( defined('WP_DEBUG') && true === WP_DEBUG ) {
 
+				wp_die( $e->getMessage() );
+				
+			} else {
+				
+				error_log( $e->getMessage() );
+				
+			}
+		
         }
 
 

@@ -13,6 +13,8 @@
 	     */
 	    public function register()
 	    {
+		    
+		    $this->app['session.store'] = null;
 			
 			$this->app->instance(
 				'session',

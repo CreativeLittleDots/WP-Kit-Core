@@ -81,11 +81,9 @@
 	    public function registerCoreContainerAliases() {
 		    
 	        $aliases = [
-	            'app' => [
-	                'Illuminate\Foundation\Application',
-	                'Illuminate\Contracts\Container\Container',
-	                'Illuminate\Contracts\Foundation\Application'
-	            ]
+	            'app'                  => [\Illuminate\Foundation\Application::class, \Illuminate\Contracts\Container\Container::class, \Illuminate\Contracts\Foundation\Application::class],
+	            'auth'                 => [\Illuminate\Auth\AuthManager::class, \Illuminate\Contracts\Auth\Factory::class],
+				'auth.driver'          => [\Illuminate\Contracts\Auth\Guard::class],
 	        ];
 	        foreach ($aliases as $key => $aliases)
 	        {
@@ -119,8 +117,20 @@
 	     */
 	    protected function registerBaseServiceProviders()
 	    {
+		    $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\EventsServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\HttpServiceProvider'
+	        ));
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\WPKitServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\SessionServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
+	            'WPKit\Providers\EloquentServiceProvider'
 	        ));
 	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\AuthServiceProvider'

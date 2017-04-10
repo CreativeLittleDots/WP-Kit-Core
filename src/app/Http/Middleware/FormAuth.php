@@ -12,7 +12,8 @@
     	public function beforeAuth() {
 			
 			add_filter( 'login_url', array($this, 'get_login_url'), 10, 3);
-			add_action( 'login_init', array($this, 'mask_login') );;
+			add_action( 'login_init', array($this, 'mask_login') );
+			add_filter( 'login_redirect', array($this, 'login_redirect'), 10, 3 );
 			
 		}
     	
@@ -24,6 +25,18 @@
 			), $settings));
 
 		}
+		
+		/**
+	     * Handle an incoming request.
+	     *
+	     * @param  \Illuminate\Http\Request  $request
+	     * @param  \Closure  $next
+	     * @return mixed
+	     */
+	    public function handle($request, $next)
+	    {
+	        return false;
+	    }
 		
 		public function isAllowed() {
 			
@@ -78,6 +91,14 @@
             }
 	        
         }
+        
+        public function login_redirect() {
+	        
+	        extract($this->settings);
+			
+			return ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $login_redirect;
+			
+		}
         
         public function mask_login() {
 	        

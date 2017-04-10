@@ -44,11 +44,7 @@ class Kernel implements KernelContract
      *
      * @var array
      */
-    protected $middleware = [
-	    'oauth' => 'WPKit\Http\Middleware\OauthAuth',
-	    'form' => 'WPKit\Http\Middleware\FormAuth',
-	    'basic' => 'WPKit\Http\Middleware\BasicAuth'
-    ];
+    protected $middleware = [];
 
     /**
      * The application's route middleware groups.
@@ -56,13 +52,22 @@ class Kernel implements KernelContract
      * @var array
      */
     protected $middlewareGroups = [];
-
+    
     /**
      * The application's route middleware.
      *
+     * These middleware may be assigned to groups or used individually.
+     *
      * @var array
      */
-    protected $routeMiddleware = [];
+    protected $routeMiddleware = [
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+        'auth.form' => \WPKit\Http\Middleware\FormAuth::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    ];
 
     /**
      * Create a new HTTP kernel instance.

@@ -66,6 +66,31 @@
 	        	return $this->prepareResponse($request, $response);
 	        }
 	    }
+	    
+	    /**
+	     * Run the given route within a Stack "onion" instance.
+	     *
+	     * @param  \Illuminate\Routing\Route  $route
+	     * @param  \Illuminate\Http\Request  $request
+	     * @return mixed
+	     */
+	    protected function runRouteWithinStack(\Illuminate\Routing\Route $route, Request $request)
+	    {
+	        $shouldSkipMiddleware = $this->container->bound('middleware.disable') &&
+                                $this->container->make('middleware.disable') === true;
+
+	        $middleware = $shouldSkipMiddleware ? [] : $this->gatherRouteMiddlewares($route);
+	
+	        return (new Pipeline($this->container))
+	                        ->send($request)
+	                        ->through($middleware)
+	                        ->then(function ($request) use ($route) {
+	                            return $this->prepareResponse(
+	                                $request,
+	                                $route->run($request)
+	                            );
+	                        });
+	    }
 		
 		/**
 	     * Dispatch the request to a route and return the response.
@@ -97,7 +122,7 @@
 	    protected function findRoute($request)
 	    {
 	        if($this->current = $route = $this->routes->match($request)) {
-	        	$this->container->instance('Illuminate\Routing\Route', $route);
+	        	$this->container->instance('WPKit\Routing\Route', $route);
 				return $this->substituteBindings($route);
 			}
 	    }

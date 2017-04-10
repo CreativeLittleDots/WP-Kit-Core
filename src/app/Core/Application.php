@@ -133,6 +133,9 @@
 	            'WPKit\Providers\EloquentServiceProvider'
 	        ));
 	        $this->register($this->resolveProviderClass(
+	            'Illuminate\Hashing\HashServiceProvider'
+	        ));
+	        $this->register($this->resolveProviderClass(
 	            'WPKit\Providers\AuthServiceProvider'
 	        ));
 	        $this->register($this->resolveProviderClass(

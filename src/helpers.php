@@ -666,11 +666,11 @@
 		    
 		    if( strpos( $path, '*' ) !== false ) {
 			    
-			    $is_route = strpos( home_url( get_current_url_path() ), home_url( str_replace( '*', '', $path ) ) ) !== false;
+			    $is_route = strpos( get_current_url_path(), home_url( str_replace( '*', '', $path ) ) ) !== false;
 			    
 		    } else {
 		    
-		    	$is_route = home_url( $path ) == home_url( get_current_url_path() );
+		    	$is_route = home_url( $path ) == get_current_url_path();
 		    	
 		    }
 
@@ -833,7 +833,7 @@
 				
 			}
 			
-			return wpkit()->make( 'auth.' . $auth, compact('settings') )->handle( wpkit( 'auth' ), $callback );
+			return wpkit(  'auth.' . $auth  )->mergeSettings( $settings )->handle( wpkit( 'auth' ), $callback );
 			
 		}
 		

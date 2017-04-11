@@ -22,7 +22,6 @@
 	     */
 	    public function __construct(AuthFactory $auth, $settings = array())
 	    {
-		    var_dump($settings);
 	        $this->auth = $auth;
 	        $this->mergeSettings($settings);
 	    }
@@ -71,6 +70,8 @@
     			'login_redirect' => home_url(),
     			'mask_wp_login' => false
 			), $settings);
+			
+			return $this;
 
 		}
 		

@@ -7,7 +7,7 @@
 
 	class JsComposer extends Integration {
     	
-    	public function startIntegration( $settings ) {
+    	public function startIntegration( $settings = array() ) {
         	
         	$this->settings = is_array( $this->settings ) ? array_merge($this->settings, array(
 				'params' => array(),

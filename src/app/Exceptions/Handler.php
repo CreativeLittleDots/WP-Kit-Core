@@ -22,7 +22,7 @@
 	        
 	        if( $e->getMessage() ) {
 	        
-		        if ( defined('WP_DEBUG') && true === WP_DEBUG ) {
+		        if ( defined('WP_DEBUG_DISPLAY') && true === WP_DEBUG_DISPLAY ) {
 	
 					wp_die( $e->getMessage() );
 					

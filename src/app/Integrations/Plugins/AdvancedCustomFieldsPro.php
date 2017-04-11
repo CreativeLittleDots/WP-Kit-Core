@@ -6,9 +6,7 @@
 
 	class AdvancedCustomFieldsPro extends Integration {
     	
-    	public function startIntegration() {
-	    	
-	    	$settings = $this->settings;
+    	public function startIntegration( $settings = array() ) {
         	
         	if( function_exists('acf_add_options_page') ) {
 	        	

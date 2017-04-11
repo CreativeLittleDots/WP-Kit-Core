@@ -525,11 +525,13 @@
 		    		
 		    		if( class_exists( $class ) ) {
 			    		
-			    		$property = $class . '\IntegrationSettings';
+			    		$integration = $this->register( $this->resolveProvider($class) );
 			    		
-			    		$this->register($this->resolveProvider($class), [
-			    			$property => $settings
-			    		]);
+			    		if( $integration instanceof \WPKit\Integrations\Integration ) {
+			    		
+			    			$integration->startIntegration($settings);
+			    			
+			    		}
 		        		
 		    		}
 		    	

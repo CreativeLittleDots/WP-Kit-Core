@@ -7,20 +7,10 @@
 	class Integration extends ServiceProvider {
 		
 		protected $settings = array();
-    	
-    	public function register() {
-	    	
-	    	$this->settings = $this->getSettings();
-	    	
-	    	$this->startIntegration();
-	    	
-	    }
 	    
-	    protected function getSettings() {
+	    public function startIntegration( $settings = array() ) {
 		    
-		    $property = get_called_class() . '\IntegrationSettings';
-		    
-		    return ! empty( $this->app[ $property ] ) ? $this->app[ $property ] : [];
+		    return $this;
 		    
 	    }
     	

@@ -7,15 +7,13 @@
 
 	class TimberLibrary extends Integration {
 		
-		public function startIntegration() {
+		public function startIntegration( $settings = array() ) {
 			
 			if( ! class_exists('Timber') ) {
 				
 				return;
 				
 			}
-			
-			$settings = $this->settings;
 	
 			Timber::$locations = array( VIEWS_DIR, COMPONENTS_DIR );
 			

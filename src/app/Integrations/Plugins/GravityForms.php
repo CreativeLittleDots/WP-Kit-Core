@@ -9,7 +9,7 @@
 
 	class GravityForms extends Integration {
 		
-		public function startIntegration( $settings ) {
+		public function startIntegration( $settings = array() ) {
 			
 			add_filter( 'gform_cdata_open', array($this, 'wrap_gform_cdata_open') );
 			add_filter( 'gform_cdata_close', array($this, 'wrap_gform_cdata_close') );

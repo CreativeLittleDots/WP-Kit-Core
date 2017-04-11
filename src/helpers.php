@@ -630,9 +630,9 @@
 			    
 		    }
 		    
-		    $methods = $method == '*' ? ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'] : [$method];
+		    $methods = $method == '*' ? ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'] : ( is_array( $method ) ? $method : [$method] );
 		    
-		    $callback = wpkit()->prependNamespace( $callback );
+		    $callback = is_string( $callback ) ? wpkit()->prependNamespace( $callback ) : $callback;
 		    
 		    return Illuminate\Support\Facades\Route::match( $methods, $uri, $callback );
 		    
@@ -833,7 +833,7 @@
 				
 			}
 			
-			return wpkit(  'auth.' . $auth  )->mergeSettings( $settings )->handle( wpkit( 'auth' ), $callback );
+			return wpkit(  'auth:' . $auth  )->mergeSettings( $settings )->handle( wpkit( 'auth' ), $callback );
 			
 		}
 		

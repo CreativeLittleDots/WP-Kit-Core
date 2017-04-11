@@ -18,7 +18,18 @@
 		    $this->app->singleton('config', function () {
 	            return new Config([
 		            'app' => [
-		                'providers' => []
+		                'providers' => [
+			                'Illuminate\Filesystem\FilesystemServiceProvider',
+			                'Illuminate\Session\SessionServiceProvider',
+			                'Illuminate\Cookie\CookieServiceProvider',            
+			                'WPKit\Providers\AuthServiceProvider',
+			                'Laravel\Passport\PassportServiceProvider',
+			                'WPKit\Providers\EloquentServiceProvider',
+			                'Illuminate\Hashing\HashServiceProvider',
+			                'WPKit\Providers\CacheServiceProvider',
+			                'WPKit\Providers\TwigServiceProvider',
+			                'WPKit\Providers\NotificationServiceProvider'
+		                ]
 		            ],
 		            'session' => [
 			            'path' => '/',
@@ -37,15 +48,15 @@
 	                : ( defined('WP_DEBUG') ? 'local'
 	                    : 'production')
 	        );
+	        
+	        $this->app->singleton(
+			    \Illuminate\Contracts\Http\Kernel::class,
+			    \WPKit\Http\Kernel::class
+			);
 			
 			$this->app->singleton(
 			    \Illuminate\Contracts\Events\Dispatcher::class,
 			    \Illuminate\Events\Dispatcher::class
-			);
-			
-			$this->app->singleton(
-			    \Illuminate\Contracts\Http\Kernel::class,
-			    \WPKit\Http\Kernel::class
 			);
 			
 			$this->app->singleton(

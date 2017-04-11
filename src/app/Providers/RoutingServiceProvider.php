@@ -3,6 +3,7 @@
 namespace WPKit\Providers;
 
 use Illuminate\Routing\RoutingServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RoutingServiceProvider extends ServiceProvider
 {

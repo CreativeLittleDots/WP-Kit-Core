@@ -13,6 +13,8 @@
 	     * @var \Illuminate\Contracts\Auth\Factory
 	     */
 	    protected $auth;
+	    
+	    protected $settings = array();
 	
 	    /**
 	     * Create a new middleware instance.

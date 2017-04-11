@@ -3,7 +3,6 @@
 namespace WPKit\Providers;
 
 use Illuminate\Routing\RoutingServiceProvider as ServiceProvider;
-use WPKit\Routing\Router;
 
 class RoutingServiceProvider extends ServiceProvider
 {
@@ -15,10 +14,6 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerRouter()
     {
-	    
-        $this->app->singleton('router', function ($app) {
-            return new Router($app['events'], $app);
-        });
         
         $this->app->instance(
             'invoker',
@@ -27,7 +22,7 @@ class RoutingServiceProvider extends ServiceProvider
         
         add_action( 'init', function() {
 	        
-	        $this->app['router']->dispatch( $this->app['http'] );
+	        $this->app->send();
 	        
         });
         

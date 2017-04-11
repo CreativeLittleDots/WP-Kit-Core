@@ -2,17 +2,14 @@
 	
 	namespace WPKit\Providers;
 
-	use Illuminate\Support\ServiceProvider;
+	use WPKit\Auth\AuthManager;
+	use WPKit\Http\Middleware\FormAuth;
+	use Illuminate\Auth\AuthServiceProvider as BaseAuthServiceProvider;
 	use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 	
-	class AuthServiceProvider extends ServiceProvider {
+	class AuthServiceProvider extends BaseAuthServiceProvider {
 	
-	    /**
-	     * Register the service provider.
-	     *
-	     * @return void
-	     */
-	    public function register()
+	    public function registerAuthenticator()
 	    {
 		    
 		    $this->app['config']['auth.defaults.guard'] = 'default';
@@ -25,11 +22,33 @@
     			'provider' => 'eloquent'
     		];
 		    
+		    $this->app->singleton('auth', function ($app) {
+	            // Once the authentication service has actually been requested by the developer
+	            // we will set a variable in the application indicating such. This helps us
+	            // know that we need to set any queued cookies in the after event later.
+	            $app['auth.loaded'] = true;
+	
+	            return new AuthManager($app);
+	        });
+	
+	        $this->app->singleton('auth.driver', function ($app) {
+	            return $app['auth']->guard();
+	        });
+        
 			$this->app->singleton(
 	            'auth.basic',
 	            function($app) {
 		            
 		            return new AuthenticateWithBasicAuth($app['auth']);
+		            
+	            }
+	        );
+	        
+	        $this->app->singleton(
+	            'auth.form',
+	            function($app) {
+		            
+		            return new FormAuth($app['auth']);
 		            
 	            }
 	        );

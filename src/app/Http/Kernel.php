@@ -88,6 +88,8 @@ class Kernel implements KernelContract
     {
         $this->app = $app;
         $this->router = $router;
+        
+        $this->app->instance('router', $this->router);
 
         $router->middlewarePriority = $this->middlewarePriority;
 
@@ -111,7 +113,7 @@ class Kernel implements KernelContract
         try {
             $request->enableHttpMethodParameterOverride();
 
-            $response = $this->sendRequestThroughRouter($request);
+            $response = $this->sendRequestThroughRouter($request);  
             
         } catch (Exception $e) {
             $this->reportException($e);

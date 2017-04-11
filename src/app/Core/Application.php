@@ -25,6 +25,8 @@
     }
     
     use WPKit\Foundation\Application as BaseApplication;
+    
+    use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 
 	class Application extends BaseApplication {
 		
@@ -140,9 +142,6 @@
 	        ));
 	        $this->register($this->resolveProvider(
 	            'Illuminate\Hashing\HashServiceProvider'
-	        ));
-	        $this->register($this->resolveProvider(
-	            'Illuminate\Auth\AuthServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\AuthServiceProvider'
@@ -276,14 +275,18 @@
 				
 			}
 			
-			$response = $this->handle( $this['http'] );
-			
-			//$response->send();
-			
-			//$this[HttpKernelContract::class]->terminate($request, $response);
-			
+			$this->make(HttpKernelContract::class)->bootstrap();
+
 		}
 		
+		public function send() {
+			
+			$response = $this->handle( $this['http'] );
+			
+			$response->send();
+			
+		}
+				
 		/**
 		 * Set namespace of App
 	     *
@@ -318,6 +321,22 @@
 			return $this->getNamespace() . "\Controllers\\$controller";
 			
 		}
+		
+		/**
+	     * Prepend the last group namespace onto the use clause.
+	     *
+	     * @param  string  $class
+	     * @return string
+	     */
+	    public function prependNamespace($class)
+	    {
+	       	$class = \Illuminate\Support\Str::parseCallback( $class, 'dispatch' );
+            $class[0] = stripos( $class[0], '\\' ) === 0 ? $class[0] : $this->getControllerName( $class[0] );
+            $class = implode( '@', $class );
+            
+            return $class;
+	    }
+	    
 		
 		/**
 		 * Detect if in Wordpress environment

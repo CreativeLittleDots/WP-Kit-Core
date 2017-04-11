@@ -624,7 +624,17 @@
     
 	    function route( $uri, $callback, $method = 'get' ) {
 		    
-		    return Illuminate\Support\Facades\Route::map( $uri, $callback, $method );
+		    if( is_string( $callback ) ) {
+			    
+			    $callback = str_replace( '::' ,'@', $callback );
+			    
+		    }
+		    
+		    $methods = $method == '*' ? ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'] : [$method];
+		    
+		    $callback = wpkit()->prependNamespace( $callback );
+		    
+		    return Illuminate\Support\Facades\Route::match( $methods, $uri, $callback );
 		    
 	    }
 	    
@@ -815,17 +825,15 @@
     
     if ( ! function_exists('auth') ) {
 		
-		function auth($auth, $params = array()) {
+		function auth($auth, $settings = array(), $callback = null) {
 			
-			$class = class_exists($auth) ? $auth : "WPKit\Http\Middleware\\" . ucfirst($auth) . "Auth";
+			if( ! is_callable($callback) ) {
 				
-			if( class_exists( $class ) ) {
+				$callback = function(){};
 				
-				return wpkit()->call(array($class, 'instance'), compact('params'));
-				
-			} 
+			}
 			
-			return false;
+			return wpkit()->make( 'auth.' . $auth, compact('settings') )->handle( wpkit( 'auth' ), $callback );
 			
 		}
 		

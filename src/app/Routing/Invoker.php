@@ -3,6 +3,8 @@
     namespace WPKit\Routing;
     
     use Illuminate\Container\Container as Application;
+    use Illuminate\Routing\Route;
+    use Illuminate\Support\Str;
     
     class Invoker {
 	    
@@ -86,10 +88,66 @@
 	     */
 	    protected function newRoute($methods, $uri, $action)
 	    {
-	        return (new Route($methods, $uri, $action))
-	                    ->setRouter($this->app['router'])
-	                    ->setContainer($this->app)
-	                    ->reparseAction();
+            
+            // If the route is routing to a controller we will parse the route action into
+	        // an acceptable array format before registering it and creating this route
+	        // instance itself. We need to build the Closure that will call this out.
+	        if ($this->actionReferencesController($action)) {
+	            $action = $this->convertToControllerAction($action);
+        	}
+        	
+        	$route = new Route($methods, $uri, $action);
+        	
+        	$route->parameters['wpkit'] = true;
+		    
+	        return $route->setRouter( $this->app['router'] )->setContainer( $this->app );
+	                    
+	    }
+	    
+	    /**
+	     * Determine if the action is routing to a controller.
+	     *
+	     * @param  array  $action
+	     * @return bool
+	     */
+	    protected function actionReferencesController($action)
+	    {
+	        if (! $action instanceof Closure) {
+	            return is_string($action) || (isset($action['uses']) && is_string($action['uses']));
+	        }
+	
+	        return false;
+	    }
+	    
+	    /**
+	     * Add a controller based route action to the action array.
+	     *
+	     * @param  array|string  $action
+	     * @return array
+	     */
+	    protected function convertToControllerAction($action) {
+		    
+	        if ( is_string($action) ) {
+		        
+		        if( ! Str::contains($action, '@' ) ) {
+				    
+	            	$action .= '@dispatch';
+	            	
+	            }
+		        
+	            $action = ['uses' => $action];
+	            
+	        }
+
+	        $action['uses'] = $this->app->prependNamespace($action['uses']);
+	
+	        // Here we will set this controller name on the action array just so we always
+	        // have a copy of it for reference if we need it. This can be used while we
+	        // search for a controller name or do some other type of fetch operation.
+	        $action['controller'] = $action['uses'];
+	
+	        return $action;
+	        
 	    }
 	    
 	}

@@ -1,42 +1,78 @@
 <?php
     
     namespace WPKit\Http\Middleware;
+    
+    use Closure;
+	use Illuminate\Contracts\Auth\Factory as AuthFactory;
 
-	class FormAuth extends Auth {
+	class FormAuth {
 		
 		/**
-	     * @var string
+	     * The guard factory instance.
+	     *
+	     * @var \Illuminate\Contracts\Auth\Factory
 	     */
-    	public $action = 'wp';
-    	
-    	public function beforeAuth() {
-			
-			add_filter( 'login_url', array($this, 'get_login_url'), 10, 3);
-			add_action( 'login_init', array($this, 'mask_login') );
-			add_filter( 'login_redirect', array($this, 'login_redirect'), 10, 3 );
-			
-		}
-    	
-    	public function mergeSettings($settings = array()) {
-			
-			parent::mergeSettings(array_merge(array(
-    			'login_redirect' => home_url(),
-    			'mask_wp_login' => false
-			), $settings));
-
-		}
-		
-		/**
+	    protected $auth;
+	
+	    /**
+	     * Create a new middleware instance.
+	     *
+	     * @param  \Illuminate\Contracts\Auth\Factory  $auth
+	     * @return void
+	     */
+	    public function __construct(AuthFactory $auth, $settings = array())
+	    {
+		    var_dump($settings);
+	        $this->auth = $auth;
+	        $this->mergeSettings($settings);
+	    }
+	    
+	    /**
 	     * Handle an incoming request.
 	     *
 	     * @param  \Illuminate\Http\Request  $request
 	     * @param  \Closure  $next
+	     * @param  string|null  $guard
 	     * @return mixed
 	     */
-	    public function handle($request, $next)
+	    public function handle($request, Closure $next, $guard = null)
 	    {
-	        return false;
+		    
+		    add_filter( 'login_url', array($this, 'get_login_url'), 10, 3);
+			add_action( 'login_init', array($this, 'mask_login') );
+			add_filter( 'login_redirect', array($this, 'login_redirect'), 10, 3 );
+			
+			nocache_headers();
+			
+			$is_allowed = $this->isAllowed();
+
+            if ( ! is_user_logged_in() && ! $is_allowed ) {
+                
+                $current_url = get_current_url();
+                
+                wp_redirect( add_query_arg('redirect_to', urlencode($current_url), $this->settings['logout_redirect']) );
+                
+                exit;
+                
+            } else {
+	            
+	            $next($request);
+	            
+            }
+	        
 	    }
+    	
+    	public function mergeSettings($settings = array()) {
+	    	
+	    	$this->settings = array_merge(array(
+    			'allow' => array(),
+    			'disallow' => array(),
+    			'logout_redirect' => '/wp-login.php',
+    			'login_redirect' => home_url(),
+    			'mask_wp_login' => false
+			), $settings);
+
+		}
 		
 		public function isAllowed() {
 			
@@ -48,7 +84,45 @@
 		    	
 	    	}
 	    	
-	    	return parent::isAllowed();
+	    	$is_allowed = is_user_logged_in() || is_page( $this->settings['logout_redirect'] ) || is_route( $this->settings['logout_redirect'] );
+			
+			if( ! $is_allowed ) {
+				
+				if( ! empty( $this->settings['disallow'] ) ) {
+					
+					$is_allowed = true;
+					
+					foreach($this->settings['disallow'] as $page) {
+	    			
+		    			$is_allowed = is_page( $page ) || is_route( BASE_PATH . $page ) ? false : $is_allowed;
+		    			
+		    			if( ! $is_allowed ) {
+			    			
+			    			break;
+			    			
+		    			}
+		    			
+					}
+				
+				} else {
+					
+					foreach($this->settings['allow'] as $page) {
+	    			
+		    			$is_allowed = is_page( $page ) || is_route( BASE_PATH . $page ) ? true : $is_allowed;
+		    			
+		    			if( $is_allowed ) {
+			    			
+			    			break;
+			    			
+		    			}
+		    			
+					}
+					
+				}
+				
+			}
+			
+			return $is_allowed;
 	    	
     	}
     	
@@ -73,24 +147,6 @@
     		return $login_url;
     		
 		}
-		
-		public function authenticate() {
-			
-			nocache_headers();
-			
-			$is_allowed = $this->isAllowed();
-
-            if ( ! is_user_logged_in() && ! $is_allowed ) {
-                
-                $current_url = get_current_url();
-                
-                wp_redirect( add_query_arg('redirect_to', urlencode($current_url), $this->settings['logout_redirect']) );
-                
-                exit;
-                
-            }
-	        
-        }
         
         public function login_redirect() {
 	        

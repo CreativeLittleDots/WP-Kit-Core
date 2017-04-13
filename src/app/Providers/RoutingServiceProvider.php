@@ -3,7 +3,6 @@
 namespace WPKit\Providers;
 
 use Illuminate\Routing\RoutingServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Route;
 
 class RoutingServiceProvider extends ServiceProvider
 {
@@ -21,7 +20,7 @@ class RoutingServiceProvider extends ServiceProvider
             $this->app->make('WPKit\Routing\Invoker', ['app' => $this->app])
         );
         
-        add_action( 'init', function() {
+        add_action( 'template_redirect', function() {
 	        
 	        $this->app->send();
 	        

@@ -7,14 +7,4 @@
 	
 	class SessionGuard extends BaseSessionGuard {
 		
-		/**
-	     * Get the response for basic authentication.
-	     *
-	     * @return \Symfony\Component\HttpFoundation\Response
-	     */
-	    protected function failedBasicResponse()
-	    {
-	        return new Response('Invalid credentials.', 401, ['WWW-Authenticate' => 'Basic']);
-	    }
-		
 	}

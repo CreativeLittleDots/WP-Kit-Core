@@ -131,6 +131,21 @@
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\RoutingServiceProvider'
 	        ));
+	        $this->register($this->resolveProvider(
+	            'Illuminate\Session\SessionServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	            'Illuminate\Filesystem\FilesystemServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	            'Illuminate\Cookie\CookieServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	            'Illuminate\Hashing\HashServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	            'WPKit\Providers\AuthServiceProvider'
+	        ));
 	        	        
 	        
 	    }

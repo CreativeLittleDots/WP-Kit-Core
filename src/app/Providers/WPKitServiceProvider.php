@@ -18,14 +18,9 @@
 		    $this->app->singleton('config', function () {
 	            return new Config([
 		            'app' => [
-		                'providers' => [
-			                'Illuminate\Filesystem\FilesystemServiceProvider',
-			                'Illuminate\Session\SessionServiceProvider',
-			                'Illuminate\Cookie\CookieServiceProvider',            
-			                'WPKit\Providers\AuthServiceProvider',
+		                'providers' => [          
 			                'Laravel\Passport\PassportServiceProvider',
 			                'WPKit\Providers\EloquentServiceProvider',
-			                'Illuminate\Hashing\HashServiceProvider',
 			                'WPKit\Providers\CacheServiceProvider',
 			                'WPKit\Providers\TwigServiceProvider',
 			                'WPKit\Providers\NotificationServiceProvider'

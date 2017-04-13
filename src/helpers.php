@@ -391,7 +391,7 @@
     
 	    function is_wp_login() {
 	        
-	        return in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) );
+	        return in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php', 'wp-activate.php', 'wp-signup.php' ) );
 	        
 	    }
 	    
@@ -833,7 +833,15 @@
 				
 			}
 			
-			return wpkit(  'auth:' . $auth  )->mergeSettings( $settings )->handle( wpkit( 'auth' ), $callback );
+			$auth = wpkit(  'auth:' . $auth  );
+			
+			if( method_exists( $auth, 'mergeSettings' ) && $settings ) {
+				
+				$auth->mergeSettings( $settings );
+				
+			}
+			
+			return $auth->handle( wpkit( 'auth' ), $callback );
 			
 		}
 		

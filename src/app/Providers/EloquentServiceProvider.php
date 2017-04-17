@@ -14,6 +14,7 @@
 	     */
 	    public function register()
 	    {
+		    
 	        global $wpdb;
 	
 	        $capsule = new Capsule($this->app);

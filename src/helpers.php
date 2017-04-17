@@ -833,7 +833,7 @@
 				
 			}
 			
-			$auth = wpkit(  'auth:' . $auth  );
+			$auth = wpkit(  'auth.' . $auth  );
 			
 			if( method_exists( $auth, 'mergeSettings' ) && $settings ) {
 				

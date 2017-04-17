@@ -6,7 +6,7 @@
 	use WPKit\Http\Middleware\FormAuth;
 	use WPKit\Http\Middleware\OauthAuth;
 	use Illuminate\Auth\AuthServiceProvider as BaseAuthServiceProvider;
-	use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+	use WPKit\Auth\Middleware\BasicAuth;
 	
 	class AuthServiceProvider extends BaseAuthServiceProvider {
 	
@@ -41,16 +41,16 @@
 	        });
         
 			$this->app->singleton(
-	            'auth:basic',
+	            'auth.basic',
 	            function($app) {
 		            
-		            return new AuthenticateWithBasicAuth($app['auth']);
+		            return new BasicAuth($app['auth']);
 		            
 	            }
 	        );
 	        
 	        $this->app->singleton(
-	            'auth:form',
+	            'auth.form',
 	            function($app) {
 		            
 		            return new FormAuth($app['auth']);

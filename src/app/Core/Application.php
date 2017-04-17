@@ -27,6 +27,7 @@
     use WPKit\Foundation\Application as BaseApplication;
     
     use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
+    use Illuminate\Support\Facades\Facade;
 
 	class Application extends BaseApplication {
 		
@@ -119,11 +120,17 @@
 	     */
 	    protected function registerBaseServiceProviders()
 	    {
+		    
+		    Facade::setFacadeApplication($this);
+		    
 		    $this->register($this->resolveProvider(
 	            'Illuminate\Events\EventServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\WPKitServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	        	'Illuminate\Database\DatabaseServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\HttpServiceProvider'
@@ -141,10 +148,13 @@
 	            'Illuminate\Cookie\CookieServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
-	            'Illuminate\Hashing\HashServiceProvider'
+	            'WPKit\Providers\HashServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\AuthServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
+	        	'WPKit\Providers\PassportServiceProvider'
 	        ));
 	        	        
 	        
@@ -263,6 +273,8 @@
 				]);
 				
 			}
+			
+			$this->app->make( 'db.connection' );
 			
 			$this->make(HttpKernelContract::class)->bootstrap();
 

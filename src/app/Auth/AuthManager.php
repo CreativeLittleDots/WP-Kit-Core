@@ -3,6 +3,7 @@
 	namespace WPKit\Auth;
 	
 	use Illuminate\Auth\AuthManager as BaseAuthManager;
+	use Illuminate\Auth\SessionGuard;
 	
 	class AuthManager extends BaseAuthManager {
 		

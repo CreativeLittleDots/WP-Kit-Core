@@ -22,7 +22,7 @@
 		            'app' => [
 		                'providers' => [          
 			                'WPKit\Providers\EloquentServiceProvider',
-			                'WPKit\Providers\CacheServiceProvider',
+			                'WPKit\Providers\StoreServiceProvider',
 			                'WPKit\Providers\TwigServiceProvider',
 			                'WPKit\Providers\NotificationServiceProvider'
 		                ]

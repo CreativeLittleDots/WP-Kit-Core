@@ -1,6 +1,6 @@
 <?php
     
-    namespace WPKit\Cache;
+    namespace WPKit\Store;
 
 	class Store {
 		

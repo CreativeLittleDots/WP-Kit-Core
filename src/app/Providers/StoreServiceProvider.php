@@ -4,7 +4,7 @@
 
 	use Illuminate\Support\ServiceProvider;
 	
-	class CacheServiceProvider extends ServiceProvider {
+	class StoreServiceProvider extends ServiceProvider {
 	
 	    /**
 	     * Register the service provider.
@@ -15,8 +15,8 @@
 	    {
 			
 			$this->app->instance(
-	            'cache',
-	            $this->app->make('WPKit\Cache\Store')
+	            'store',
+	            $this->app->make('WPKit\Store\Store')
 	        );
 	        
 	    }

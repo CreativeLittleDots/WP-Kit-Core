@@ -139,6 +139,9 @@
 	            'WPKit\Providers\RoutingServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
+	            'Illuminate\Cache\CacheServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
 	            'Illuminate\Session\SessionServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
@@ -274,7 +277,7 @@
 				
 			}
 			
-			$this->app->make( 'db.connection' );
+			$this->instance(\Illuminate\Database\Connection::class, $this->app->make( 'db.connection' ) );
 			
 			$this->make(HttpKernelContract::class)->bootstrap();
 

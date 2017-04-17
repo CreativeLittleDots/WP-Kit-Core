@@ -40,6 +40,18 @@
 		    
 	    }
 	    
+	    public function findForPassport($username) {
+		    
+	        return $this->where('user_login', $username)->first();
+	        
+	    }
+	    
+	    public function getPasswordAttribute() {
+		    
+		    return $this->user_pass;
+		    
+	    }
+	    
 	}
 
 ?>

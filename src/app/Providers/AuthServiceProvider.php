@@ -18,6 +18,7 @@
 			    'driver' => 'eloquent',
     			'model' => \WPKit\Models\User::class
     		];
+    		$this->app['config']['auth.providers.users.model'] = \WPKit\Models\User::class;
 			$this->app['config']['auth.guards.default'] = [
     			'driver' => 'session',
     			'provider' => 'eloquent'

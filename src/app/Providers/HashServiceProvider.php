@@ -25,6 +25,14 @@ class HashServiceProvider extends ServiceProvider
         $this->app->singleton('hash', function () {
             return new WpPasswordHasher(new PasswordHash( 8, true ));
         });
+        
+        $this->app->singleton(
+	        \Illuminate\Contracts\Hashing\Hasher::class,
+	        function () {
+	            return new WpPasswordHasher(new PasswordHash( 8, true ));
+	        }
+        );
+        
     }
 
     /**

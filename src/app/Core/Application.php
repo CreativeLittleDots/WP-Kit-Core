@@ -103,11 +103,12 @@
 	     *
 	     * @return static
 	     */
-	    public static function getInstance() {
+	    public static function getInstance($params = null) {
+		    
 		    
 	        if (is_null(static::$instance))
 	        {
-	            static::$instance = new static;
+	            static::$instance = new static($params);
 	        }
 	        return static::$instance;
 	        
@@ -288,6 +289,8 @@
 			$response = $this->handle( $this['http'] );
 			
 			$response->send();
+			
+			$this[HttpKernelContract::class]->terminate($request, $response);
 			
 		}
 				

@@ -578,7 +578,7 @@
     
 	    function wpkit($binding = null) {
 		    
-		    $instance = WPKit\Core\Application::getInstance();
+		    $instance = WPKit\Core\Application::getInstance(realpath(APP_ROOT));
 		    
 		    if ( ! $binding ) {
 			    
@@ -586,7 +586,7 @@
 	            
 	        }
 	        
-	        return $instance[$binding];
+	        return $instance->make($binding);
 		    
 	    }
 	    
@@ -922,6 +922,45 @@
             
         } 
 	        
+	}
+	
+	/*----------------------------------------------*\
+    	#LARAVEL FUNCTIONS
+    \*----------------------------------------------*/
+	
+	if (! function_exists('storage_path')) {
+    /**
+	     * Get the path to the storage folder.
+	     *
+	     * @param  string  $path
+	     * @return string
+	     */
+	    function storage_path($path = '')
+	    {
+	        return wpkit()->storagePath().($path ? DIRECTORY_SEPARATOR.$path : $path);
+	    }
+	}
+	
+	if (! function_exists('config')) {
+	    /**
+	     * Get / set the specified configuration value.
+	     *
+	     * If an array is passed as the key, we will assume you want to set an array of values.
+	     *
+	     * @param  array|string  $key
+	     * @param  mixed  $default
+	     * @return mixed
+	     */
+	    function config($key = null, $default = null)
+	    {
+	        if (is_null($key)) {
+	            return wpkit('config');
+	        }
+	        if (is_array($key)) {
+	            return wpkit('config')->set($key);
+	        }
+	        return wpkit('config')->get($key, $default);
+	    }
 	}
 
 ?>

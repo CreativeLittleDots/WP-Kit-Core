@@ -19,6 +19,11 @@
 	            \Illuminate\Http\Request::capture()
 	        );
 	        
+	        $this->app->instance(
+	            'request',
+	            \Illuminate\Http\Request::capture()
+	        );
+	        
 	    }
 	
 	}

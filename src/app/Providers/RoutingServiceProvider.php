@@ -21,8 +21,16 @@ class RoutingServiceProvider extends ServiceProvider
             $this->app->make('WPKit\Routing\Invoker', ['app' => $this->app])
         );
         
+        
+        
         add_action( 'init', function() {
 	        
+	        Route::get('/{any}', function ($any) {
+		
+			  // any other url, subfolders also
+			
+			})->where('any', '.*');
+
 	        $this->app->send();
 	        
         });

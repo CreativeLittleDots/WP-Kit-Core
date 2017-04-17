@@ -126,6 +126,16 @@
 			);
 			
 			$this->app->singleton(
+			    \Illuminate\Contracts\Cache\Repository::class,
+			    \Illuminate\Cache\Repository::class
+			);
+			
+			$this->app->singleton(
+			    \Illuminate\Contracts\Cache\Store::class,
+			    \WPKit\Store\Store::class
+			);
+			
+			$this->app->singleton(
 			    \Illuminate\Contracts\Events\Dispatcher::class,
 			    \Illuminate\Events\Dispatcher::class
 			);

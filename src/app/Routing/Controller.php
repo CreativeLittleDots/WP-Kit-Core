@@ -27,7 +27,7 @@
 	    /**
 	     * @var Static
 	     */
-	    public static $instance = null;
+	    public static $instances = [];
         
         /**
 	     * @var array
@@ -53,13 +53,13 @@
 	        
 	        $class = get_called_class();
 	        
-	        if( empty( static::$instance ) ) {
+	        if( empty( static::$instances[$class] ) ) {
 		        
-		        static::$instance = $app->make($class, func_get_args()); 
+		        static::$instances[$class] = $app->make($class, func_get_args()); 
 		        
 	        }
 	        
-	        return static::$instance;
+	        return static::$instances[$class];
 	        
         }
 		

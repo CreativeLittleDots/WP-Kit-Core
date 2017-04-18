@@ -962,5 +962,31 @@
 	        return wpkit('config')->get($key, $default);
 	    }
 	}
+	
+	if (! function_exists('base_path')) {
+	    /**
+	     * Get the path to the base of the install.
+	     *
+	     * @param  string  $path
+	     * @return string
+	     */
+	    function base_path($path = '')
+	    {
+	        return wpkit()->basePath().($path ? DIRECTORY_SEPARATOR.$path : $path);
+	    }
+	}
+	
+	if (! function_exists('app_path')) {
+	    /**
+	     * Get the path to the application folder.
+	     *
+	     * @param  string  $path
+	     * @return string
+	     */
+	    function app_path($path = '')
+	    {
+	        return wpkit()->path().($path ? DIRECTORY_SEPARATOR.$path : $path);
+	    }
+	}
 
 ?>

@@ -54,12 +54,6 @@
 	     * @var boolean
 	     */
 		protected $inWp = false;
-		/**
-	     * Namespace of App.
-	     *
-	     * @var string
-	     */
-		protected $namespace = 'App';
 	    
 	    /**
 	     * Register the basic bindings into the container.
@@ -202,7 +196,7 @@
 			
 				foreach( glob( POST_TYPES_DIR . DS . '*.php' ) as $post_type ) {
 					
-					$post_type = $this->getNamespace() . '\PostTypes\\' . basename($post_type, '.php');
+					$post_type = $this->getNamespace() . 'PostTypes\\' . basename($post_type, '.php');
 					
 					$this->make($post_type);
 					
@@ -218,7 +212,7 @@
 			
 				foreach( glob( TAXONOMIES_DIR . DS . '*.php' ) as $taxonomy ) {
 					
-					$taxonomy = $this->getNamespace() . '\Taxonomies\\' . basename($taxonomy, '.php');
+					$taxonomy = $this->getNamespace() . 'Taxonomies\\' . basename($taxonomy, '.php');
 					
 					$this->make($taxonomy);
 					
@@ -234,7 +228,7 @@
 			
 				foreach( glob( SHORTCODES_DIR . DS . '*.php' ) as $shortcode ) {
 	    			
-	    			$class = $this->getNamespace() . '\Shortcodes\\' . basename($shortcode, '.php');
+	    			$class = $this->getNamespace() . 'Shortcodes\\' . basename($shortcode, '.php');
 	    			
 	    			$shortcode = $this->make($class);
 
@@ -252,7 +246,7 @@
 			
 				foreach( glob( WIDGETS_DIR . DS . '*.php' ) as $widget) {
 					
-					$class = $this->getNamespace() . '\Widgets\\' . basename($widget, '.php');
+					$class = $this->getNamespace() . 'Widgets\\' . basename($widget, '.php');
 					
 					add_action( 'widgets_init', function() use ($widget, $class) {
 	    				
@@ -290,7 +284,7 @@
 			
 			$response->send();
 			
-			$this[HttpKernelContract::class]->terminate($request, $response);
+			//$this[HttpKernelContract::class]->terminate($request, $response);
 			
 		}
 				
@@ -300,21 +294,8 @@
 	     * @return \WPKit\Core\Application
 	     */
 		public function setNamespace($namespace) {
-			
-			$this->namespace = $namespace;
-			
+						
 			return $this;
-			
-		}
-		
-		/**
-		 * Get namespace of App
-	     *
-	     * @return string
-	     */
-		public function getNamespace() {
-			
-			return $this->namespace;
 			
 		}
 		
@@ -325,7 +306,7 @@
 	     */
 		public function getControllerName($controller) {
 			
-			return $this->getNamespace() . "\Controllers\\$controller";
+			return $this->getNamespace() . "Controllers\\$controller";
 			
 		}
 		

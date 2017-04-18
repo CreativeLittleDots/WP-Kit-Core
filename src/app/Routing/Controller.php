@@ -72,7 +72,7 @@
 		public function __construct(Application $app, Request $http) {
 			
 			$this->app = $app;
-			$this->http = $http;
+			$this->http = $http->capture();
 			
 		}
         
@@ -242,7 +242,7 @@
 		
 		protected function render( $view, $vars = array(), $echo = true ) {
 			
-			$path = str_replace( 'Controller', '', implode( '/', explode( '\\', str_replace( $this->app->getNamespace() . '\Controllers\\', '', get_called_class() ) ) ) );
+			$path = str_replace( 'Controller', '', implode( '/', explode( '\\', str_replace( $this->app->getNamespace() . 'Controllers\\', '', get_called_class() ) ) ) );
 			
 			$html = get_element( $path, $view, $vars, $echo );
 			

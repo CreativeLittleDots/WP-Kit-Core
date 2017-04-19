@@ -31,8 +31,7 @@
 	    "symfony/var-dumper": "~3.0",
 	    "illuminate/http": "5.4",
 	    "illuminate/routing": "5.4",
-	    "tgmpa/tgm-plugin-activation": "*",
-	    "laravel/passport": "^1.0"
+	    "tgmpa/tgm-plugin-activation": "*"
     },
 	"type": "library",
 	"autoload": {

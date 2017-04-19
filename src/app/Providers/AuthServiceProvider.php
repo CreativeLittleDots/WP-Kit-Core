@@ -4,6 +4,7 @@
 
 	use WPKit\Auth\AuthManager;
 	use WPKit\Http\Middleware\FormAuth;
+	use WPKit\Http\Middleware\TokenAuth;
 	use WPKit\Http\Middleware\OauthAuth;
 	use Illuminate\Auth\AuthServiceProvider as BaseAuthServiceProvider;
 	use WPKit\Auth\Middleware\BasicAuth;
@@ -55,6 +56,15 @@
 	            function($app) {
 		            
 		            return new FormAuth($app['auth']);
+		            
+	            }
+	        );
+	        
+	        $this->app->singleton(
+	            'auth.token',
+	            function($app) {
+		            
+		            return new TokenAuth($app['auth']);
 		            
 	            }
 	        );

@@ -994,5 +994,15 @@
 	        return wpkit()->path().($path ? DIRECTORY_SEPARATOR.$path : $path);
 	    }
 	}
+	
+	if ( ! function_exists('fastcgi_finish_request') ) {
+		
+		function fastcgi_finish_request() {
+		 
+        	die();
+        	
+        }
+            
+	}
 
 ?>

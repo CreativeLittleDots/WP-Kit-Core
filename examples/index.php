@@ -1,3 +1,0 @@
-<?php
-    
-    // home is sweet

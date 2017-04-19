@@ -5,7 +5,7 @@ namespace WPKit\Http;
 use Exception;
 use Throwable;
 use WPKit\Core\Application;
-use Illuminate\Routing\Router;
+use WPKit\Routing\Router;
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Contracts\Debug\ExceptionHandler;

@@ -274,7 +274,11 @@
 			
 			$this->instance(\Illuminate\Database\Connection::class, $this->app->make( 'db.connection' ) );
 			
-			$this->make(HttpKernelContract::class)->bootstrap();
+			if( php_sapi_name() !== 'cli' ) {
+			
+				$this->make(HttpKernelContract::class)->bootstrap();
+				
+			}
 
 		}
 		

@@ -126,6 +126,11 @@
 			);
 			
 			$this->app->singleton(
+			    \Illuminate\Contracts\Console\Kernel::class,
+			    \WPKit\Console\Kernel::class
+			);
+			
+			$this->app->singleton(
 			    \Illuminate\Contracts\Cache\Repository::class,
 			    \Illuminate\Cache\Repository::class
 			);

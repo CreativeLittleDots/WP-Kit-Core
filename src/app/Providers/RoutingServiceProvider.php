@@ -21,9 +21,18 @@ class RoutingServiceProvider extends ServiceProvider
             $this->app->make('WPKit\Routing\Invoker', ['app' => $this->app])
         );
         
-        
+        $this->app->instance(
+            'router',
+            $this->app->make('WPKit\Routing\Router', ['app' => $this->app])
+        );
         
         add_action( 'init', function() {
+	        
+	        if( php_sapi_name() === 'cli' ) {
+			    
+			    return false;
+			    
+			}
 	        
 	        Route::get('/{any}', function ($any) {
 		

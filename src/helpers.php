@@ -624,6 +624,12 @@
     
 	    function route( $uri, $callback, $method = 'get' ) {
 		    
+		    if( php_sapi_name() === 'cli' ) {
+			    
+			    return false;
+			    
+			}
+		    
 		    if( is_string( $callback ) ) {
 			    
 			    $callback = str_replace( '::' ,'@', $callback );

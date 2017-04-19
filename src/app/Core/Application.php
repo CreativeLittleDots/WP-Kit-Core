@@ -284,7 +284,7 @@
 			
 			$response->send();
 			
-			//$this[HttpKernelContract::class]->terminate($request, $response);
+			$this[HttpKernelContract::class]->terminate($request, $response);
 			
 		}
 				

@@ -249,9 +249,6 @@
 	        $this->register($this->resolveProvider(
 	            'WPKit\Providers\AuthServiceProvider'
 	        ));
-	        $this->register($this->resolveProvider(
-	        	'WPKit\Providers\PassportServiceProvider'
-	        ));
 	        	        
 	        
 	    }

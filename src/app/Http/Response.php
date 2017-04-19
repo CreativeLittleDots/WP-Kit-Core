@@ -18,5 +18,15 @@
 	
 	        return $this;
 	    }
+	    
+	    public function sendHeaders() {
+		    
+		    if( ! is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		    
+		    	parent::sendHeaders();
+		    	
+		    }
+		    
+	    }
 		
 	}

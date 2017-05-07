@@ -750,6 +750,12 @@
 			
 			foreach($blogs as $blog) {
 				
+				if( $author && ! is_user_member_of_blog( $author, $blog->blog_id ) ) {
+					
+					continue;
+					
+				}
+				
 				switch_to_blog($blog->blog_id);
 				
 				$blog_posts = get_posts($args);

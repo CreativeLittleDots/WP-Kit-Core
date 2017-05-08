@@ -36,7 +36,7 @@
 		/**
 	     * The application's version.
 	     */
-	    const VERSION = '1.3';
+	    const VERSION = '1.4.4';
 
 	    /**
 	     * The registered plugins.
@@ -70,7 +70,6 @@
 		            'app' => [
 		                'providers' => [          
 			                'WPKit\Providers\EloquentServiceProvider',
-			                'WPKit\Providers\StoreServiceProvider',
 			                'WPKit\Providers\TwigServiceProvider',
 			                'WPKit\Providers\NotificationServiceProvider'
 		                ]
@@ -235,6 +234,9 @@
 	            'Illuminate\Cache\CacheServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
+	            'WPKit\Providers\StoreServiceProvider'
+	        ));
+	        $this->register($this->resolveProvider(
 	            'Illuminate\Session\SessionServiceProvider'
 	        ));
 	        $this->register($this->resolveProvider(
@@ -326,8 +328,8 @@
 	    			$class = $this->getNamespace() . 'Shortcodes\\' . basename($shortcode, '.php');
 	    			
 	    			$shortcode = $this->make($class);
-
-					$this->shortcodes[$shortcode->base] = $shortcode;
+	    			
+	    			$this->addShortcode($shortcode->base, $shortcode);
 					
 				}
 				
@@ -529,13 +531,28 @@
 		}
 		
 		/**
+	     * Save a Shortcode
+	     *
+	     * @return array
+	     */
+		public function addShortcode($tag, $shortcode) {
+			
+			$shortcodes = $this->getShortcodes();
+			
+			$shortcodes[$tag] = $shortcode;
+			
+			$this->make('store')->set('shortcodes', $shortcodes);
+			
+		}
+		
+		/**
 	     * Get all loaded shortcodes.
 	     *
 	     * @return array
 	     */
 		public function getShortcodes() {
     		
-    		return $this->shortcodes;
+    		return $this->make('store')->get('shortcodes');
     		
 		}
 		

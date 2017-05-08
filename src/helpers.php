@@ -578,19 +578,15 @@
     
 	    function wpkit($binding = null) {
 		    
-		    if( empty( $GLOBALS['wpkit'] ) ) {
-		    
-		    	$GLOBALS['wpkit'] = WPKit\Core\Application::getInstance(realpath(APP_ROOT));
-		    	
-		    }
+		   $instance = WPKit\Core\Application::getInstance(realpath(APP_ROOT));
 		    
 		    if ( ! $binding ) {
 			    
-	            return $GLOBALS['wpkit'];
+	            return $instance;
 	            
 	        }
 	        
-	        return $GLOBALS['wpkit']->make($binding);
+	        return $instance->make($binding);
 		    
 	    }
 	    

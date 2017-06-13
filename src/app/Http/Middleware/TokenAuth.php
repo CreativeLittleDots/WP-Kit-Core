@@ -118,8 +118,13 @@
 		public function isAllowed() {
 			
 			extract($this->settings);
+<<<<<<< HEAD
 			
 			$is_allowed = is_user_logged_in();
+=======
+	    	
+	    	$is_allowed = is_user_logged_in() || is_page( $this->settings['logout_redirect'] ) || is_route( $this->settings['logout_redirect'] );
+>>>>>>> origin/master
 			
 			if( ! $is_allowed ) {
 				

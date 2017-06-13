@@ -51,6 +51,8 @@
 			
 			if( $is_allowed = $this->isAllowed() ) {
 				
+				$next($request);
+				
 				return true;
 				
 			}
@@ -107,7 +109,7 @@
     			'allow' => array()
 			), $settings);
 			
-			$settings['allow'][] = '/oauth/token';
+			$this->settings['allow'][] = '/oauth/token';
 			
 			return $this;
 
@@ -116,14 +118,8 @@
 		public function isAllowed() {
 			
 			extract($this->settings);
-	    	
-	    	if( ! $mask_wp_login && is_wp_login() ) {
-		    	
-		    	return true;
-		    	
-	    	}
-	    	
-	    	$is_allowed = is_user_logged_in() || is_page( $this->settings['logout_redirect'] ) || is_route( $this->settings['logout_redirect'] );
+			
+			$is_allowed = is_user_logged_in();
 			
 			if( ! $is_allowed ) {
 				

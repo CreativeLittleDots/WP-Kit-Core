@@ -578,15 +578,19 @@
     
 	    function wpkit($binding = null) {
 		    
-		    $instance = WPKit\Core\Application::getInstance(realpath(APP_ROOT));
+		    if( empty( $GLOBALS['wpkit'] ) ) {
+		    
+		    	$GLOBALS['wpkit'] = WPKit\Core\Application::getInstance(realpath(APP_ROOT));
+		    	
+		    }
 		    
 		    if ( ! $binding ) {
 			    
-	            return $instance;
+	            return $GLOBALS['wpkit'];
 	            
 	        }
 	        
-	        return $instance->make($binding);
+	        return $GLOBALS['wpkit']->make($binding);
 		    
 	    }
 	    
@@ -823,9 +827,9 @@
 				
 			$restController = wpkit()->make($controller);
 			
-			route( BASE_PATH . '/:controller/:action/:id', array( $restController, 'action' ), '*' );
-			route( BASE_PATH . '/:controller/:action', array( $restController, 'action' ), '*' );
-			route( BASE_PATH . '/:controller', array( $restController, 'action' ), '*' );
+			route( ':controller/:action/:id', array( $restController, 'action' ), '*' );
+			route( ':controller/:action', array( $restController, 'action' ), '*' );
+			route( ':controller', array( $restController, 'action' ), '*' );
 			
 		}
 		
@@ -853,7 +857,7 @@
 				
 			}
 			
-			return $auth->handle( wpkit( 'auth' ), $callback );
+			return $auth->handle( wpkit( 'http' ), $callback );
 			
 		}
 		

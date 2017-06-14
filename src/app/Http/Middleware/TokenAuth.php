@@ -24,16 +24,9 @@
 	     * @param  \Illuminate\Contracts\Auth\Factory  $auth
 	     * @return void
 	     */
-	    public function __construct(AuthFactory $auth, $settings = array())
+	    public function __construct(AuthFactory $auth)
 	    {
-	        $this->auth = $auth;
-	        $this->mergeSettings($settings);
-	    }
-	    
-	    public static function routes() {
-		    
-		    Route::post( BASE_PATH . '/oauth/token', wpkit('auth.token')->settings['callback'] );
-		    
+	        $this->auth = $auth; 
 	    }
 	    
 	    /**
@@ -44,7 +37,7 @@
 	     * @param  string|null  $guard
 	     * @return mixed
 	     */
-	    public function handle($request, Closure $next, $guard = null)
+	    public function handle(Request $request, Closure $next, $guard = null)
 	    {
 			
 			nocache_headers();
@@ -59,11 +52,11 @@
 	
 			// here
 			
-			$token = wpkit('http')->get('access_token');
+			$token = $request->get('access_token');
 			
-			if( empty($token) && wpkit('http')->bearerToken() ) {
+			if( empty($token) && $request->bearerToken() ) {
 				
-				$token = wpkit('http')->bearerToken();
+				$token = $request->bearerToken();
 				
 			}
 			
@@ -104,12 +97,14 @@
 	    	$this->settings = array_merge(array(
     			'username' => 'login',
     			'callback' => self::class . '@token',
-    			'issuer' => array(__CLASS__, 'issueToken'),
+    			'issuer' => array( __CLASS__, 'issueToken'),
     			'limit' => 5,
     			'allow' => array()
 			), $settings);
 			
 			$this->settings['allow'][] = '/oauth/token';
+			
+			Route::post( 'oauth/token', $this->settings['callback'] );
 			
 			return $this;
 
@@ -161,7 +156,7 @@
 	    	
     	}
     	
-    	public function token() {
+    	public function token(Request $request) {
 	    	
 	    	if( ! $username = wpkit('http')->get('username') ) {
 						
@@ -179,9 +174,9 @@
 				
 			}
 			
-			if( is_array( $this->settings['username'] ) ) {
+			if( is_array( wpkit('auth.token')->settings['username'] ) ) {
 					
-				foreach($this->settings['username'] as $property) {
+				foreach( wpkit('auth.token')->settings['username'] as $property ) {
 					
 					if( $user = get_user_by( $property, $username ) ) {
 						
@@ -192,12 +187,22 @@
 				}
 				
 			} else {
+				
+				$indentifiers = is_array( wpkit('auth.token')->settings['username'] ) ? wpkit('auth.token')->settings['username'] : array( wpkit('auth.token')->settings['username'] );
+				
+				foreach( $indentifiers as $indentifier ) {
 			
-				$user = get_user_by( $this->settings['username'], $username );
+					if( $user = get_user_by( $indentifier, $username ) ) {
+						
+						break;
+						
+					}
+					
+				}
 				
 			}
 			
-			$is_authenticated = wp_authenticate($user->user_login, $password);
+			$is_authenticated = wp_authenticate($user ? $user->user_login : false, $password);
 			
 			if ( ! is_wp_error( $is_authenticated ) ) {
 				
@@ -215,7 +220,7 @@
 				
 				status_header(200);
 			
-				wp_send_json_success(call_user_func($this->settings['issuer'], $token, $user));
+				wp_send_json_success( call_user_func( wpkit('auth.token')->settings['issuer'], $token, $user ) );
 				
 			} else {
 				

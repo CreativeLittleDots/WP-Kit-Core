@@ -56,7 +56,7 @@
 			
 			if( empty($token) && $request->bearerToken() ) {
 				
-				$token = $request->bearerToken();
+				$token = base64_decode( $request->bearerToken() );
 				
 			}
 			

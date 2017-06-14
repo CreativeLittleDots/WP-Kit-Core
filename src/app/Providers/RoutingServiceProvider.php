@@ -26,7 +26,7 @@ class RoutingServiceProvider extends ServiceProvider
             $this->app->make('WPKit\Routing\Router', ['app' => $this->app])
         );
         
-        add_action( 'init', function() {
+        add_action( 'wpkit_init', function() {
 	        
 	        if( php_sapi_name() === 'cli' ) {
 			    

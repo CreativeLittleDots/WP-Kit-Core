@@ -365,6 +365,12 @@
 					'file' => 'timber-library/timber.php'
 				]);
 				
+				add_action( 'init', function() {
+					
+					do_action( 'wpkit_init' );
+					
+				} );
+				
 			}
 			
 			$this->instance(\Illuminate\Database\Connection::class, $this->app->make( 'db.connection' ) );

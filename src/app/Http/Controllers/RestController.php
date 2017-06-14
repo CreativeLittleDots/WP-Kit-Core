@@ -47,7 +47,11 @@
 			    
 		    }
 		    
-		    $this->app->call(array($this->app->make($class), 'beforeFilter'));
+		    if( method_exists($class, 'beforeFilter') ) {
+		    
+		    	$this->app->call(array($this->app->make($class), 'beforeFilter'));
+		    	
+		    }
 		    
 		    $this->app->call(array($this->app->make($class), $action), compact('id'));
 		    

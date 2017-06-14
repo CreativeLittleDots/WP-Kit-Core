@@ -81,7 +81,7 @@
 	     *
 	     * @return void
 	     */
-        protected function beforeFilter() {
+        public function beforeFilter() {
 			
 			add_action( $this->scripts_action, array($this, 'enqueueScripts'), $this->scripts_priority );
 			

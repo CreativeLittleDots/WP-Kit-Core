@@ -827,9 +827,9 @@
 				
 			$restController = wpkit()->make($controller);
 			
-			route( ':controller/:action/:id', array( $restController, 'action' ), '*' );
-			route( ':controller/:action', array( $restController, 'action' ), '*' );
-			route( ':controller', array( $restController, 'action' ), '*' );
+			route( '{controller}/{action}/{id}', $controller . '@action', '*' );
+			route( '{controller}/{action}', $controller . '@action', '*' );
+			route( '{controller}', $controller . '@action', '*' );
 			
 		}
 		

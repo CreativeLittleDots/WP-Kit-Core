@@ -51,7 +51,7 @@
                 
                 $current_url = get_current_url();
                 
-                wp_redirect( add_query_arg('redirect_to', urlencode($current_url), $this->settings['logout_redirect']) );
+                wp_redirect( add_query_arg('redirect_to', ! is_wp_login() ? urlencode( $current_url ) : null, $this->settings['logout_redirect'] ) );
                 
                 exit;
                 
@@ -81,7 +81,7 @@
 			
 			extract($this->settings);
 	    	
-	    	if( ! $mask_wp_login && is_wp_login() ) {
+	    	if( is_wp_login() ) {
 		    	
 		    	return true;
 		    	
@@ -170,16 +170,10 @@
 		            return;
 		            
 	            }
-	            
-	            $args = array();
-	            
-	            if( ! empty( $_REQUEST['redirect_to'] ) ) {
-		            
-		            $args['redirect_to'] = $_REQUEST['redirect_to'];
-		            
-	            }
                 
-                wp_redirect( add_query_arg( $args, $logout_redirect ) );
+                wp_redirect( add_query_arg( $_REQUEST, $logout_redirect ) );
+                
+                exit();
                 
             }
 	        

@@ -64,7 +64,7 @@
 					'query_var'          => true,
 					'rewrite'            => $this->rewrite && $this->rewrite !== true ? $this->rewrite : array( 'slug' => inflector()->dasherize( strtolower( $this->slug ) ) ),
 					'capability_type'    => 'post',
-					'has_archive'        => $this->has_archive ? inflector()->dasherize( inflector()->pluralize( strtolower( $this->slug ) ) ) : false,
+					'has_archive'        => $this->has_archive && $this->has_archive !== true ? $this->has_archive : (  $this->has_archive ? inflector()->dasherize( inflector()->pluralize( strtolower( $this->slug ) ) ) : false ),
 					'menu_icon' 	     => $this->icon,
 					'hierarchical'       => $this->hierarchical,
 					'menu_position'      => null,

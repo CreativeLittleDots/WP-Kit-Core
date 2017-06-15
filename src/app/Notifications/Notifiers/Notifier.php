@@ -54,10 +54,14 @@
 	            'message' => $message,
 	            'class'   => $this->getTypeClass( $type )
 	        ];
+	        
+	        if(!session_id()) {
+		        session_start();
+	        }
 	
 	        $notices = $this->getNotices();
 	        $notices[] = $notification;
-	        session()->put($this->session_key, $notices);
+	        $_SESSION[$this->session_key] = $notices;
 	        
 	        return $notification;
 	    }
@@ -126,7 +130,7 @@
 	     */
 	    public function getNotices()
 	    {
-	        return session()->get($this->session_key, []);
+	        return ! empty( $_SESSION[$this->session_key] ) ? $_SESSION[$this->session_key] : [];
 	    }
 	
 	    /**

@@ -36,7 +36,7 @@
 		/**
 	     * The application's version.
 	     */
-	    const VERSION = '1.4.5';
+	    const VERSION = '1.4.6';
 
 	    /**
 	     * The registered plugins.
@@ -366,6 +366,12 @@
 				$this->addIntegration('timber-library', [
 					'file' => 'timber-library/timber.php'
 				]);
+				
+				add_action( 'init', function() {
+					
+					do_action( 'wpkit_init' );
+					
+				} );
 				
 			}
 			

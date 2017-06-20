@@ -212,6 +212,8 @@
 				}
 				
 			}
+			
+			$query->groupBy( 'posts.ID' );
 		
 			return $query;
 			

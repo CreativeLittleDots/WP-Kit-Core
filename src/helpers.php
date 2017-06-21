@@ -763,20 +763,10 @@
 				foreach($blog_posts as $blog_post) {
 					
 					$blog_post->blog_id = $blog->blog_id;
+					$blog_post->$orderbyVal = $blog_post->$orderbyVal;
 					
-					if($orderby === 'date') 
-						$ordering = strtotime($blog_post->$orderbyVal);
-						
-					else
-						$ordering = $blog_post->$orderbyVal;
+					$posts[] = $blog_post;
 					
-					while(isset($posts[$ordering])) {
-						
-						$ordering = $ordering+1;
-						
-					}
-					
-					$posts[$ordering] = $blog_post;
 					
 				}
 				
@@ -784,7 +774,31 @@
 			
 			switch_to_blog($current_blog);
 			
-			krsort($posts);
+			uasort($posts, function($a, $b) use($orderby, $orderbyVal)  {
+				
+				if( $orderby === 'date' ) {
+					
+					$ordering_a = strtotime($a->$orderbyVal);
+					$ordering_b = strtotime($b->$orderbyVal);
+					
+				}
+						
+				else {
+					
+					$ordering_a = $a->$orderbyVal;
+					$ordering_b = $b->$orderbyVal;
+					
+				}
+				
+				return $ordering_a > $ordering_b ? -1 : ( $ordering_a == $ordering_b ? 0 : 1 );
+				
+			});
+			
+			if( $order === 'DESC' ) {
+				
+				$posts = array_reverse($posts);
+				
+			}
 			
 			$query = new WP_Query( $args );
 			

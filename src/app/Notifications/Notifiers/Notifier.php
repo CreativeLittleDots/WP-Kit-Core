@@ -38,6 +38,9 @@
 	        {
 	            self::$instance = $this;
 	        }
+	        if(!session_id()) {
+		        session_start();
+	        }
 	        $this->runActions();
 	    }
 	
@@ -54,10 +57,6 @@
 	            'message' => $message,
 	            'class'   => $this->getTypeClass( $type )
 	        ];
-	        
-	        if(!session_id()) {
-		        session_start();
-	        }
 	
 	        $notices = $this->getNotices();
 	        $notices[] = $notification;
@@ -186,7 +185,7 @@
 	     */
 	    public function clearNotices()
 	    {
-	    	session()->put($this->session_key, []);
+	    	$_SESSION[$this->session_key] = [];
 	    }
 	
 	    /**

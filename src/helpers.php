@@ -660,7 +660,7 @@
 		
 		function get_current_url_path() {
 			
-			return explode('?', get_current_url())[0];
+			return rtrim( explode('?', get_current_url())[0], '/');
 			
 		}
 		

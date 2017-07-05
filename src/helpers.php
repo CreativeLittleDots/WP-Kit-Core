@@ -650,7 +650,7 @@
 		
 		function get_current_url() {
 			
-			return home_url( wpkit('http')->getRequestUri() );
+			return get_home_url( 1, wpkit('http')->getRequestUri() );
 			
 		}
 		

@@ -9,10 +9,10 @@
     	
     	public function startIntegration( $settings = array() ) {
         	
-        	$this->settings = is_array( $this->settings ) ? array_merge($this->settings, array(
+        	$this->settings = is_array( $settings ) ? array_merge(array(
 				'params' => array(),
 				'support' => array()
-			)) : array();
+			), $settings) : array();
         	
         	if( ! function_exists('vc_set_shortcodes_templates_dir') ) {
             	return;

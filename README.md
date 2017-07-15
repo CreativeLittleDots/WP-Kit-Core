@@ -1,5 +1,7 @@
 # WP Kit (Core)
 
+**This repo is being discontinued to make way for [Themosis Framework](http://framework.themosis.com/). Themosis Framework works as a framework for Wordpress Themes and Plugins which makes this repo redundant.** 
+
 WP Kit is a RAD (Rapid Application Development) solution for Wordpress.
 
 > **Note:** This repository contains the core code of WP Kit. If you want to build your theme using WP Kit, visit the main [WP Kit Theme](https://github.com/creativelittledots/wp-kit).

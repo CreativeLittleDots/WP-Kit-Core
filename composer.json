@@ -1,7 +1,7 @@
 {
-	"name": "creativelittledots/wp-kit-core",
-	"description": "Creative Little WP Kit is a RAD (Rapid Application Development) solution for Wordpress.",
-	"keywords": ["wordpress", "framework", "oop", "creative little wp kit", "Creatie Little WP Kit"],
+	"name": "wp-kit/core",
+	"description": "WP Kit is a RAD (Rapid Application Development) solution for Wordpress.",
+	"keywords": ["wordpress", "framework", "oop", "wp kit"],
 	"homepage" : "https://github.com/creativelittledots/wp-kit-core",
 	"license": "MIT",
 	"authors": [

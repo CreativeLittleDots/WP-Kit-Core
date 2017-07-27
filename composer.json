@@ -20,7 +20,6 @@
 	    "illuminate/database": "5.4",
 	    "illuminate/validation": "5.4",
 	    "illuminate/filesystem": "5.4",
-	    "illuminate/exception": "5.4",
 	    "illuminate/bus": "5.4",
 	    "illuminate/config": "5.4",
 	    "illuminate/cache": "5.4",

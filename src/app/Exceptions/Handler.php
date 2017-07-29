@@ -7,8 +7,18 @@
     use WPKit\Http\Response;
 	
 	class Handler implements ExceptionHandlerContract {
+        
+        /**
+	     * A list of the exception types that should not be reported.
+	     *
+	     * @var array
+	     */
+	    protected $dontReport = [
+		    \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException::class,
+		    \Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class,
+		    \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException::class
+	    ];
 
-        protected $handlers = array();
 
 
         /**
@@ -20,22 +30,30 @@
          */
         public function report( Exception $e ) {
 	        
-	        if( $e->getMessage() ) {
+	        if ( $this->shouldntReport($e) ) {
+		        
+	            return;
+	            
+	        }
 	        
-		        if ( defined('WP_DEBUG_DISPLAY') && true === WP_DEBUG_DISPLAY ) {
-	
-					wp_die( $e->getMessage() );
-					
-				} else {
-					
-					error_log( $e->getMessage() );
-					
-				}
-				
-			}
+	        error_log( $e->getMessage() );
 		
         }
-
+	
+	    /**
+	     * Determine if the exception is in the "do not report" list.
+	     *
+	     * @param  \Exception  $e
+	     * @return bool
+	     */
+	    protected function shouldntReport(Exception $e)
+	    {
+			foreach($this->dontReport as $exception) {
+				if($e instanceof $exception) {
+					return true;
+				}
+			}
+	    }
 
         /**
          * Render an exception into an HTTP response.
@@ -46,7 +64,19 @@
          * @return \Symfony\Component\HttpFoundation\Response
          */
         public function render( $request, Exception $e ) {
-            return new Response( $e->getMessage(), 500 );
+	        
+	        if ( $this->shouldntReport($e) ) {
+		        
+	            return;
+	            
+	        }
+	        
+	        if ( defined('WP_DEBUG_DISPLAY') && true === WP_DEBUG_DISPLAY ) {
+
+				wp_die( $e->getMessage() );
+				
+			}
+
         }
 
 
@@ -59,7 +89,9 @@
          * @return void
          */
         public function renderForConsole( $output, Exception $e ) {
+	        
             echo $e->getMessage();
+            
         }
 
     }

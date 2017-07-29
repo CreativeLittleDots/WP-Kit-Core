@@ -389,9 +389,13 @@
 			
 			$response = $this->handle( $this['http'] );
 			
-			$response->send();
+			if( $response ) {
 			
-			$this[HttpKernelContract::class]->terminate($this['http'], $response);
+				$response->send();
+			
+				$this[HttpKernelContract::class]->terminate($this['http'], $response);
+				
+			}
 			
 		}
 				

@@ -1,4 +1,4 @@
-# WPKit Core
+# WPKit (Core)
 
 **This repo is being discontinued to make way for [Themosis Framework](http://framework.themosis.com/). Themosis Framework works as a framework for Wordpress Themes and Plugins which makes this repo redundant.** 
 

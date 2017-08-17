@@ -20,6 +20,7 @@
     	var $row_actions = array();
     	var $public = true;
     	var $publicly_queryable = true;
+    	var $labels = array();
 		
 		public function __construct() {
 			
@@ -41,7 +42,7 @@
     			$name = inflector()->titleize($this->name ? $this->name : inflector()->humanize($this->slug));
 		
 				register_post_type( $this->slug , array(
-					'labels'             => array(
+					'labels'             => array_merge( array(
 						'name'               => _x( $plural, 'post type general name', 'wpkit' ),
 						'singular_name'      => _x( $name, 'post type singular name', 'wpkit' ),
 						'menu_name'          => _x( $this->menu_name ? inflector()->titleize($this->menu_name) : $plural, 'admin menu', 'wpkit' ),
@@ -56,7 +57,7 @@
 						'parent_item_colon'  => __( 'Parent ' . $plural . ':', 'wpkit' ),
 						'not_found'          => __( 'No ' . strtolower($plural) . ' found.', 'wpkit' ),
 						'not_found_in_trash' => __( 'No ' . strtolower($plural) . ' found in Trash.', 'wpkit' )
-					),
+					), $this->labels ),
 					'public'             => $this->public,
 					'publicly_queryable' => $this->publicly_queryable,
 					'show_ui'            => true,

@@ -56,6 +56,12 @@
 	     * @var boolean
 	     */
 		protected $inWp = false;
+		/**
+	     * Should be auto intgegrate Timber
+	     *
+	     * @var boolean
+	     */
+		public $autoTimber = true;
 	    
 	    /**
 	     * Register the basic bindings into the container.
@@ -363,9 +369,13 @@
 			
 				$this->requirePlugins();
 				
-				$this->addIntegration('timber-library', [
-					'file' => 'timber-library/timber.php'
-				]);
+				if( $this->autoTimber ) {
+					
+					$this->addIntegration('timber-library', [
+						'file' => 'timber-library/timber.php'
+					]);
+					
+				}
 				
 				add_action( 'init', function() {
 					

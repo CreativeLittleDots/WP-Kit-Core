@@ -19,7 +19,7 @@
 			
 			if( ! empty($settings['context']) && is_array($settings['context']) && count($settings['context']) > 0 ) {
 				
-				add_filter( 'timber_context', function ( $context ) {
+				add_filter( 'timber_context', function ( $context ) use($settings) {
 					
 					$context = $context + $settings['context'];
 					

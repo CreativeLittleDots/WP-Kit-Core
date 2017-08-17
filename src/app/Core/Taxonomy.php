@@ -13,6 +13,7 @@
     	var $name = '';
     	var $belongs_to = array();
     	var $post_types = array();
+    	var $labels = array();
 		
 		public function __construct() {
     		
@@ -40,7 +41,7 @@
     				array(
 	    				'label' 			=> __( $name ),
 	    				'hierarchical'      => $this->hierarchical,
-	    				'labels'            =>  array(
+	    				'labels'            =>  array_merge( array(
 		    				'name'              => _x( $plural, 'wpkit' ),
 		    				'singular_name'     => _x( $name, 'wpkit' ),
 		    				'search_items'      => __( 'Search '.$plural ),
@@ -52,7 +53,7 @@
 		    				'add_new_item'      => __( 'Add New ' . $name ),
 		    				'new_item_name'     => __( 'New ' . $name . ' Name' ),
 		    				'menu_name'         => __( $plural ),
-		    			),
+		    			), $this->labels ),
 	    				'show_ui'           => true,
 	    				'show_admin_column' => true,
 	    				'query_var'         => true,

@@ -98,7 +98,7 @@
     		
     		foreach($atts as $key => &$att) {
         		
-        		$param = $this->params[$key];
+        		if( $param = isset( $this->params[$key] ) ? $this->params[$key] : null ) {
         		
         		switch($param['type']) {
             		
@@ -115,6 +115,8 @@
                     break;
             		
         		}
+				
+			}
         		
     		}
     		

@@ -6,6 +6,11 @@
 
 	class AdvancedCustomFieldsPro extends Integration {
     	
+    	/**
+	     * Start the integration
+	     *
+	     * @var WPKit\Integrations\Plugins\AdvancedCustomFieldsPro
+	     */
     	public function startIntegration( $settings = array() ) {
         	
         	if( function_exists('acf_add_options_page') ) {
@@ -42,6 +47,8 @@
 				} );
 				
 			}
+			
+			return $this;
             
         }
         

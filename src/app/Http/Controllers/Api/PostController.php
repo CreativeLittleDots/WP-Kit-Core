@@ -7,7 +7,7 @@
 	class PostController extends Controller {
 		
 		/**
-	     * Save an post
+	     * Save a post
 	     *
 	     * @param  int  $id
 	     * @return Model
@@ -72,7 +72,10 @@
 		protected function whereQuery( $query, $model ) {
 			
 			$query->select( 'posts.*' );
-				
+			
+			/**
+		     * Check if request has search term query		     
+		     */
 			if( ! empty( $this->http->get('s') ) ) {
 				
 				$query->where( 'post_title', 'like', '%' . $this->http->get('s') . '%' );
@@ -93,6 +96,9 @@
 				
 			}
 			
+			/**
+		     * Check if request has meta query		     
+		     */
 			if( ! empty( $this->http->get('meta_query') ) ) {
 			
 				foreach($this->http->get('meta_query') as $meta_query) {
@@ -118,7 +124,10 @@
 				}
 				
 			}
-
+			
+			/**
+		     * Check if request has taxonomy query		     
+		     */
 			if( ! empty( $this->http->get('tax_query') ) ) {
 				
 				$tax_queries = array_map(function($tax_query) {
@@ -180,6 +189,9 @@
 				
 			}
 			
+			/**
+		     * Check if request contains magic meta nested at product model level		     
+		     */
 			if( $magic_meta = array_filter( $this->http->only( $model->getMagicMeta() ) ) ) {
 				
 				foreach($magic_meta as $key => $meta) {

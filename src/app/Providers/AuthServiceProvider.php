@@ -13,6 +13,9 @@
 	
 	    public function registerAuthenticator()
 	    {
+		    /**
+		     * Setup Auth config data
+		     */
 		    
 		    $this->app['config']['auth.defaults.guard'] = 'default';
 		    $this->app['config']['auth.providers.eloquent'] = [
@@ -41,6 +44,10 @@
 	        $this->app->singleton('auth.driver', function ($app) {
 	            return $app['auth']->guard();
 	        });
+	        
+	        /**
+		     * Bind our three middlewares
+		     */
         
 			$this->app->singleton(
 	            'auth.basic',

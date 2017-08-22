@@ -9,6 +9,12 @@
 
 	class GravityForms extends Integration {
 		
+		/**
+	     * Start the integration
+	     *
+	     * @param array $settings
+	     * @return WPKit\Integrations\Plugins\GravityForms
+	     */
 		public function startIntegration( $settings = array() ) {
 			
 			add_filter( 'gform_cdata_open', array($this, 'wrap_gform_cdata_open') );
@@ -21,7 +27,7 @@
 			add_filter( 'gform_pre_form_settings_save', array($this, 'save_form_button_settings') );
 			add_filter( 'gform_pre_form_settings_save', array($this, 'save_form_label_settings') );
 			
-			add_filter( 'gform_notification', array($this, 'change_notification_format'), 10, 3);
+			add_filter( 'gform_notification', array($this, 'change_notification_format') );
 			
 			add_filter( 'gform_enable_field_label_visibility_settings', '__return_true' );
 			add_filter( 'gform_enable_field_label_position_settings', '__return_true' );
@@ -32,7 +38,7 @@
             add_filter( 'gform_add_field_buttons', array( $this, 'nesting_add_field' ) );
             add_filter( 'gform_field_type_title' , array( $this, 'nesting_title' ), 10, 2 );
             add_action( 'gform_editor_js', array( $this, 'nesting_custom_scripts' ) );
-            add_filter( 'gform_field_content', array( $this, 'nesting_display_field' ), 10, 5 );
+            add_filter( 'gform_field_content', array( $this, 'nesting_display_field' ), 10, 2 );
             
             add_filter( 'gform_field_value_user_first_name', array($this, 'parameter_user_first_name' ) );
             add_filter( 'gform_field_value_user_last_name', array($this, 'parameter_user_last_name' ) );
@@ -41,6 +47,12 @@
 			
 		}
 		
+		/**
+	     * Open javascript wrapper
+	     *
+	     * @param string $content
+	     * @return string
+	     */
 		public function wrap_gform_cdata_open( $content = '' ) {
 			
         	$content = 'document.addEventListener( "DOMContentLoaded", function() { ';
@@ -49,6 +61,12 @@
         	
         }
         
+        /**
+	     * Close javascript wrapper
+	     *
+	     * @param string $content
+	     * @return string
+	     */
         public function wrap_gform_cdata_close( $content = '' ) {
 	        
         	$content = ' }, false );';
@@ -57,7 +75,13 @@
         	
         }
 		
-		public function change_notification_format( $notification, $form, $entry ) {
+		/**
+	     * Change gform notification format
+	     *
+	     * @param array $notification
+	     * @return array
+	     */
+		public function change_notification_format( $notification ) {
 		
 			// is_plugin_active is not availble on front end
 			if( !is_admin() )
@@ -75,6 +99,13 @@
 		    
 		}
 		
+		/**
+	     * Add button class fields to form settings
+	     *
+	     * @param array $settings
+	     * @param GForm_Model $form
+	     * @return array
+	     */
 		public function form_button_settings($settings, $form) {
 			
 		    $settings['Form Button'] = array_merge(
@@ -103,6 +134,13 @@
 		    
 		}
 		
+		/**
+	     * Add label fields to form settings
+	     *
+	     * @param array $settings
+	     * @param GForm_Model $form
+	     * @return array
+	     */
 		public function form_label_settings($settings, $form) {
 			
 		    $settings['Form Layout'] = array_merge(
@@ -126,6 +164,12 @@
 		    
 		}
 		
+		/**
+	     * Save button fields values
+	     *
+	     * @param GForm_Model $form
+	     * @return GForm_Model
+	     */
 		public function save_form_button_settings($form) {
 			
 			$form['button_wrapper_class'] = rgpost('button_wrapper_class');
@@ -137,6 +181,12 @@
 		    
 		}
 		
+		/**
+	     * Save label fields values
+	     *
+	     * @param GForm_Model $form
+	     * @return GForm_Model
+	     */
 		public function save_form_label_settings($form) {
 			
 		    $form['labelPosition'] = rgpost('form_label_position');
@@ -145,6 +195,13 @@
 		    
 		}
 		
+		/**
+	     * Output label placement fields values
+	     *
+	     * @param int $position
+	     * @param GForm_Model $form
+	     * @return void
+	     */
 		public function field_label_settings($position, $form_id) {
     		
     		if ( $position == 50 ) {
@@ -167,6 +224,11 @@
     		
 		}
 		
+		/**
+	     * Output label fields javascript
+	     *
+	     * @return void
+	     */
 		public function field_label_settings_script() {
     		
             ?>
@@ -185,6 +247,14 @@
     		
 		}
 		
+		/**
+	     * Adjust label position classname
+	     *
+	     * @param string $classes
+	     * @param GForm_Field $field
+	     * @param GForm_Model $form
+	     * @return string
+	     */
 		public function field_label_position_class($classes, $field, $form) {
     		
     		$label_position_class = 'field_label_above';
@@ -203,6 +273,13 @@
     		
 		}
 		
+		/**
+	     * Adjust output html for form
+	     *
+	     * @param string $html
+	     * @param GForm_Model $form
+	     * @return string
+	     */
 		public function custom_markup($html, $form) {
 			
 			if( is_admin() ) {
@@ -245,11 +322,12 @@
 			
 		}
 		
-		
 		/**
-		 * Create a new fields group in the Gravity Forms forms editor and add our nesting 'fields' to it.
-		 */
-		
+	     * Create a new fields group in the Gravity Forms forms editor and add our nesting 'fields' to it.
+	     *
+	     * @param array field_groups
+	     * @return array
+	     */
 		public function nesting_add_field( $field_groups ) {
 			
 			// add begin nesting button
@@ -307,9 +385,12 @@
 		
 		
 		/**
-		 * Add title to nesting, displayed in Gravity Forms forms editor
-		 */
-		
+	     * Add title to nesting, displayed in Gravity Forms forms editor
+	     *
+	     * @param string $title
+	     * @param string $field_type
+	     * @return string
+	     */
 		public function nesting_title( $title, $field_type ) {
 			
 			if ( $field_type === "NestBegin" ) :
@@ -328,11 +409,11 @@
 			
 		}
 		
-		
 		/**
-		 * JavaSript to add field options to nesting fields in the Gravity forms editor
-		 */
-		
+	     * Enqueue custom scripts for nesting functionality
+	     *
+	     * @return void
+	     */
 		public function nesting_custom_scripts() {
 			
 			wp_register_script( 'gform-nesting', get_asset('admin/jquery.gform.nesting.js'), array('jquery'), '1.0.0', true );
@@ -345,7 +426,14 @@
 			
 		}
 
-		public function nesting_display_field( $content, $field, $value, $lead_id, $form_id) {
+		/**
+	     * Manipulate output html of nesting field
+	     *
+	     * @param string $content
+	     * @param array $field
+	     * @return string
+	     */
+		public function nesting_display_field( $content, $field) {
 			
 			if ( ( ! is_admin() ) && ( $field['type'] == 'NestBegin') ) {
 				
@@ -361,24 +449,44 @@
 			
 		}
 		
+		/**
+	     * Get current user first name parameter filter
+	     *
+	     * @return string
+	     */
 		public function parameter_user_first_name() {
     		
     		return wp_get_current_user()->user_firstname;
     		
 		}
 		
+		/**
+	     * Get current user last name parameter filter
+	     *
+	     * @return string
+	     */
 		public function parameter_user_last_name() {
     		
     		return wp_get_current_user()->user_lastname;
     		
 		}
 		
+		/**
+	     * Get current user full name parameter filter
+	     *
+	     * @return string
+	     */
 		public function parameter_user_full_name() {
     		
     		return wp_get_current_user()->user_firstname . ( wp_get_current_user()->user_lastname ? ' ' . wp_get_current_user()->user_lastname : '' );
     		
 		}
 		
+		/**
+	     * Get current user email parameter filter
+	     *
+	     * @return string
+	     */
 		public function parameter_user_email() {
     		
     		return wp_get_current_user()->user_email;

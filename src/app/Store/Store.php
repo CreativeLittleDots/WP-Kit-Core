@@ -6,12 +6,25 @@
 
 	class Store implements StoreContract {
 		
+		/**
+	     * Set an item from the cache by key.
+	     *
+	     * @param  string  $key
+	     * @param  mixed  $val
+	     * @return mixed
+	     */
 		public function set( $key, $val ) {
     		
     		return $this->put( $key, $val, 3600 );
     		
 		}
 		
+		/**
+	     * Remove an item from the cache by key.
+	     *
+	     * @param string  $key
+	     * @return void
+	     */
 		public function remove( $key ) {
 			
 			unset( $GLOBALS['wpkit__store'][$key] );
@@ -21,7 +34,7 @@
 		/**
 	     * Retrieve an item from the cache by key.
 	     *
-	     * @param  string|array  $key
+	     * @param  string  $key
 	     * @return mixed
 	     */
 	    public function get($key) {
@@ -150,10 +163,6 @@
 	     *
 	     * @return string
 	     */
-	    public function getPrefix() {
-		    
-		    
-		    
-	    }
+	    public function getPrefix() {}
     	
     }

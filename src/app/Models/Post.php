@@ -8,6 +8,10 @@
 	
 	class Post extends Model {
 	
+		/**
+	     * Use soft deletes for trash
+	     *
+	     */
 	    use SoftDeletes;
 	
 	    /**

@@ -16,6 +16,11 @@
 	     */
 	    protected $auth;
 	    
+	    /**
+	     * The auth settings
+	     *
+	     * @var array
+	     */
 	    protected $settings = array();
 	
 	    /**
@@ -92,6 +97,12 @@
 	        
 	    }
     	
+    	/**
+	     * Merge settings into middleware for use through middleware methods
+	     *
+	     * @param array $settings
+	     * @return WPKit\Http\Middleware\TokenAuth
+	     */
     	public function mergeSettings($settings = array()) {
 	    	
 	    	$this->settings = array_merge(array(
@@ -110,6 +121,11 @@
 
 		}
 		
+		/**
+	     * Check if this current route is allowed based on middleware settings
+	     *
+	     * @return boolean
+	     */
 		public function isAllowed() {
 			
 			extract($this->settings);
@@ -156,6 +172,12 @@
 	    	
     	}
     	
+    	/**
+	     * Validate request and respond with token
+	     *
+	     * @var Illuminate\Http\Request $request
+	     * @return void
+	     */
     	public function token(Request $request) {
 	    	
 	    	if( ! $username = wpkit('http')->get('username') ) {
@@ -232,6 +254,13 @@
 			
 		}
 		
+		/**
+	     * Form the token object
+	     *
+	     * @var string $token
+	     * @var WP_User $user
+	     * @return array
+	     */
 		public static function issueToken( $token, \WP_User $user ) {
 			
 			return array(

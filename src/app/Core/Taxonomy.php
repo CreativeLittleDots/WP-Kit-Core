@@ -2,19 +2,83 @@
     
     namespace WPKit\Core;
 
-	class Taxonomy { // to be deprecated 2.0
+	class Taxonomy {
 		
+		/**
+	     * The blog ids that taxonomy should be registered on
+	     *
+	     * @var array
+	     */
 		var $blog_ids = [];
+		
+		/**
+	     * The blog ids to excluded registration on
+	     *
+	     * @var array
+	     */
 		var $exclude_blog_ids = [];
+		
+		/**
+	     * Does the taxonomy should have a rewrite?
+	     *
+	     * @var boolean
+	     */
     	var $rewrite = true;
+    	
+    	/**
+	     * The slug of the taxonomy
+	     *
+	     * @var string
+	     */
     	var $slug = '';
+    	
+    	/**
+	     * Is the taxonomy hierarchical
+	     *
+	     * @var boolean
+	     */
     	var $hierarchical = false;
+    	
+    	/**
+	     * The label for taxonomy to display when plural
+	     *
+	     * @var string
+	     */
     	var $plural = '';
+    	
+    	/**
+	     * The name of the taxonomy
+	     *
+	     * @var string
+	     */
     	var $name = '';
+    	
+    	/**
+	     * Where to nest the taxonomy page in wp admin
+	     *
+	     * @var array
+	     */
     	var $belongs_to = array();
+    	
+    	/**
+	     * Post types to register taxonomy on
+	     *
+	     * @var array
+	     */
     	var $post_types = array();
+    	
+    	/**
+	     * Labels for taxonomy
+	     *
+	     * @var array
+	     */
     	var $labels = array();
 		
+		/**
+	     * The constructor, it runs the whole registration for taxonomy
+	     *
+	     * @return void
+		 */
 		public function __construct() {
     		
     		if( $this->blog_ids && ! in_array( get_current_blog_id(), $this->blog_ids ) ) {

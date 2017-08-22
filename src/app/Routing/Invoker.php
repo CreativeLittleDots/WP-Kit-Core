@@ -18,12 +18,27 @@
 	     */
 	    protected $routes = array();
 
+		/**
+	     * The constructor
+	     *
+	     * @param Illuminate\Container\Container $app
+	     * @return void
+		 */
 		public function __construct(Application $app) {
 	    	
 	    	$this->app = $app;
 	    	
 	    }
 	    
+	    /**
+	     * Invoke based on a condition
+	     *
+	     * @param  mixed (string, closure)  $callback
+	     * @param  string  $action
+	     * @param  mixed (closure, string)  $condition
+	     * @param  mixed (int)  $priority
+	     * @return  Illuminate\Routing\Route
+	     */
 	    public function invokeByCondition( $callback, $action = 'wp', $condition = true, $priority = 10 ) {
 		    
 		    $route = $this->getRoute( $callback );
@@ -46,6 +61,14 @@
 			
 		}
 		
+		/**
+	     * Invoke a callback
+	     *
+	     * @param  mixed (string, closure)  $callback
+	     * @param  string  $action
+	     * @param  mixed (int)  $priority
+	     * @return  Illuminate\Routing\Route
+	     */
 		public function invoke( $callback, $action = 'wp', $priority = 10 ) {
 			
 			$this->routes[$callback] = $route = $this->getRoute( $callback );
@@ -60,6 +83,12 @@
 			
 		}
 		
+		/**
+	     * Get a route object based on callback string
+	     *
+	     * @param  string  $callback
+	     * @return  Illuminate\Routing\Route
+	     */
 		public function getRoute( $callback ) {
 			
 			if( empty( $this->routes[$callback] ) ) {

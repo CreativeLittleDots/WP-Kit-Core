@@ -4,14 +4,18 @@
 	
 	class UserMeta extends Model {
 		
+		/**
+	     * The table associated with the model.
+	     *
+	     * @var string
+	     */
 	    protected $primaryKey = 'meta_id';
 	
-	    public $timestamps    = false;
-	
-	    public function getTable() {
-		    
-	        return $this->getConnection()->db->prefix . 'usermeta';
-	        
-	    }
+		/**
+	     * Disable timestamps.
+	     *
+	     * @var boolean
+	     */
+	    public $timestamps = false;
 	    
 	}

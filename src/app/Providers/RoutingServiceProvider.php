@@ -26,6 +26,11 @@ class RoutingServiceProvider extends ServiceProvider
             $this->app->make('WPKit\Routing\Router', ['app' => $this->app])
         );
         
+        /**
+	     * Setup a global route on main wpkit action to allow any route to
+	     * resolve to wp processing, this callback makes the response happen
+	    */
+        
         add_action( 'wpkit_init', function() {
 	        
 	        if( php_sapi_name() === 'cli' ) {

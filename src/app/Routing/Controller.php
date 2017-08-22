@@ -222,6 +222,12 @@
 			
 		}
 		
+		/**
+	     * Get path for a script
+	     *
+	     * @param  string  $file
+	     * @return string
+	     */
 		protected function getScriptPath( $file ) {
     		
     		if( ! filter_var( $file , FILTER_VALIDATE_URL) === false ) {
@@ -240,6 +246,14 @@
     		
 		}
 		
+		/**
+	     * Render a view or component contextual to a controller
+	     *
+	     * @param  string  $view
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 		protected function render( $view, $vars = array(), $echo = true ) {
 			
 			$path = str_replace( 'Controller', '', implode( '/', explode( '\\', str_replace( $this->app->getNamespace() . 'Controllers\\', '', get_called_class() ) ) ) );
@@ -258,6 +272,14 @@
 			
 		}
 		
+		/**
+	     * Render a view contextual to a controller
+	     *
+	     * @param  string  $view
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 		protected function renderView( $view, $vars = array(), $echo = true ) {
 			
 			$html = $this->render( $view, $vars, $echo );
@@ -274,6 +296,14 @@
 			
 		}
 		
+		/**
+	     * Render a component contextual to a controller
+	     *
+	     * @param  string  $view
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 		protected function renderComponent( $view, $vars = array(), $echo = true ) {
 			
 			$html = $this->render( $view, $vars, $echo );

@@ -288,12 +288,6 @@
 				}
 				
 			}
-				
-			else {
-				
-				// admin error
-				
-			}
 			
 			if( defined( 'POST_TYPES_DIR' ) && POST_TYPES_DIR ) {
 			
@@ -304,10 +298,6 @@
 					$this->make($post_type);
 					
 				}
-				
-			} else {
-				
-				// admin error
 				
 			}
 			
@@ -320,10 +310,6 @@
 					$this->make($taxonomy);
 					
 				}
-				
-			} else {
-				
-				// admin error
 				
 			}
 			
@@ -338,10 +324,6 @@
 	    			$this->addShortcode($shortcode->base, $shortcode);
 					
 				}
-				
-			} else {
-				
-				// admin error
 				
 			}
 			
@@ -358,10 +340,6 @@
 					});
 					
 				}
-				
-			} else {
-				
-				// admin error
 				
 			}
 			
@@ -395,6 +373,11 @@
 
 		}
 		
+		/**
+		 * Send response to client
+	     *
+	     * @return void
+	     */
 		public function send() {
 			
 			$response = $this->handle( $this['http'] );

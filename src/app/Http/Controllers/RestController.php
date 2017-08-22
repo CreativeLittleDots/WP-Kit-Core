@@ -6,6 +6,18 @@
 	
 	class RestController extends Controller {
 	    
+	    /**
+	     * The action used in Route for RestController, it takes the current route and tried to find a 
+	     * suitable controller and action by matching the pattern in the url e.g.
+	     * GET /houses/get/12 -> HouseController::get
+	     * POST /houses/add -> HouseController::save
+	     * GET /houses -> HouseController::get
+	     *
+	     * @param string $controller
+	     * @param string $action
+	     * @param int $id
+	     * @var void
+	     */
 	    public function action($controller, $action = '', $id = '') {
 		    
 		    if( empty( $controller ) ) {

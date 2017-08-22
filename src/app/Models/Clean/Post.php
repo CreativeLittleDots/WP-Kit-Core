@@ -50,7 +50,7 @@
 	    }
 	    
 	    /**
-	     * Build $appends property
+	     * Build $appends property because we want to conditionally check for data to append to $post
 	     *
 	     * @return void
 	     */
@@ -311,6 +311,11 @@
 	        
 	    }
 	    
+	    /**
+	     * Mutate a meta value, cast to in if required
+	     *
+	     * @var mixed
+	     */
 	    public function mutateMetaValue($key, $value) {
 		    
 		    $value = is_numeric($value) ? (int) $value : $value;
@@ -319,6 +324,11 @@
 		    
 	    }
 	    
+	    /**
+	     * Get arrayable appends to append right at the bottom of object for nice presentation
+	     *
+	     * @var array
+	     */
 	    public function getArrayableAppendsAfterMagicMeta() {
 		    return [
 				'status',

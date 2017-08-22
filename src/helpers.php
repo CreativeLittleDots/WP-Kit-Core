@@ -6,6 +6,12 @@
 	
 	if ( ! function_exists('get_currency_symbol') ) {
 	
+		/**
+	     * Get currency symbol for a given currency
+	     *
+	     * @param  string  $currency
+	     * @return string
+	     */
 		function get_currency_symbol( $currency = DEFAULT_CURRENCY ) {
 	    
 	        $symbols = array(
@@ -69,6 +75,13 @@
     
     if ( ! function_exists('to_currency') ) {
     
+    	/**
+	     * Convert number to a given currency
+	     *
+	     * @param  float  $price
+	     * @param  string  $currency
+	     * @return string
+	     */
 	    function to_currency( $price, $currency = DEFAULT_CURRENCY ) {
 	        
 	        return sprintf( '%1$s%2$s', get_currency_symbol($currency), number_format( $price, 0 ) );
@@ -83,6 +96,14 @@
 	
 	if ( ! function_exists('icon') ) {
 	
+		/**
+	     * Retrieve icon from xlink icon file
+	     *
+	     * @param  string  $name
+	     * @param  string  $css
+	     * @param  boolean  $echo
+	     * @return string
+	     */
 		function icon($name, $css = '', $echo = true) {
 			
 			$icon = "<svg " . ( $css ? "class='$css'" : '' ) . "><use xlink:href='" . THEME_URI . "/images/icons.svg#icon-$name'></use></svg>";
@@ -107,6 +128,13 @@
     
     if ( ! function_exists('nice') ) {
      
+     	/**
+	     * Output really nice code
+	     *
+	     * @param  string  $content
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 	    function nice($content, $echo = true) {
 		    
 		    ob_start();
@@ -141,6 +169,13 @@
     
     if ( ! function_exists('wp_nice_json') ) {
      
+     	/**
+	     * Output really nice JSON
+	     *
+	     * @param  string  $json
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 	    function wp_nice_json($json, $echo = true) {
 		    
 		    if ( ! WPKIT_DEBUG ) {
@@ -184,7 +219,16 @@
     \*----------------------------------------------*/
     
     if ( ! function_exists('get_element') ) {
-    
+    	
+    	/**
+	     * Retrieve an element (component/view)
+	     *
+	     * @param  string  $path
+	     * @param  string  $template
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 	    function get_element($path = '', $template, $vars = array(), $echo = false) {
 		    
 		    $file = $path . DS . $template;
@@ -237,6 +281,15 @@
     
     if ( ! function_exists('get_component') ) {
     
+    	/**
+	     * Retrieve a component
+	     *
+	     * @param  string  $path
+	     * @param  string  $template
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 	    function get_component($path = '', $template, $vars = array(), $echo = false) {
 		    
 		    $html = get_element($path, $template, $vars, $echo);
@@ -257,6 +310,15 @@
     
     if ( ! function_exists('the_component') ) {
     
+    	/**
+	     * Echo a component
+	     *
+	     * @param  string  $path
+	     * @param  string  $template
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return void
+	     */
 	    function the_component($path = '', $template, $vars = array()) {
 		    
 		    get_component($path, $template, $vars, true);
@@ -271,6 +333,15 @@
     
     if ( ! function_exists('component') ) {
     
+    	/**
+	     * Retrieve a component
+	     *
+	     * @param  string  $path
+	     * @param  string  $template
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 	    function component($path = '', $template, $vars = array(), $echo = true) {
 		    
 		    $html = get_component($path, $template, $vars, $echo);
@@ -291,6 +362,15 @@
     
     if ( ! function_exists('get_view') ) {
     
+    	/**
+	     * Retrieve a view
+	     *
+	     * @param  string  $path
+	     * @param  string  $template
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 	    function get_view($path = '', $template, $vars = array(), $echo = false) {
 		    
 		    $html = get_element( $path, $template, $vars, $echo );
@@ -311,6 +391,15 @@
     
     if ( ! function_exists('the_view') ) {
     
+    	/**
+	     * Echo a component
+	     *
+	     * @param  string  $path
+	     * @param  string  $template
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return void
+	     */
 	    function the_view($path = '', $template, $vars = array()) {
 		    
 		    get_view($path, $template, $vars, true);
@@ -325,6 +414,15 @@
     
     if ( ! function_exists('view') ) {
     
+    	/**
+	     * Retrieve a view
+	     *
+	     * @param  string  $path
+	     * @param  string  $template
+	     * @param  array  $vars
+	     * @param  boolean  $echo
+	     * @return string / void
+	     */
 	    function view($path = '', $template, $vars = array(), $echo = true) {
 		    
 		    $html = get_view($path, $template, $vars, $echo);
@@ -345,6 +443,13 @@
     
     if ( ! function_exists('get_asset') ) {
     
+    	/**
+	     * Retrieve an asset
+	     *
+	     * @param  string  $file
+	     * @param  boolean  $server_path
+	     * @return string
+	     */
 	    function get_asset($file, $server_path = false) {
 	        
 	        foreach( array_map( 'trim', explode(',', ASSET_DIRS) ) as $dir ) {
@@ -371,6 +476,12 @@
     
     if ( ! function_exists('the_asset') ) {
     
+    	/**
+	     * Echo an asset
+	     *
+	     * @param  string  $file
+	     * @return void
+	     */
 	    function the_asset($file) {
 	        
 	        if( $asset = get_asset( $file ) ) {
@@ -389,6 +500,11 @@
     
     if ( ! function_exists('is_wp_login') ) {
     
+    	/**
+	     * Check if current page is wp-login
+	     *
+	     * @return boolean
+	     */
 	    function is_wp_login() {
 	        
 	        return in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php', 'wp-activate.php', 'wp-signup.php' ) );
@@ -403,6 +519,13 @@
     
     if ( ! function_exists('twig_this') ) {
     
+    	/**
+	     * Deprecated: Convert template to twig
+	     *
+	     * @param  string  $template
+	     * @param  array  $data
+	     * @return string
+	     */
 	    function twig_this($template, $data) {
 		    
 		    _deprecated_function( __FUNCTION__, '1.3', 'twigify' );
@@ -415,6 +538,13 @@
 	
 	if ( ! function_exists('twigify') ) {
     
+    	/**
+	     * Convert template to twig
+	     *
+	     * @param  string  $template
+	     * @param  array  $data
+	     * @return string
+	     */
 	    function twigify($template, $data) {
 		    
 		    if( class_exists('Timber') ) {
@@ -435,6 +565,15 @@
     
     if ( ! function_exists('in_metadata_serialized') ) {
     
+    	/**
+	     * Check if value is inside an serialized meta data
+	     *
+	     * @param  string  $value
+	     * @param  string  $type
+	     * @param  int  $object_id
+	     * @param  string  $meta_key
+	     * @return boolean
+	     */
 	    function in_metadata_serialized($value, $type = 'post', $object_id, $meta_key) {
 	        
 	        $array = get_metadata($type, $object_id, $meta_key, true);
@@ -447,6 +586,16 @@
     
     if ( ! function_exists('update_metadata_serialized') ) {
     
+    	/**
+	     * Update serialized meta data
+	     *
+	     * @param  string  $type
+	     * @param  int  $object_id
+	     * @param  string  $meta_key
+	     * @param  string  $value
+	     * @param  boolean  $multiple
+	     * @return void
+	     */
 	    function update_metadata_serialized($type = 'post', $object_id, $meta_key, $value, $multiple = false) {
 	        
 			if( $multiple || ! in_metadata_serialized($value, $type, $object_id, $meta_key) ) { 
@@ -467,6 +616,15 @@
     
     if ( ! function_exists('remove_metadata_serialized') ) {
     
+    	/**
+	     * Remove serialized meta data
+	     *
+	     * @param  string  $type
+	     * @param  int  $object_id
+	     * @param  string  $meta_key
+	     * @param  string  $value
+	     * @return void
+	     */
 	    function remove_metadata_serialized($type = 'post', $object_id, $meta_key, $value) {
 	        
 	        $array = get_metadata($type, $object_id, $meta_key, true);
@@ -493,6 +651,11 @@
     
     if ( ! function_exists('get_the_raw_archive_title') ) {
     
+    	/**
+	     * Get a really nice archive title no matter what the template
+	     *
+	     * @return string
+	     */
 	    function get_the_raw_archive_title() {
 	        global $post;
 	        if ( is_category() ) {
@@ -561,6 +724,11 @@
     
     if ( ! function_exists('inflector') ) {
     
+    	/**
+	     * Inflector helper
+	     *
+	     * @return ICanBoogie\Inflector
+	     */
 	    function inflector() {
 		    
 		    return ICanBoogie\Inflector::get(INFLECTOR_DEFAULT_LOCALE);
@@ -576,6 +744,12 @@
     
     if ( ! function_exists('wpkit') ) {
     
+    	/**
+	     * wpkit helper
+	     *
+	     * @param  string  $binding
+	     * @return mixed (WPKit\Core\Application)
+	     */
 	    function wpkit($binding = null) {
 		    
 		   $instance = WPKit\Core\Application::getInstance(realpath(APP_ROOT));
@@ -597,7 +771,16 @@
     \*----------------------------------------------*/
     
     if ( ! function_exists('invoke') ) {
-    
+    	
+    	/**
+	     * invoke helper
+	     *
+	     * @param  mixed (string, closure)  $callback
+	     * @param  string  $action
+	     * @param  mixed (closure, string)  $condition
+	     * @param  mixed (int)  $priority
+	     * @return  Illuminate\Routing\Route
+	     */
 	    function invoke( $callback, $action = 'wp', $condition = null, $priority = null ) {
 		    
 		    $priority = is_null( $priority ) ? ( is_numeric( $condition ) ? $condition : 10 ) : $priority;
@@ -622,6 +805,14 @@
     
     if ( ! function_exists('route') ) {
     
+    	/**
+	     * route helper
+	     *
+	     * @param  string  $uri
+	     * @param  mixed (string, closure)  $callback
+	     * @param  string  $method
+	     * @return  Illuminate\Routing\Route
+	     */
 	    function route( $uri, $callback, $method = 'get' ) {
 		    
 		    if( php_sapi_name() === 'cli' ) {
@@ -648,6 +839,11 @@
 	
 	if( ! function_exists('get_current_url') ) {
 		
+		/**
+	     * get_current_url helper
+	     *
+	     * @return string
+	     */
 		function get_current_url() {
 			
 			return get_home_url( 1, wpkit('http')->getRequestUri() );
@@ -658,6 +854,11 @@
 	
 	if( ! function_exists('get_current_url_path') ) {
 		
+		/**
+	     * get_current_url_path helper
+	     *
+	     * @return string
+	     */
 		function get_current_url_path() {
 			
 			return rtrim( explode('?', get_current_url())[0], '/');
@@ -668,6 +869,12 @@
 	
 	if ( ! function_exists('is_route') ) {
     
+    	/**
+	     * check if current route matches path
+	     *
+	     * @param  string  $path
+	     * @return boolean
+	     */
 	    function is_route( $path ) {
 		    
 		    if( strpos( $path, '*' ) !== false ) {
@@ -691,7 +898,13 @@
     \*----------------------------------------------*/
     
     if ( ! function_exists('get_wpmu_query') ) {
-    	    
+    	  
+    	/**
+	     * build a multisite query to retrieve posts from multiple blogs
+	     *
+	     * @param  array  $args
+	     * @return WP_Query
+	     */
 	    function get_wpmu_query($args = array()) {
 			
 			global $wpdb;
@@ -819,6 +1032,11 @@
 	
 	if( ! function_exists( 'get_wpmu_site_slug' ) ) {
 		
+		/**
+	     * get_wpmu_site_slug helper
+	     *
+	     * @return string
+	     */
 		function get_wpmu_site_slug() {
 			
 			return str_replace( get_site_url(1), '', get_site_url() );
@@ -833,6 +1051,12 @@
     
     if ( ! function_exists('force_rest') ) {
 	
+		/**
+	     * force_rest for restApi only environments
+	     *
+	     * @param  string  $controller
+	     * @return void
+	     */
 		function force_rest($controller = '\WPKit\Http\Controllers\RestController') {
 				
 			$restController = wpkit()->make($controller);
@@ -851,6 +1075,14 @@
     
     if ( ! function_exists('auth') ) {
 		
+		/**
+	     * auth helper
+	     *
+	     * @param  string  $auth
+	     * @param  array  $settings
+	     * @param  mixed (string, closure)  $callback
+	     * @return Closure (executed)
+	     */
 		function auth($auth, $settings = array(), $callback = null) {
 			
 			if( ! is_callable($callback) ) {
@@ -899,6 +1131,7 @@
 	}
 	
 	if ( ! function_exists('notifier') ) {
+		
 	    /**
 	     * Gets the session flashbag or a key from the session flashbag.
 	     *
@@ -924,9 +1157,13 @@
     	#NGINX FIXES
     \*----------------------------------------------*/
 	
-	// apache_request_headers replicement for nginx
 	if ( ! function_exists('apache_request_headers') ) {
-		 
+		
+		/**
+	     * apache_request_headers replicement for nginx
+	     *
+	     * @return array
+	     */
         function apache_request_headers() { 
 	        
             foreach($_SERVER as $key  =>$value) { 
@@ -954,8 +1191,9 @@
     	#LARAVEL FUNCTIONS
     \*----------------------------------------------*/
 	
-	if (! function_exists('storage_path')) {
-    /**
+	if ( ! function_exists( 'storage_path' ) ) {
+		
+    	/**
 	     * Get the path to the storage folder.
 	     *
 	     * @param  string  $path
@@ -965,9 +1203,11 @@
 	    {
 	        return wpkit()->storagePath().($path ? DIRECTORY_SEPARATOR.$path : $path);
 	    }
+	    
 	}
 	
-	if (! function_exists('config')) {
+	if ( ! function_exists( 'config' ) ) {
+		
 	    /**
 	     * Get / set the specified configuration value.
 	     *
@@ -977,6 +1217,7 @@
 	     * @param  mixed  $default
 	     * @return mixed
 	     */
+	     
 	    function config($key = null, $default = null)
 	    {
 	        if (is_null($key)) {
@@ -987,9 +1228,11 @@
 	        }
 	        return wpkit('config')->get($key, $default);
 	    }
+	    
 	}
 	
-	if (! function_exists('base_path')) {
+	if ( ! function_exists( 'base_path' ) ) {
+		
 	    /**
 	     * Get the path to the base of the install.
 	     *
@@ -1000,9 +1243,11 @@
 	    {
 	        return wpkit()->basePath().($path ? DIRECTORY_SEPARATOR.$path : $path);
 	    }
+	    
 	}
 	
-	if (! function_exists('app_path')) {
+	if ( ! function_exists('app_path') ) {
+		
 	    /**
 	     * Get the path to the application folder.
 	     *
@@ -1013,10 +1258,16 @@
 	    {
 	        return wpkit()->path().($path ? DIRECTORY_SEPARATOR.$path : $path);
 	    }
+	    
 	}
 	
 	if ( ! function_exists('fastcgi_finish_request') ) {
 		
+		/**
+	     * Force fastcgi_finish_request as we do not have a Kernel
+	     *
+	     * @return void
+	     */
 		function fastcgi_finish_request() {
 		 
         	die();

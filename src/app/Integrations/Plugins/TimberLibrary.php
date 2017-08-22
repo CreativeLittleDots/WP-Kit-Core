@@ -7,6 +7,12 @@
 
 	class TimberLibrary extends Integration {
 		
+		/**
+	     * Start the integration
+	     *
+	     * @param array $settings
+	     * @return WPKit\Integrations\Plugins\TimberLibrary
+	     */
 		public function startIntegration( $settings = array() ) {
 			
 			if( ! class_exists('Timber') ) {

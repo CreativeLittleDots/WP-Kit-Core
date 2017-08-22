@@ -2,26 +2,132 @@
     
     namespace WPKit\Core;
 
-	class PostType { // to be deprecated 2.0
-
+	class PostType {
+		
+		/**
+	     * The blog ids that post type should be registered on
+	     *
+	     * @var array
+	     */
 		var $blog_ids = [];
+		
+		/**
+	     * The blog ids to excluded registration on
+	     *
+	     * @var array
+	     */
 		var $exclude_blog_ids = [];
+		
+		/**
+	     * Does the post type should have a rewrite?
+	     *
+	     * @var boolean
+	     */
     	var $rewrite = true;
+    	
+    	/**
+	     * Does the post type have an archive?
+	     *
+	     * @var boolean
+	     */
     	var $has_archive = true;
+    	
+    	/**
+	     * The name of the post type to display in admin menu
+	     *
+	     * @var string
+	     */
     	var $menu_name = '';
+    	
+    	/**
+	     * The slug of the post type
+	     *
+	     * @var string
+	     */
     	var $slug = '';
+    	
+    	/**
+	     * The icon of the post type to display in admin menu
+	     *
+	     * @var string
+	     */
     	var $icon = 'dashicons-admin-post';
+    	
+    	/**
+	     * Is the post type hierarchical
+	     *
+	     * @var boolean
+	     */
     	var $hierarchical = false;
+    	
+    	/**
+	     * The label for post type to display in context of all items
+	     *
+	     * @var string
+	     */
     	var $all_items = '';
+    	
+    	/**
+	     * The label for post type to display when plural
+	     *
+	     * @var string
+	     */
     	var $plural = '';
+    	
+    	/**
+	     * The name of the post type
+	     *
+	     * @var string
+	     */
     	var $name = '';
+    	
+    	/**
+	     * Shoud the post type show in the admin menu?
+	     *
+	     * @var boolean
+	     */
     	var $show_in_menu = true;
+    	
+    	/**
+	     * Features that the post types supports
+	     *
+	     * @var array
+	     */
     	var $supports = array();
+    	
+    	/**
+	     * Actions to display on hover of row in wp admin
+	     *
+	     * @var array
+	     */
     	var $row_actions = array();
+    	
+    	/**
+	     * Is the post type public?
+	     *
+	     * @var boolean
+	     */
     	var $public = true;
+    	
+    	/**
+	     * Is the post type public queriable with WP_Query?
+	     *
+	     * @var boolean
+	     */
     	var $publicly_queryable = true;
+    	
+    	/**
+	     * Labels for post type
+	     *
+	     * @var array
+	     */
     	var $labels = array();
 		
+		/**
+	     * The constructor, it runs the whole registration for post type
+	     *
+	     * @return void
+		 */
 		public function __construct() {
 			
 			if( $this->blog_ids && ! in_array( get_current_blog_id(), $this->blog_ids ) ) {

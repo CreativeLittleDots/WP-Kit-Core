@@ -8,6 +8,12 @@ use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 
 class WpPasswordHasher implements HasherContract
 {
+	
+	/**
+     * Default hasher
+     *
+     * @var PasswordHash
+     */
 	protected $hasher;
 	
     /**

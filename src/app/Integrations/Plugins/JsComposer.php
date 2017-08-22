@@ -7,6 +7,12 @@
 
 	class JsComposer extends Integration {
     	
+    	/**
+	     * Start the integration
+	     *
+	     * @param array $settings
+	     * @return WPKit\Integrations\Plugins\JsComposer
+	     */
     	public function startIntegration( $settings = array() ) {
         	
         	$this->settings = is_array( $settings ) ? array_merge(array(
@@ -48,6 +54,11 @@
             
         }
         
+        /**
+	     * Add composed shortcodes and params from config
+	     *
+	     * @return void
+	     */
         public function add_vc_params() {
 	        
 	        foreach( WPBMap::getAllShortCodes() as $base => $element ) {
@@ -72,6 +83,11 @@
 
         }
         
+        /**
+	     * Remove vc frontend styles and scripts
+	     *
+	     * @return void
+	     */
         public function remove_vc_styles() {
             
             if( empty( $_REQUEST['vc_editable'] ) ) {
@@ -83,6 +99,14 @@
             
         }
         
+        /**
+	     * Replace grid classes with custom classes
+	     *
+	     * @param string $clas_string
+	     * @param string $tag
+	     * @param array $atts
+	     * @return string
+	     */
         public function custom_css_classes( $class_string, $tag, $atts ) {
             
             if ( $tag == 'vc_row' || $tag == 'vc_row_inner' ) {

@@ -14,6 +14,11 @@
 	     */
 	    protected $auth;
 	    
+	    /**
+	     * The auth settings
+	     *
+	     * @var array
+	     */
 	    protected $settings = array();
 	
 	    /**
@@ -63,6 +68,12 @@
 	        
 	    }
     	
+    	/**
+	     * Merge settings into middleware for use through middleware methods
+	     *
+	     * @param array $settings
+	     * @return WPKit\Http\Middleware\FormAuth
+	     */
     	public function mergeSettings($settings = array()) {
 	    	
 	    	$this->settings = array_merge(array(
@@ -77,6 +88,11 @@
 
 		}
 		
+		/**
+	     * Check if this current route is allowed based on middleware settings
+	     *
+	     * @return boolean
+	     */
 		public function isAllowed() {
 			
 			extract($this->settings);
@@ -129,6 +145,14 @@
 	    	
     	}
     	
+    	/**
+	     * Get login url based on middleware settings
+	     *
+	     * @param string $login_url
+	     * @param string $redirect
+	     * @param boolean $force_reauth
+	     * @return string
+	     */
     	public function get_login_url($login_url, $redirect, $force_reauth) {
         		
     		extract($this->settings);
@@ -151,6 +175,11 @@
     		
 		}
         
+        /**
+	     * Get login redirect based on request and middleware settings
+	     *
+	     * @return string
+	     */
         public function login_redirect() {
 	        
 	        extract($this->settings);
@@ -159,6 +188,11 @@
 			
 		}
         
+        /**
+	     * Mask login and redirect user to a given login page based on middleware settings
+	     *
+	     * @return void
+	     */
         public function mask_login() {
 	        
 	        extract($this->settings);

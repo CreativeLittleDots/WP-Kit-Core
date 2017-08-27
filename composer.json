@@ -1,6 +1,6 @@
 {
 	"name": "wp-kit/core",
-	"description": "WP Kit is a RAD (Rapid Application Development) solution for Wordpress.",
+	"description": "The core framework of wp-kit",
 	"keywords": ["wordpress", "framework", "oop", "wp kit"],
 	"homepage" : "https://github.com/creativelittledots/wp-kit-core",
 	"license": "MIT",

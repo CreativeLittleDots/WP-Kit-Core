@@ -10,7 +10,7 @@ This repo has been discontinued to make way for [```wp-kit/foundation```](https:
 
 ```wp-kit/theme:2.*``` depends on several [```wp-kit components```](https://github.com/wp-kit) which were originally a part of ```wp-kit/core```.
 
-This major change in ```wp-kit/theme:2.*``` is to allow more flexibility in adding ServiceProviders to ```wp-kit/theme``` and results in an unavoidable overhaul that deems ```wp-kit/core``` redundant.
+This major change in ```wp-kit/theme:2.*``` is to allow more flexibility in adding [ServiceProviders](https://laravel.com/docs/5.4/providers) to ```wp-kit/theme``` and results in an unavoidable overhaul that deems ```wp-kit/core``` redundant.
 
 ## Requirements
 

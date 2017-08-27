@@ -8,7 +8,9 @@ This repo has been discontinued to make way for [```wp-kit/foundation```](https:
 
 ```wp-kit/core``` is a dependancy of [```wp-kit/theme:1.*```](https://github.com/wp-kit/theme/releases/tag/1.5.5) and [```wp-kit/standalone```](https://github.com/wp-kit/standalone) only.
 
-```wp-kit/theme:2.*``` depends on several [```wp-kit components```](https://github.com/wp-kit) which are originally part of ```wp-kit/core```.
+```wp-kit/theme:2.*``` depends on several [```wp-kit components```](https://github.com/wp-kit) which were originally a part of ```wp-kit/core```.
+
+This major change in ```wp-kit/theme:2.*``` was to allow more flexibility in adding ServiceProviders to ```wp-kit/theme``` and resulted in an unavoidable overhaul that deems ```wp-kit/core``` redundant.
 
 ## Requirements
 

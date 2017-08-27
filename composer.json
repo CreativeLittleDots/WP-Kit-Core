@@ -1,7 +1,7 @@
 {
 	"name": "wp-kit/core",
 	"description": "The core framework of wp-kit",
-	"keywords": ["wordpress", "framework", "core", "oop", "wp-kit"],
+	"keywords": ["wordpress", "framework", "core", "oop", "wp-kit", "rad", "rapid application development"],
 	"homepage" : "https://github.com/creativelittledots/wp-kit-core",
 	"license": "MIT",
 	"authors": [

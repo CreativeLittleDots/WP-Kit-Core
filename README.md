@@ -4,11 +4,11 @@
 
 ## Discontinued
 
-This repo has been discontinued to make way for [```wp-kit/foundation```](https://github.com/wp-kit/foundation) which is a dependancy of [```wp-kit/theme:2.*```](https://github.com/wp-kit/theme).
+This repo has been discontinued to make way for [```wp-kit/foundation```](https://github.com/wp-kit/foundation) and [```wp-kit components```](https://github.com/wp-kit).
 
-This repo is a dependancy of [```wp-kit/theme:1.*```](https://github.com/wp-kit/theme/releases/tag/1.5.5) and [```wp-kit/standalone```](https://github.com/wp-kit/standalone) only.
+```wp-kit/core``` is a dependancy of [```wp-kit/theme:1.*```](https://github.com/wp-kit/theme/releases/tag/1.5.5) and [```wp-kit/standalone```](https://github.com/wp-kit/standalone) only.
 
-```wp-kit/theme:2.*``` depends on several components that have been broken down into [separate repositories](https://github.com/wp-kit) which are part of ```wp-kit/core```.
+```wp-kit/theme:2.*``` depends on several [```wp-kit components```](https://github.com/wp-kit) which are originally part of ```wp-kit/core```.
 
 ## Requirements
 

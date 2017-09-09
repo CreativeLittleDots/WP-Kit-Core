@@ -36,7 +36,7 @@
 		/**
 	     * The application's version.
 	     */
-	    const VERSION = '1.4.6';
+	    const VERSION = '1.5.8';
 
 	    /**
 	     * The registered plugins.

@@ -1,12 +1,10 @@
-# WPKit (Core)
+# [WP Kit](http://creativelittle.uk/wpkit) (Core)
 
-**This repo is being discontinued to make way for [Themosis Framework](http://framework.themosis.com/). Themosis Framework works as a framework for Wordpress Themes and Plugins which makes this repo redundant.** 
+The Creative Little WP Kit is a RAD (Rapid Application Development) solution for Wordpress.
 
-WPKit is a RAD (Rapid Application Development) solution for Wordpress.
+> **Note:** This repository contains the core code of the Creative Little WP Kit. If you want to build your theme using Creative Little WP Kit, visit the main [Creative Little WP Kit](https://github.com/creativelittledots/wp-kit).
 
-> **Note:** This repository contains the core code of WPKit. If you want to build your theme using WPKit, visit the main [WPKit Theme](https://github.com/creativelittledots/wp-kit).
-
-WPKit (Core) is automatically downloaded via Composer in WPKit Theme, so please only use this repo to reference examples of usage.
+Creative Little WP Kit (Core) is automatically downloaded via Composer in Creative Little WP Kit, so please only use this repo to reference examples of usage.
 
 ## Requirements
 
@@ -16,8 +14,8 @@ PHP 5.6+
 
 ## Official Repo
 
-The official repo for WPKit Theme can be found [here](https://github.com/creativelittledots/WP-Kit).
+The official repo for WP Kit can be found [here](https://github.com/creativelittledots/WP-Kit).
 
 ## License
 
-WPKit Core is open-sourced software licensed under the MIT License.
+WP Kit Core is open-sourced software licensed under the MIT License.

@@ -1,49 +1,21 @@
 {
-	"name": "wp-kit/core",
-	"description": "The core framework of wp-kit",
-	"keywords": ["wordpress", "framework", "core", "oop", "wp-kit", "rad", "rapid application development"],
-	"homepage" : "https://github.com/creativelittledots/wp-kit-core",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Creative Little Dots",
-			"email" : "tech@creativelittledots.co.uk",
-			"homepage" : "https://creativelittledots.co.uk/",
-			"role" : "Developers"
-		}
-	],
-	"require": {
-        "php": ">=5.4.45",
-        "querypath/QueryPath": "*",
-        "twig/twig": "~1.16",
-        "icanboogie/inflector": "*",
-	    "illuminate/database": "5.4",
-	    "illuminate/validation": "5.4",
-	    "illuminate/filesystem": "5.4",
-	    "illuminate/bus": "5.4",
-	    "illuminate/config": "5.4",
-	    "illuminate/cache": "5.4",
-	    "illuminate/cookie": "5.4",
-	    "illuminate/auth": "5.4",
-	    "illuminate/queue": "5.4",
-	    "illuminate/events": "5.4",
-	    "vierbergenlars/php-semver": "~3.0",
-	    "symfony/var-dumper": "~3.0",
-	    "illuminate/http": "5.4",
-	    "illuminate/routing": "5.4",
-	    "tgmpa/tgm-plugin-activation": "*"
+	"name": "wp-kit/foundation",
+    "description": "The core application for wp-kit",
+    "keywords": ["wp-kit", "foundation", "application", "rad", "rapid application development"],
+    "license": "MIT",
+	"config": {
+		"preferred-install": "dist"
+	},
+    "require": {
+        "illuminate/container": "5.*",
+        "wp-kit/config": "2.*"
     },
-	"type": "library",
 	"autoload": {
         "psr-4": {
-            "WPKit\\": "src/app" 
+            "WPKit\\Foundation\\": "src/Foundation"
         },
         "files": [
-            "src/helpers.php",
-            "src/defines.php"
+            "src/helpers.php"
         ]
-    },
-    "config": {
-		"preferred-install": "dist"
-	}
+    }
 }

@@ -1,23 +1,31 @@
-# wp-kit/core
+# wp-kit/foundation
 
-> **Note:** This repository contains the core code of ```wp-kit```. If you want to build your theme using ```wp-kit```, visit the main [wp-kit/theme](https://github.com/wp-kit/theme).
+The core application for ```wp-kit```.
 
-## Discontinued
+```wp-kit``` is a [```RAD```](https://en.wikipedia.org/wiki/Rapid_application_development) (Rapid Application Development) solution for Wordpress.
 
-This repo has been discontinued to make way for [```wp-kit/foundation```](https://github.com/wp-kit/foundation) and [```wp-kit components```](https://github.com/wp-kit).
+This repo should not be pulled directly as it is a dependancy of ```wp-kit/theme```.
 
-```wp-kit/core``` is a dependancy of [```wp-kit/theme:1.*```](https://github.com/wp-kit/theme/releases/tag/1.5.5) and [```wp-kit/standalone```](https://github.com/wp-kit/standalone) only.
+## Get Involved
 
-```wp-kit/theme:2.*``` depends on several [```wp-kit components```](https://github.com/wp-kit) which were originally a part of ```wp-kit/core```.
+To learn more about how to use ```wp-kit``` check out the docs:
 
-This major change in ```wp-kit/theme:2.*``` is to allow more flexibility in adding [ServiceProviders](https://laravel.com/docs/5.4/providers) to ```wp-kit/theme``` and results in an unavoidable overhaul that deems ```wp-kit/core``` redundant.
+[View the Docs](https://github.com/wp-kit/theme/tree/docs/README.md)
+
+Any help is appreciated. The project is open-source and we encourage you to participate. You can contribute to the project in multiple ways by:
+
+- Reporting a bug issue
+- Suggesting features
+- Sending a pull request with code fix or feature
+- Following the project on [GitHub](https://github.com/wp-kit)
+- Sharing the project around your community
+
+For details about contributing to the framework, please check the [contribution guide](https://github.com/wp-kit/theme/tree/docs/Contributing.md).
 
 ## Requirements
 
-Wordpress 4+
-
-PHP 5.6+
+* PHP 5.6+
 
 ## License
 
-wp-kit/core is open-sourced software licensed under the MIT License.
+wp-kit/foundation is open-sourced software licensed under the MIT License.

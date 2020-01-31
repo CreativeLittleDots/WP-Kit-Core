@@ -7,7 +7,7 @@
 		"preferred-install": "dist"
 	},
     "require": {
-        "illuminate/container": "5.5.*",
+        "illuminate/container": "^6.0",
         "wp-kit/config": "2.*"
     },
 	"autoload": {
